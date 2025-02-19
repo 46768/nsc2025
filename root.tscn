@@ -1,11 +1,3 @@
-[gd_scene load_steps=3 format=3 uid="uid://c5qeo01ixj1xh"]
-
-[ext_resource type="Texture2D" uid="uid://bc83alf18q3ud" path="res://assets/textures/test.png" id="1_5o7sw"]
-[ext_resource type="Script" path="res://scripts/test.gd" id="2_3pg21"]
+[gd_scene format=3 uid="uid://c5qeo01ixj1xh"]
 
 [node name="Root" type="Node2D"]
-
-[node name="Test" type="Sprite2D" parent="."]
-texture = ExtResource("1_5o7sw")
-script = ExtResource("2_3pg21")
-metadata/_edit_group_ = true

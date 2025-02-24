@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://dc0wkqvws5k6e"]
+
+[ext_resource type="PackedScene" uid="uid://c44n34k18cx8m" path="res://scenes/IDE.tscn" id="1_xj0ui"]
+
+[node name="Main" type="Node2D"]
+
+[node name="Ide" parent="." instance=ExtResource("1_xj0ui")]
+anchors_preset = 9
+anchor_right = 0.0
+grow_horizontal = 1

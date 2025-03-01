@@ -1,9 +1,6 @@
 extends Node
 
 
-@export_range(49152, 65535) var server_port: int = 56440
-
-
 # Python environment variables
 const PYTHON_PACKED_PATH: String = "res://python-binding/python-packed.tar.gz"
 const PYTHON_ENV_PATH: String = "user://python-env"
@@ -13,24 +10,26 @@ var PYTHON3_BIN_PATH: String = {
 	"Windows": PYTHON_CONDA_PATH+"/python.exe",
 	"Linux": PYTHON_CONDA_PATH+"/bin/python3",
 }[OS.get_name()]
+var instantiated: bool = false
 
-# Server variables
-var server_thread: Thread
-const SERVER_PATH: String = "res://python-binding/server.py"
-var server_output = []
 
-func _start_python_ws_server(
-	server_path: String, port: int, python3_bin: String
-) -> void:
-	var gpath = ProjectSettings.globalize_path(server_path)
-	var bin_path = ProjectSettings.globalize_path(python3_bin)
-	# python3 server.py {port} {python3 bin}
-	OS.execute(
-		bin_path, [gpath, "%d" % port, bin_path],
-		server_output, true
+func python_run(
+	script_path: String, args: PackedStringArray
+) -> Array:
+	print("Received request to run script")
+	var gpath = ProjectSettings.globalize_path(script_path)
+	var bin_path = ProjectSettings.globalize_path(PYTHON3_BIN_PATH)
+	var cmd_arg = PackedStringArray([gpath])
+	var output = []
+	cmd_arg.append_array(args)
+	print(bin_path, " ", cmd_arg)
+	var ret_code = OS.execute(
+		bin_path, cmd_arg,
+		output, true
 	)
-	for i in server_output:
-		print(i)
+	output.append(ret_code)
+	
+	return output
 
 
 func _unpack_python_env(pypck_path: String, dest_path: String) -> void:
@@ -60,6 +59,9 @@ func _clear_directory(dir_path: String, root_path: String):
 
 
 func _ready() -> void:
+	# Avoid repeated instantiation
+	if instantiated:
+		return
 	# Prepare python environment
 	var data_dir = DirAccess.open("user://")
 	if not data_dir.dir_exists(PYTHON_ENV_PATH):
@@ -82,8 +84,5 @@ func _ready() -> void:
 		_clear_directory(PYTHON_CONDA_PATH, PYTHON_CONDA_PATH)
 		data_dir.make_dir(PYTHON_CONDA_PATH)
 		_unpack_python_env(USR_PACKED_PATH, PYTHON_CONDA_PATH)
-		
-	# Start python server
-	server_thread = Thread.new()
-	server_thread.start(_start_python_ws_server.bind(
-		SERVER_PATH, server_port, PYTHON3_BIN_PATH))
+	
+	instantiated = true

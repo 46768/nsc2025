@@ -16,13 +16,11 @@ var instantiated: bool = false
 func python_run(
 	script_path: String, args: PackedStringArray
 ) -> Array:
-	print("Received request to run script")
 	var gpath = ProjectSettings.globalize_path(script_path)
 	var bin_path = ProjectSettings.globalize_path(PYTHON3_BIN_PATH)
 	var cmd_arg = PackedStringArray([gpath])
 	var output = []
 	cmd_arg.append_array(args)
-	print(bin_path, " ", cmd_arg)
 	var ret_code = OS.execute(
 		bin_path, cmd_arg,
 		output, true

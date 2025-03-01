@@ -42,12 +42,20 @@ func _unpack_python_env(pypck_path: String, dest_path: String) -> void:
 	], unpack_output)
 
 
-func _clear_directory(dir_path: String):
+func _clear_directory(dir_path: String, root_path: String):
 	var directory = ProjectSettings.globalize_path(dir_path)
+	var root_directory = ProjectSettings.globalize_path(root_path)
+	var sliced_dir = directory.split("/")
+	# Prevent deleting ancestor root
+	if len(directory) < len(root_directory) or not directory.begins_with(root_directory): 
+		return
+	# Prevent using . and .. to indirectly reference root directory
+	if "." in sliced_dir or ".." in sliced_dir:
+		return
 	for file in DirAccess.get_files_at(directory):
 		DirAccess.remove_absolute(directory.path_join(file))
 	for dir in DirAccess.get_directories_at(directory):
-		_clear_directory(directory.path_join(dir))
+		_clear_directory(directory.path_join(dir), root_directory)
 	DirAccess.remove_absolute(directory)
 
 
@@ -71,7 +79,7 @@ func _ready() -> void:
 	
 	if not FileAccess.file_exists(PYTHON3_BIN_PATH):
 		# Clear and unpack again
-		_clear_directory(PYTHON_CONDA_PATH)
+		_clear_directory(PYTHON_CONDA_PATH, PYTHON_CONDA_PATH)
 		data_dir.make_dir(PYTHON_CONDA_PATH)
 		_unpack_python_env(USR_PACKED_PATH, PYTHON_CONDA_PATH)
 		

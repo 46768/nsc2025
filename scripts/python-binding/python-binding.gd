@@ -58,7 +58,7 @@ func _ready() -> void:
 		data_dir.make_dir(PYTHON_ENV_PATH)
 	
 	# Copy packed env if not found
-	if not FileAccess.file_exists(PYTHON_PACKED_PATH):
+	if not FileAccess.file_exists(PYTHON_PACKED_PATH) and not FileAccess.file_exists(USR_PACKED_PATH):
 		printerr("Cant find packed env file '%s'" % PYTHON_PACKED_PATH)
 		return
 	if not FileAccess.file_exists(USR_PACKED_PATH):

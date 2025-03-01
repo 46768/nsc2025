@@ -1,0 +1,12 @@
+name: Branch format checker
+on: [pull_request]
+jobs:
+  Branch-Format-Check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch files
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+      - name: CHANGELOG.md check
+        run: test -f CHANGELOG.md

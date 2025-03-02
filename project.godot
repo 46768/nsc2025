@@ -11,9 +11,15 @@ config_version=5
 [application]
 
 config/name="nsc2025"
+config/version="pre-dev0.0.1"
 run/main_scene="res://main.tscn"
+config/use_custom_user_dir=true
 config/features=PackedStringArray("4.3", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[autoload]
+
+PythonBinding="*res://scripts/python-binding/python-binding.gd"
 
 [rendering]
 

@@ -1,3 +1,6 @@
+# Github actions
+- Added workflow to check for merging branch's existence of a CHANGELOG.md
+
 # Python Binding
 - Implemented python environment unpacking from python-packed.tar.gz archive
 - Implemented binary self-healing of the conda environment

@@ -1,5 +1,8 @@
 extends Node
-
+## Godot-Python binding provider
+##
+## A binding script to allows python script to be
+## ran within Godot
 
 # Python environment variables
 const PYTHON_PACKED_PATH: String = "res://python-binding/python-packed.tar.gz"
@@ -13,7 +16,12 @@ var PYTHON3_BIN_PATH: String = {
 var instantiated: bool = false
 
 
-func python_run(
+## Run python script with given arguments in a blocking way
+##
+## Run a python script with given arguments in a blocking way
+## and return the stdout+stderr as an array with the return code
+## appended to it
+func run(
 	script_path: String, args: PackedStringArray
 ) -> Array:
 	var gpath = ProjectSettings.globalize_path(script_path)
@@ -30,6 +38,7 @@ func python_run(
 	return output
 
 
+# Unpack given conda .tar.gz archive into a directory
 func _unpack_python_env(pypck_path: String, dest_path: String) -> void:
 	var unpack_output: Array = []
 	# Using tar
@@ -39,6 +48,7 @@ func _unpack_python_env(pypck_path: String, dest_path: String) -> void:
 	], unpack_output)
 
 
+# Recursively delete a directory
 func _clear_directory(dir_path: String, root_path: String):
 	var directory = ProjectSettings.globalize_path(dir_path)
 	var root_directory = ProjectSettings.globalize_path(root_path)
@@ -56,10 +66,13 @@ func _clear_directory(dir_path: String, root_path: String):
 	DirAccess.remove_absolute(directory)
 
 
+# Runs on game startup (Specified this script as
+# a global/singleton in project settings)
 func _ready() -> void:
 	# Avoid repeated instantiation
 	if instantiated:
 		return
+	
 	# Prepare python environment
 	var data_dir = DirAccess.open("user://")
 	if not data_dir.dir_exists(PYTHON_ENV_PATH):

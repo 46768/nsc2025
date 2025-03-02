@@ -6,7 +6,7 @@ extends Control
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	print("Hello!")
-	var res = PythonBinding.python_run("res://python-binding/server.py", [
+	var res = PythonBinding.run("res://python-binding/server.py", [
 		str(server_port),
 		ProjectSettings.globalize_path(PythonBinding.PYTHON3_BIN_PATH),
 	])

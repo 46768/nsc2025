@@ -1,3 +1,9 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+
+# Project exports
+exports/
+
+# Python packed archive
+python-packed.tar.gz

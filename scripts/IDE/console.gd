@@ -1,16 +1,16 @@
 extends Control
 
 
-const OUTPUT_H_RATIO = 0.9
-const INPUT_H_RATIO = 1 - OUTPUT_H_RATIO
+var output_ratio = 0.8
+var output_padding = 0.05
+var input_ratio = 0.15
 
-func _ready() -> void:
-	pass
-
-func set_console_layout(console_size: Vector2) -> void:
-	print("setting console inner")
+func setup_layout(console_size: Vector2) -> void:
 	$ConsoleOutput.set_position(Vector2.ZERO)
-	$ConsoleOutput.set_size(console_size * Vector2(1, OUTPUT_H_RATIO))
+	$ConsoleOutput.set_size(console_size * Vector2(1, output_ratio))
 	
-	$ConsoleInput.set_position(console_size * Vector2(0, OUTPUT_H_RATIO))
-	$ConsoleInput.set_size(console_size * Vector2(1, INPUT_H_RATIO))
+	$ConsoleOutputPanel.set_position(Vector2.ZERO)
+	$ConsoleOutputPanel.set_size(console_size * Vector2(1, output_ratio+output_padding))
+	
+	$ConsoleInput.set_position(console_size * Vector2(0, output_ratio+output_padding))
+	$ConsoleInput.set_size(console_size * Vector2(1, input_ratio))

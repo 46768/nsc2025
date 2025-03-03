@@ -17,12 +17,14 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_msfw7")
+margin = 0.02
 
 [node name="Editor" type="CodeEdit" parent="."]
-layout_mode = 0
-offset_left = 556.0
-offset_right = 1138.0
-offset_bottom = 322.0
+layout_mode = 2
+offset_left = 55.0
+offset_top = 15.0
+offset_right = 63.0
+offset_bottom = 40.0
 placeholder_text = "Code here"
 draw_tabs = true
 gutters_draw_line_numbers = true
@@ -32,23 +34,49 @@ auto_brace_completion_highlight_matching = true
 script = ExtResource("2_kuje3")
 
 [node name="Console" type="Container" parent="."]
-layout_mode = 0
-offset_left = 418.0
-offset_top = 344.0
-offset_right = 458.0
-offset_bottom = 384.0
+layout_mode = 2
+offset_left = 55.0
+offset_top = 15.0
+offset_right = 63.0
+offset_bottom = 40.0
 script = ExtResource("3_u5bfh")
 
 [node name="ConsoleInput" type="LineEdit" parent="Console"]
 layout_mode = 2
 
-[node name="ConsoleOutput" type="Label" parent="Console"]
+[node name="ConsoleOutput" type="ScrollContainer" parent="Console"]
 layout_mode = 2
-text = "Hello Label!"
+follow_focus = true
+
+[node name="ConsoleOutputText" type="Label" parent="Console/ConsoleOutput"]
+layout_mode = 2
+text = "Hello Label!
+Hello Label!
+Hello Label!
+Hello Label!
+Hello Label!
+Hello Label!
+Hello Label!
+Hello Label!
+Hello Label!
+Hello Label!
+Hello Label!
+Hello Label!
+Hello Label!
+Hello Label!
+Hello Label!
+Hello Label!"
+
+[node name="ConsoleOutputPanel" type="Panel" parent="Console"]
+z_index = -1
+layout_mode = 2
+mouse_filter = 2
 
 [node name="Sidebar" type="Container" parent="."]
-layout_mode = 0
-offset_right = 40.0
+layout_mode = 2
+offset_left = 55.0
+offset_top = 15.0
+offset_right = 63.0
 offset_bottom = 40.0
 script = ExtResource("4_gbtak")
 
@@ -80,8 +108,23 @@ layout_mode = 2
 script = ExtResource("7_5casr")
 metadata/_tab_index = 2
 
+[node name="SidebarPanel" type="Panel" parent="Sidebar"]
+z_index = -1
+layout_mode = 2
+mouse_filter = 2
+mouse_force_pass_scroll_events = false
+
 [node name="Notes" type="TextEdit" parent="."]
-layout_mode = 0
-offset_right = 8.0
-offset_bottom = 8.0
+layout_mode = 2
+offset_left = 55.0
+offset_top = 15.0
+offset_right = 63.0
+offset_bottom = 40.0
 placeholder_text = "Put your notes here"
+
+[node name="IDEPanel" type="Panel" parent="."]
+z_index = -2
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2

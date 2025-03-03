@@ -1,42 +1,49 @@
 extends Control
 
 @export_range(49152, 65535) var server_port: int = 56440
+@export_range(0.1, 0.9, 0.1) var sidebar_w_ratio = 0.3
+@export_range(0.1, 0.9, 0.1) var sidebar_h_ratio = 0.6
+@export_range(0.01, 0.1, 0.01) var margin = 0.05
 
-var screen_size: Vector2;
 
-const SIDE_BAR_W_RATIO = 0.3
-const SIDE_BAR_H_RATIO = 0.6
-const EDITOR_W_RATIO = 1 - SIDE_BAR_W_RATIO
-const EDITOR_H_RATIO = SIDE_BAR_H_RATIO
-const NOTES_W_RATIO = SIDE_BAR_W_RATIO
-const NOTES_H_RATIO = 1 - SIDE_BAR_H_RATIO
-const CONSOLE_W_RATIO = EDITOR_W_RATIO
-const CONSOLE_H_RATIO = NOTES_H_RATIO
+func setup_layout(screen_size: Vector2) -> void:
+	var container_size = screen_size * (Vector2(1, 1) - (2 * Vector2(margin, margin)))
+	var sidebar_ratio: Vector2 = Vector2(sidebar_w_ratio, sidebar_h_ratio)
+	var editor_ratio: Vector2 = Vector2(1, 0) - sidebar_ratio * Vector2(1, -1)
+	var console_ratio: Vector2 = Vector2(1, 1) - sidebar_ratio
+	var notes_ratio: Vector2 = Vector2(0, 1) - sidebar_ratio * Vector2(-1, 1)
+	var obj_offset: Vector2 = screen_size * Vector2(margin, margin)
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	screen_size = get_viewport_rect().size
-	
+	print(screen_size)
+	print(container_size)
+	print(sidebar_ratio)
+	print(editor_ratio)
+	print(console_ratio)
+	print(notes_ratio)
 	set_size(screen_size)
 	set_position(Vector2.ZERO)
 	
-	print("setting sidebar")
-	$Sidebar.set_position(Vector2.ZERO)
-	$Sidebar.set_size(screen_size * Vector2(SIDE_BAR_W_RATIO, SIDE_BAR_H_RATIO))
-	$Sidebar.set_sidebar_layout(screen_size * Vector2(SIDE_BAR_W_RATIO, SIDE_BAR_H_RATIO))
+	$Sidebar.set_position(obj_offset)
+	$Sidebar.set_size(container_size * sidebar_ratio)
+	$Sidebar.setup_layout($Sidebar.size)
 	
-	print("setting editor")
-	$Editor.set_position(screen_size * Vector2(SIDE_BAR_W_RATIO, 0))
-	$Editor.set_size(screen_size * Vector2(EDITOR_W_RATIO, EDITOR_H_RATIO))
+	$Editor.set_position(($Sidebar.size * Vector2(1, 0)) + obj_offset)
+	$Editor.set_size(container_size * editor_ratio)
 	
-	print("setting console")
-	$Console.set_position(screen_size * Vector2(SIDE_BAR_W_RATIO, SIDE_BAR_H_RATIO))
-	$Console.set_size(screen_size * Vector2(CONSOLE_W_RATIO, CONSOLE_H_RATIO))
-	$Console.set_console_layout(screen_size * Vector2(CONSOLE_W_RATIO, CONSOLE_H_RATIO))
+	$Console.set_position($Sidebar.size + obj_offset)
+	$Console.set_size(container_size * console_ratio)
+	$Console.setup_layout($Console.size)
 	
-	print("setting notes")
-	$Notes.set_position(screen_size * Vector2(0, SIDE_BAR_H_RATIO))
-	$Notes.set_size(screen_size * Vector2(NOTES_W_RATIO, NOTES_H_RATIO))
+	$Notes.set_position(($Sidebar.size * Vector2(0, 1)) + obj_offset)
+	$Notes.set_size(container_size * notes_ratio)
+	
+	$IDEPanel.set_position(Vector2.ZERO)
+	$IDEPanel.set_size(screen_size)
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	setup_layout(get_viewport_rect().size)
 	
 	print("Hello!")
 	var res = PythonBinding.run("res://python-binding/server.py", [

@@ -20,9 +20,8 @@ func resize() -> void:
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	resize()
-	sidebar_split = $MarginContainer/VerticalSplit/SidebarSplit
-	editor_split = $MarginContainer/VerticalSplit/EditorSplit
+	sidebar_split = $Margin/VerticalSplit/SidebarSplit
+	editor_split = $Margin/VerticalSplit/EditorSplit
 	sidebar_split.dragged.connect(sidebar_to_editor_sync)
 	editor_split.dragged.connect(editor_to_sidebar_sync)
 	get_tree().get_root().size_changed.connect(resize)
-	pass

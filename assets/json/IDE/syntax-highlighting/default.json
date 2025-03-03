@@ -1,4 +1,69 @@
 {
 	"function": "7fb4ca",
-	"number": "a292a3"
+	"number": "a292a3",
+	"symbol": "c4b28a",
+	"string": {
+		"color": "8a9a7b",
+		"token": [
+			"\"",
+			"\"\"\"",
+			"'",
+			"'''",
+		],
+	},
+	"keyword": {
+		"color": "8992a7",
+		"token": [
+			"if",
+			"elif",
+			"else",
+
+			"and",
+			"or",
+			"not",
+
+			"as",
+			"in",
+			"is",
+
+			"async",
+			"await",
+
+			"break",
+			"continue",
+
+			"def",
+			"lambda",
+			"return",
+			"pass",
+
+			"try",
+			"except",
+			"finally",
+			"raise",
+
+			"for",
+			"while",
+
+			"import",
+			"from",
+
+			"global",
+			"nonlocal",
+
+			"with",
+			"yield",
+			"assert",
+			"class",
+			"del",
+		],
+	},
+	"constant": {
+		"color": "b6927b",
+		"token": [
+			"True",
+			"False",
+			"None",
+		],
+	},
 }

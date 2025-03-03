@@ -88,6 +88,7 @@ placeholder_text = "Code here"
 draw_tabs = true
 line_folding = true
 gutters_draw_line_numbers = true
+code_completion_enabled = true
 indent_automatic = true
 auto_brace_completion_enabled = true
 auto_brace_completion_highlight_matching = true
@@ -129,3 +130,6 @@ Hello Label!"
 [node name="ConsoleInput" type="LineEdit" parent="Margin/VerticalSplit/EditorSplit/Console"]
 layout_mode = 2
 caret_blink = true
+
+[connection signal="code_completion_requested" from="Margin/VerticalSplit/EditorSplit/Editor" to="Margin/VerticalSplit/EditorSplit/Editor" method="_handle_autocomplete"]
+[connection signal="text_changed" from="Margin/VerticalSplit/EditorSplit/Editor" to="Margin/VerticalSplit/EditorSplit/Editor" method="_handle_autocomplete"]

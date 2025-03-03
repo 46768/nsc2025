@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: Report a bug
-title: "[BUG] game deleted my root directory"
+title: "[BUG] "
 labels: bug
 assignees: ''
 

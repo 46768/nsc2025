@@ -1,7 +1,7 @@
 ---
 name: Feature plan
 about: Plans a feature for development
-title: "[FEATURE] Add something to the game"
+title: "[FEATURE] "
 labels: feature
 assignees: ''
 

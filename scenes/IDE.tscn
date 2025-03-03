@@ -1,8 +1,15 @@
-[gd_scene load_steps=2 format=3 uid="uid://c44n34k18cx8m"]
+[gd_scene load_steps=8 format=3 uid="uid://c44n34k18cx8m"]
 
 [ext_resource type="Script" path="res://scripts/IDE/ide.gd" id="1_msfw7"]
+[ext_resource type="Script" path="res://scripts/IDE/editor.gd" id="2_kuje3"]
+[ext_resource type="Script" path="res://scripts/IDE/console.gd" id="3_u5bfh"]
+[ext_resource type="Script" path="res://scripts/IDE/sidebar.gd" id="4_gbtak"]
+[ext_resource type="Script" path="res://scripts/IDE/problem_viewer.gd" id="5_7esix"]
+[ext_resource type="Script" path="res://scripts/IDE/file_explorer.gd" id="6_5fjmn"]
+[ext_resource type="Script" path="res://scripts/IDE/debugger.gd" id="7_5casr"]
 
 [node name="Ide" type="Control"]
+layout_direction = 2
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -10,3 +17,71 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_msfw7")
+
+[node name="Editor" type="CodeEdit" parent="."]
+layout_mode = 0
+offset_left = 556.0
+offset_right = 1138.0
+offset_bottom = 322.0
+placeholder_text = "Code here"
+draw_tabs = true
+gutters_draw_line_numbers = true
+indent_automatic = true
+auto_brace_completion_enabled = true
+auto_brace_completion_highlight_matching = true
+script = ExtResource("2_kuje3")
+
+[node name="Console" type="Container" parent="."]
+layout_mode = 0
+offset_left = 418.0
+offset_top = 344.0
+offset_right = 458.0
+offset_bottom = 384.0
+script = ExtResource("3_u5bfh")
+
+[node name="ConsoleInput" type="LineEdit" parent="Console"]
+layout_mode = 2
+
+[node name="ConsoleOutput" type="Label" parent="Console"]
+layout_mode = 2
+text = "Hello Label!"
+
+[node name="Sidebar" type="Container" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("4_gbtak")
+
+[node name="TabContainer" type="TabContainer" parent="Sidebar"]
+layout_mode = 2
+current_tab = 0
+
+[node name="ProblemViewer" type="Control" parent="Sidebar/TabContainer"]
+layout_mode = 2
+script = ExtResource("5_7esix")
+metadata/_tab_index = 0
+
+[node name="ProblemStatement" type="RichTextLabel" parent="Sidebar/TabContainer/ProblemViewer"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+bbcode_enabled = true
+text = "Hi! This is a [b]problem[/b], [i]e[/i], [center]a[/center]"
+
+[node name="FileExplorer" type="Control" parent="Sidebar/TabContainer"]
+visible = false
+layout_mode = 2
+script = ExtResource("6_5fjmn")
+metadata/_tab_index = 1
+
+[node name="Debugger" type="Control" parent="Sidebar/TabContainer"]
+visible = false
+layout_mode = 2
+script = ExtResource("7_5casr")
+metadata/_tab_index = 2
+
+[node name="Notes" type="TextEdit" parent="."]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+placeholder_text = "Put your notes here"

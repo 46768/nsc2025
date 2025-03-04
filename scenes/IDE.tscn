@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/IDE/ide.gd" id="1_msfw7"]
 [ext_resource type="Script" path="res://scripts/IDE/editor.gd" id="2_kuje3"]
-[ext_resource type="Script" path="res://scripts/IDE/file_explorer.gd" id="6_5fjmn"]
+[ext_resource type="Script" path="res://scripts/IDE/file-explorer.gd" id="6_5fjmn"]
 
 [node name="Ide" type="Control"]
 layout_direction = 2
@@ -10,8 +10,8 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = -85.0
-offset_bottom = -51.0
+offset_right = -1152.0
+offset_bottom = -648.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3

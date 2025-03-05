@@ -1,10 +1,12 @@
 extends Node
 
+
 var vfs: VFS
 var shell: COSH
 var output: RichTextLabel
 var cmd_input: LineEdit
 var cwd_label: Label
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

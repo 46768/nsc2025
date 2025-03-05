@@ -1,10 +1,12 @@
 extends Control
 
+
 @export_range(49152, 65535) var server_port: int = 56440
 @export_range(0, 100) var margin: int = 10
 
 var sidebar_split: VSplitContainer
 var editor_split: VSplitContainer
+
 
 func sidebar_to_editor_sync(offset: int) -> void:
 	editor_split.split_offset = offset

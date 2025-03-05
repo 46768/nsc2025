@@ -4,6 +4,7 @@ extends CodeEdit
 var highlighter_json: Dictionary
 var symbols_lookup: Dictionary
 
+
 func _load_colors(json_path: String) -> CodeHighlighter:
 	var json_file = FileAccess.open(json_path, FileAccess.READ)
 	var colors = JSON.parse_string(json_file.get_as_text())

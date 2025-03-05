@@ -1,28 +1,30 @@
 class_name COSH
 extends Object
 
+
 var attached_vfs: VFS
-var parent_dir: Dictionary
-var current_dir: Dictionary
-var cwd: PackedStringArray
+var cwd: String
 
 var shell_user: String
 var shell_machine: String
 
-var output_buffer: String
+var module_reg: Dictionary
 var command_reg: Dictionary
+
+var output_buffer: String
+
 
 func _init(vfs: VFS) -> void:
 	attached_vfs = vfs
-	parent_dir = vfs.data
-	current_dir = vfs.data
-	cwd = PackedStringArray([])
+	cwd = "/"
 	
-	shell_user = "john"
+	shell_user = "cosh"
 	shell_machine = "cosine"
 	
-	output_buffer = ""
+	module_reg = {}
 	command_reg = {}
+	
+	output_buffer = ""
 	
 	set_command("cd", __cosh_cd)
 	set_command("echo", __cosh_echo)
@@ -45,106 +47,123 @@ func run_command(cmd: String, arg: PackedStringArray) -> void:
 	var appending_string: String = "[%s@%s:%s]$ %s\n" % [
 		shell_user,
 		shell_machine,
-		get_cwd_string(),
+		cwd,
 		cmd + " " + " ".join(arg),
 	]
 	if cmd == "":
 		pass
 	elif cmd in command_reg:
-		appending_string += str(command_reg[cmd].call(arg))
+		appending_string += str(command_reg[cmd].call(self, arg))
 	else:
 		appending_string += "%s: command not found\n" % cmd
 	output_buffer += appending_string + "\n"
 
 
-func update_cwd() -> int:
-	var temp_current: Dictionary = attached_vfs.get_dir(cwd)
-	if temp_current in attached_vfs.DIR_NOT_FOUND:
-		return 1
-	current_dir = temp_current
-	parent_dir = attached_vfs.get_dir(cwd.slice(0, -1))
-	return 0
+func add_module_registry(module_name: String):
+	module_reg[module_name] = true
 
 
-func get_cwd_string() -> String:
-	return "/" + "/".join(cwd)
+func remove_module_registry(module_name: String):
+	module_reg.erase(module_name)
 
 
 # Builtin programs
 
-func __cosh_cd(child_packed: PackedStringArray) -> String:
-	if child_packed.is_empty():
+func __cosh_cd(shell: COSH, args: PackedStringArray) -> String:
+	if args.is_empty():
 		return "cd: missing path\n"
 	
-	var child = child_packed[0]
-	var new_cwd = cwd.duplicate()
+	var path = args[0]
+	var new_cwd = shell.cwd
 	
-	if child == ".":
+	if path == ".":
 		return ""
-	elif child == "..":
-		new_cwd = cwd.slice(0, -1)
-	elif child.begins_with("/"):
-		new_cwd = attached_vfs.split_path(child)
+	elif path == "..":
+		new_cwd = shell.attached_vfs.get_parent(cwd)
+	elif path.begins_with("/"):
+		new_cwd = path
 	else:
-		var child_blocks: PackedStringArray = attached_vfs.split_path(child)
-		new_cwd.append_array(child_blocks)
+		new_cwd += ("" if shell.cwd.ends_with("/") else "/") + path
 	
-	if attached_vfs.dir_exists(new_cwd):
-		cwd = new_cwd
-		update_cwd()
+	var new_cwd_is_dir: bool = (shell.attached_vfs.get_block(new_cwd).type as VFS.FileType) == VFS.FileType.DIRECTORY
+	if shell.attached_vfs.block_exists(new_cwd) and new_cwd_is_dir:
+		shell.cwd = new_cwd
 		return ""
+	elif not new_cwd_is_dir:
+		return "cd: %s: Not a directory" % path
 	else:
 		return "cd: directory not found\n"
 
 
-func __cosh_echo(text: PackedStringArray):
-	return " ".join(text) + "\n"
+func __cosh_echo(_shell: COSH, args: PackedStringArray):
+	return " ".join(args) + "\n"
 
 
-func __cosh_clear(_unused: PackedStringArray):
-	output_buffer = ""
+func __cosh_clear(shell: COSH, _args: PackedStringArray):
+	shell.output_buffer = ""
 	return ""
 
 
-func __cosh_mkdir(path_packed: PackedStringArray):
-	if path_packed.is_empty():
+func __cosh_mkdir(shell: COSH, args: PackedStringArray):
+	if args.is_empty():
 		return "mkdir: missing path\n"
 	
-	var path = path_packed[0]
-	var new_cwd = cwd.duplicate()
+	var path: String = args[0]
+	var dir_path: String = shell.cwd
 	
 	if path.begins_with("/"):
-		new_cwd = attached_vfs.split_path(path)
+		dir_path = path
 	else:
-		var path_blocks: PackedStringArray = attached_vfs.split_path(path)
-		new_cwd.append_array(path_blocks)
+		dir_path += ("" if shell.cwd.ends_with("/") else "/") + path
 	
-	var mkdir_res: int = attached_vfs.mkdir("/"+"/".join(new_cwd))
-	if mkdir_res == attached_vfs.ERR_BLOCK_EXIST:
+	var mkdir_res: VFS.RET_CODE = attached_vfs.mkdir(dir_path)
+	if mkdir_res == shell.attached_vfs.RET_CODE.ERR:
 		return "mkdir: cannot create directory '%s': File exists\n" % path
 	else:
 		return ""
 
 
-func __cosh_touch(path: PackedStringArray):
-	pass
+func __cosh_touch(shell: COSH, args: PackedStringArray):
+	if args.is_empty():
+		return "touch: missing file operand\n"
+	var path: String = args[0]
+	path = path if path.begins_with("/") else shell.cwd + ("" if shell.cwd.ends_with("/") else "/") + path
+	if not shell.attached_vfs.block_exists(path):
+		shell.attached_vfs.write_file(path, "")
+	
+	return ""
 
 
-func __cosh_rm(path: PackedStringArray):
-	pass
+func __cosh_rm(shell: COSH, args: PackedStringArray):
+	if args.is_empty():
+		return "rm: missing operand\n"
+	var path: String = args[0]
+	var flags: String = ""
+	if "-r" in args:
+		flags = args[0]
+		path = args[1]
+	path = path if path.begins_with("/") else shell.cwd + ("" if cwd.ends_with("/") else "/") + path
+	if path == "/":
+		return "rm: [color=red]Error: Deleting / will cause irreversable damage to the file system[/color]\n"
+	var is_dir: bool = (shell.attached_vfs.get_block(path).type as VFS.FileType) == VFS.FileType.DIRECTORY
+	if "r" not in flags and is_dir:
+		return "rm: cannot remove '%s': Is a directory" % path
+	
+	var ret_code: VFS.RET_CODE = shell.attached_vfs.delete_block(path)
+	if ret_code == VFS.RET_CODE.ERR:
+		return "rm: cannot remove '%s': No such file or directory" % path
+	return ""
 
 
-func __cosh_ls(path_packed: PackedStringArray):
-	var path: PackedStringArray
-	if path_packed.is_empty():
-		path = cwd
-	else:
-		path = attached_vfs.split_path(path_packed[0])
-	var dir: Dictionary = attached_vfs.get_dir(path)
+func __cosh_ls(shell: COSH, args: PackedStringArray):
+	var path: String = shell.cwd if args.is_empty() else args[0]
+	path = path if path.begins_with("/") else shell.cwd + ("" if cwd.ends_with("/") else "/") + path
+	var dir: Dictionary = shell.attached_vfs.get_block(path)
 	var ret_string_arr: PackedStringArray = PackedStringArray([])
-	for block in dir.keys():
-		if dir[block] is Dictionary:
-			ret_string_arr.append("[color=7fb4ca]%s[/color]" % block)
+	for block in (dir.content as Dictionary).keys():
+		var basename: String = shell.attached_vfs.get_basename(block)
+		if (shell.attached_vfs.get_block(block).type as VFS.FileType) == VFS.FileType.DIRECTORY:
+			ret_string_arr.append("[color=7fb4ca]%s[/color]" % basename)
 		else:
-			ret_string_arr.append(block)
+			ret_string_arr.append(basename)
 	return " ".join(ret_string_arr)

@@ -10,11 +10,13 @@ var cwd_label: Label
 func _ready() -> void:
 	vfs = VFS.new()
 	shell = COSH.new(vfs)
+	COSHTestModule.new().install_module(shell)
+	
 	output = $ConsoleOutput/ConsoleOutputText
 	cmd_input = $ConsoleInput/ConsoleInputLine
 	cwd_label = $ConsoleInput/ConsoleCWD/CWDText
 	
-	cwd_label.text = " [%s@%s: %s]$ " % [shell.shell_user, shell.shell_machine, shell.get_cwd_string()]
+	cwd_label.text = " [%s@%s: %s]$ " % [shell.shell_user, shell.shell_machine, shell.cwd]
 
 
 func _run_command(input: String) -> void:
@@ -25,4 +27,4 @@ func _run_command(input: String) -> void:
 		shell.run_command("", [])
 	output.text = shell.output_buffer
 	cmd_input.text = ""
-	cwd_label.text = " [%s@%s: %s]$ " % [shell.shell_user, shell.shell_machine, shell.get_cwd_string()]
+	cwd_label.text = " [%s@%s: %s]$ " % [shell.shell_user, shell.shell_machine, shell.cwd]

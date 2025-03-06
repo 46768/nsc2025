@@ -24,23 +24,19 @@ func __cosh_cd(shell: COSH, args: PackedStringArray) -> String:
 	var path = args[0]
 	var new_cwd = shell.cwd
 	
-	if path == ".":
-		return ""
-	elif path == "..":
-		new_cwd = shell.attached_vfs.get_parent(shell.cwd)
-	elif path.begins_with("/"):
+	if path.begins_with("/"):
 		new_cwd = path
 	else:
-		new_cwd += ("" if shell.cwd.ends_with("/") else "/") + path
+		new_cwd = VFS.path_join(new_cwd, path)
+	new_cwd = VFS.resolve_path(new_cwd)
 	
-	var new_cwd_is_dir: bool = (shell.attached_vfs.get_block(new_cwd).type as VFS.FileType) == VFS.FileType.DIRECTORY
-	if shell.attached_vfs.block_exists(new_cwd) and new_cwd_is_dir:
-		shell.cwd = new_cwd
-		return ""
-	elif not new_cwd_is_dir:
-		return "cd: %s: Not a directory" % path
-	else:
+	if not shell.attached_vfs.block_exists(new_cwd):
 		return "cd: directory not found\n"
+	elif not shell.attached_vfs.is_dir(new_cwd):
+		return "cd: %s: Not a directory" % path
+	
+	shell.cwd = new_cwd
+	return ""
 
 
 func __cosh_echo(_shell: COSH, args: PackedStringArray):
@@ -62,10 +58,11 @@ func __cosh_mkdir(shell: COSH, args: PackedStringArray):
 	if path.begins_with("/"):
 		dir_path = path
 	else:
-		dir_path += ("" if shell.cwd.ends_with("/") else "/") + path
+		dir_path = VFS.path_join(shell.cwd, path)
+	dir_path = VFS.resolve_path(dir_path)
 	
 	var mkdir_res: VFS.RET_CODE = shell.attached_vfs.mkdir(dir_path)
-	if mkdir_res == shell.attached_vfs.RET_CODE.ERR:
+	if mkdir_res == VFS.RET_CODE.ERR:
 		return "mkdir: cannot create directory '%s': File exists\n" % path
 	else:
 		return ""
@@ -75,7 +72,8 @@ func __cosh_touch(shell: COSH, args: PackedStringArray):
 	if args.is_empty():
 		return "touch: missing file operand\n"
 	var path: String = args[0]
-	path = path if path.begins_with("/") else shell.cwd + ("" if shell.cwd.ends_with("/") else "/") + path
+	path = path if path.begins_with("/") else VFS.path_join(shell.cwd, path)
+	path = VFS.resolve_path(path)
 	if not shell.attached_vfs.block_exists(path):
 		shell.attached_vfs.write_file(path, "")
 	
@@ -90,10 +88,11 @@ func __cosh_rm(shell: COSH, args: PackedStringArray):
 	if "-r" in args:
 		flags = args[0]
 		path = args[1]
-	path = path if path.begins_with("/") else shell.cwd + ("" if shell.cwd.ends_with("/") else "/") + path
+	path = path if path.begins_with("/") else VFS.path_join(shell.cwd, path)
+	path = VFS.resolve_path(path)
 	if path == "/":
 		return "rm: [color=red]Error: Deleting / will cause irreversable damage to the file system[/color]\n"
-	var is_dir: bool = (shell.attached_vfs.get_block(path).type as VFS.FileType) == VFS.FileType.DIRECTORY
+	var is_dir: bool = shell.attached_vfs.is_dir(path)
 	if "r" not in flags and is_dir:
 		return "rm: cannot remove '%s': Is a directory" % path
 	
@@ -105,12 +104,13 @@ func __cosh_rm(shell: COSH, args: PackedStringArray):
 
 func __cosh_ls(shell: COSH, args: PackedStringArray):
 	var path: String = shell.cwd if args.is_empty() else args[0]
-	path = path if path.begins_with("/") else shell.cwd + ("" if shell.cwd.ends_with("/") else "/") + path
+	path = path if path.begins_with("/") else VFS.path_join(shell.cwd, path)
+	path = VFS.resolve_path(path)
 	var dir: Dictionary = shell.attached_vfs.get_block(path)
 	var ret_string_arr: PackedStringArray = PackedStringArray([])
 	for block in (dir.content as Dictionary).keys():
-		var basename: String = shell.attached_vfs.get_basename(block)
-		if (shell.attached_vfs.get_block(block).type as VFS.FileType) == VFS.FileType.DIRECTORY:
+		var basename: String = VFS.get_basename(block)
+		if shell.attached_vfs.is_dir(block):
 			ret_string_arr.append("[color=7fb4ca]%s[/color]" % basename)
 		else:
 			ret_string_arr.append(basename)

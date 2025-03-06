@@ -1,6 +1,7 @@
 class_name COSH
 extends Object
 
+signal cwd_changed(new_cwd: String)
 
 var attached_vfs: VFS
 var cwd: String
@@ -38,6 +39,7 @@ func delete_command(cmd: String) -> void:
 
 
 func run_command(cmd: String, arg: PackedStringArray) -> void:
+	var prev_cwd = cwd
 	var appending_string: String = "[%s@%s:%s]$ %s\n" % [
 		shell_user,
 		shell_machine,
@@ -51,6 +53,8 @@ func run_command(cmd: String, arg: PackedStringArray) -> void:
 	else:
 		appending_string += "%s: command not found\n" % cmd
 	output_buffer += appending_string + "\n"
+	if prev_cwd != cwd:
+		cwd_changed.emit(cwd)
 
 
 func add_module_registry(module_name: String):

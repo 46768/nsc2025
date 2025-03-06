@@ -1,6 +1,8 @@
 class_name VFS
 extends Object
 
+signal data_changed
+var data_changed_connected: Array
 
 enum RET_CODE { SUCCESS, ERR }
 enum FileType { FILE, DIRECTORY }
@@ -9,27 +11,52 @@ var data: Dictionary
 
 
 func _init(init_data = {}) -> void:
-	data = init_data
-	data["/"] = _create_block(VFS.FileType.DIRECTORY)
+	data = init_data.duplicate(true)
+	data_changed_connected = []
+	if not block_exists("/"):
+		data["/"] = _create_block(VFS.FileType.DIRECTORY)
 
 
-func _create_block(ftype: FileType) -> Dictionary:
+static func _create_block(ftype: FileType) -> Dictionary:
 	return {
 		type = ftype,
 		content = "" if ftype == FileType.FILE else {}
 	}
 
 
-func get_parent(path: String) -> String:
+static func path_join(path1: String, path2: String) -> String:
+	return path1 + ("" if path1.ends_with("/") else "/") + path2
+
+
+static func get_parent(path: String) -> String:
 	return "/"+"/".join(path.split("/", false).slice(0, -1))
 
 
-func get_basename(path: String) -> String:
+static func get_basename(path: String) -> String:
 	return path.split("/", false)[-1]
+
+
+static func resolve_path(path: String) -> String:
+	var blocks: PackedStringArray = PackedStringArray([])
+	var path_blocks: PackedStringArray = path.split("/", false)
+	for block in path_blocks:
+		if block == ".":
+			pass
+		elif block == "..":
+			blocks = blocks.slice(0, -1)
+		else:
+			blocks.append(block)
+	return "/" + "/".join(blocks)
 
 
 func block_exists(path: String) -> bool:
 	return data.has(path)
+
+
+func is_dir(path: String) -> bool:
+	if not block_exists(path):
+		return false
+	return (get_block(path).type as VFS.FileType) == VFS.FileType.DIRECTORY
 
 
 func get_block(path: String) -> Dictionary:
@@ -50,6 +77,8 @@ func delete_block(path: String) -> RET_CODE:
 			bfs_queue.append_array((current_block.content as Dictionary).keys())
 		data.erase(current_path)
 	(get_block(get_parent(path)).content as Dictionary).erase(path)
+	data_changed.emit()
+	
 	return RET_CODE.SUCCESS
 
 
@@ -65,6 +94,7 @@ func mkdir(path: String) -> RET_CODE:
 	
 	data[path] = _create_block(FileType.DIRECTORY)
 	parent.content[path] = true # Unused value to add key to dict
+	data_changed.emit()
 	
 	return RET_CODE.SUCCESS
 
@@ -83,6 +113,7 @@ func write_file(path: String, content: String) -> RET_CODE:
 	if (file.type as FileType) == FileType.DIRECTORY:
 		return RET_CODE.ERR
 	file.content = content
+	data_changed.emit()
 	
 	return RET_CODE.SUCCESS
 

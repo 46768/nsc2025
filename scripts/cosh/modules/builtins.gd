@@ -12,6 +12,7 @@ func _init() -> void:
 		"touch": __cosh_touch,
 		"rm": __cosh_rm,
 		"ls": __cosh_ls,
+		"cat": __cosh_cat,
 	}
 
 
@@ -115,3 +116,19 @@ func __cosh_ls(shell: COSH, args: PackedStringArray):
 		else:
 			ret_string_arr.append(basename)
 	return " ".join(ret_string_arr) + ("" if ret_string_arr.is_empty() else "\n")
+
+
+func __cosh_cat(shell: COSH, args: PackedStringArray):
+	if args.is_empty():
+		return "cat: missing path\n"
+	var path: String = args[0]
+	path = path if path.begins_with("/") else VFS.path_join(shell.cwd, path)
+	var abs_path = path
+	path = VFS.resolve_path(path)
+	if not shell.attached_vfs.block_exists(path):
+		return "cat: %s: No such file\n" % abs_path
+	var is_dir: bool = shell.attached_vfs.is_dir(path)
+
+	if is_dir:
+		return "cat: '%s': Is a directory\n" % abs_path
+	return shell.attached_vfs.read_file(path) + "\n"

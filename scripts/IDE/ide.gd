@@ -1,8 +1,8 @@
 extends Control
 
+
 ## Emit once after the IDE is initialized
 signal ide_initialized(ide_vfs: VFS)
-signal ide_vfs_changed
 
 @export_range(49152, 65535) var server_port: int = 56440
 @export_range(0, 100) var margin: int = 10
@@ -42,4 +42,3 @@ func _ready() -> void:
 	
 	get_tree().get_root().size_changed.connect(resize)
 	ide_initialized.emit(vfs)
-	$Margin/VerticalSplit/EditorSplit/Console.shell.run_command("mkdir", PackedStringArray(["test"]))

@@ -31,10 +31,6 @@ func _run_command(input: String) -> void:
 	cwd_label.text = " [%s@%s: %s]$ " % [shell.shell_user, shell.shell_machine, shell.cwd]
 
 
-func _run_command_(new_text: String) -> void:
-	pass # Replace with function body.
-
-
 func _on_ide_initialized(ide_vfs: VFS) -> void:
 	vfs = ide_vfs
 	shell = COSH.new(vfs)
@@ -43,3 +39,7 @@ func _on_ide_initialized(ide_vfs: VFS) -> void:
 	shell.cwd_changed.connect(cwd_changed.emit)
 	cwd_label.text = " [%s@%s: %s]$ " % [shell.shell_user, shell.shell_machine, shell.cwd]
 	ide_initialized = true
+
+
+func _on_editor_initialized(editor_mgr: EditorManager) -> void:
+	COSHEditor.new(editor_mgr).install_module(shell)

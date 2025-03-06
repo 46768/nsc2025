@@ -135,8 +135,7 @@ size_flags_horizontal = 3
 caret_blink = true
 
 [connection signal="ide_initialized" from="." to="Margin/VerticalSplit/SidebarSplit/Sidebar/File Explorer" method="_on_ide_initialized"]
+[connection signal="ide_initialized" from="." to="Margin/VerticalSplit/EditorSplit/Editor" method="_on_ide_initialized"]
 [connection signal="ide_initialized" from="." to="Margin/VerticalSplit/EditorSplit/Console" method="_on_ide_initialized"]
-[connection signal="ide_vfs_changed" from="." to="Margin/VerticalSplit/SidebarSplit/Sidebar/File Explorer" method="_on_vfs_modified"]
-[connection signal="code_completion_requested" from="Margin/VerticalSplit/EditorSplit/Editor" to="Margin/VerticalSplit/EditorSplit/Editor" method="_handle_autocomplete"]
-[connection signal="text_changed" from="Margin/VerticalSplit/EditorSplit/Editor" to="Margin/VerticalSplit/EditorSplit/Editor" method="_handle_autocomplete"]
+[connection signal="editor_initialized" from="Margin/VerticalSplit/EditorSplit/Editor" to="Margin/VerticalSplit/EditorSplit/Console" method="_on_editor_initialized"]
 [connection signal="text_submitted" from="Margin/VerticalSplit/EditorSplit/Console/ConsoleInput/ConsoleInputLine" to="Margin/VerticalSplit/EditorSplit/Console" method="_run_command"]

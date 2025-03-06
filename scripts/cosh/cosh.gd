@@ -4,28 +4,20 @@ extends Object
 signal cwd_changed(new_cwd: String)
 
 var attached_vfs: VFS
-var cwd: String
+var cwd: String = "/"
 
-var shell_user: String
-var shell_machine: String
+var shell_user: String = "cosh"
+var shell_machine: String = "cosine"
 
-var module_reg: Dictionary
-var command_reg: Dictionary
+var module_reg: Dictionary = {}
+var command_reg: Dictionary = {}
+var signal_reg: Dictionary = {}
 
-var output_buffer: String
+var output_buffer: String = ""
 
 
 func _init(vfs: VFS) -> void:
 	attached_vfs = vfs
-	cwd = "/"
-	
-	shell_user = "cosh"
-	shell_machine = "cosine"
-	
-	module_reg = {}
-	command_reg = {}
-	
-	output_buffer = ""
 	
 	COSHBuiltins.new().install_module(self)
 
@@ -57,9 +49,17 @@ func run_command(cmd: String, arg: PackedStringArray) -> void:
 		cwd_changed.emit(cwd)
 
 
-func add_module_registry(module_name: String):
+func add_module_registry(module_name: String) -> void:
 	module_reg[module_name] = true
 
 
-func remove_module_registry(module_name: String):
+func remove_module_registry(module_name: String) -> void:
 	module_reg.erase(module_name)
+
+
+func add_signal_registry(sig_name: String, sig: Signal) -> void:
+	signal_reg[sig_name] = sig
+
+
+func remove_signal_registry(sig_name: String) -> void:
+	signal_reg.erase(sig_name)

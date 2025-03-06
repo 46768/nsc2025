@@ -1,8 +1,14 @@
-# Github actions
-- Added workflow to check for merging branch's existence of a CHANGELOG.md
+# IDE
+## Shell
+- Added a shell
+- Added shell modules
+- Added shell module signals
+- Added builtin shell module
+- Added editor shell module
 
-# Python Binding
-- Implemented python environment unpacking from python-packed.tar.gz archive
-- Implemented binary self-healing of the conda environment
-    - Only detect missing binary, does not include tampering, or checks of other files
-- Implemented function to run python script using conda environment provided python3 binary
+## Editor
+- Implemented VFS file loading
+- Implemented buffer saving
+
+# Core
+- Implemented a virtual file system

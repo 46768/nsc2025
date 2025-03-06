@@ -40,13 +40,9 @@ class VFSTree:
 					item_dict[current_path].set_icon(0, FILE_TEXTURE)
 
 
-var tree_view: Tree
+@onready var tree_view: Tree =  $FileTree
 var vfstree: VFSTree
 var ide_initialized: bool = false
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	tree_view = $FileTree
 
 
 func _on_ide_initialized(ide_vfs: VFS) -> void:

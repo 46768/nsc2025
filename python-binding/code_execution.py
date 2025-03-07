@@ -2,6 +2,7 @@ import os
 import subprocess
 import json
 import packet
+import vfs
 
 
 def handle_vfs_execution_pkt(pkt, interpreter, vfs_mgr):
@@ -10,7 +11,7 @@ def handle_vfs_execution_pkt(pkt, interpreter, vfs_mgr):
     entry_point_file = str(pkt_content["entryPoint"])
 
     vfs_path = vfs_mgr.write_vfs(vfs_json)
-    entry_point_path = os.path.join(vfs_path, entry_point_file)
+    entry_point_path = vfs.vfs_path_join(vfs_path, entry_point_file)
 
     result = execute_python_src(interpreter, entry_point_path)
 

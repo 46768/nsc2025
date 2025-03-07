@@ -3,29 +3,36 @@ import sys
 import json
 import packet
 
+import vfs
+import code_execution
+
 import asyncio
 from websockets.asyncio.server import serve
 
 
 def build_reverse_proxy(interpreter, data_path):
+    vfs_mgr = vfs.VFSMgr(data_path)
+
     async def reverse_proxy(websocket):
-        def send_pkt(x): websocket.send(json.dumps(x))
+        def send_pkt(x): await websocket.send(json.dumps(x))
         async for pkt in websocket:
             pkt_json = json.loads(pkt)
             pkt_hash = str(pkt_json["hash"])
 
             # Packet verifying to ensure no data corruption
             if pkt_hash != packet.hash_packet(pkt_json):
-                await send_pkt(packet.pkt_err("hash", pkt_hash))
+                send_pkt(packet.pkt_err("hash", pkt_hash))
                 continue
 
             # Send received confirmation
-            await send_pkt(packet.pkt_confirm(pkt))
+            send_pkt(packet.pkt_confirm(pkt))
 
             packet_type = str(pkt_json["type"])
             match packet_type:
                 case "ces:exec":
-                    pass
+                    code_execution.handle_vfs_execution_pkt(
+                            pkt_json, interpreter, vfs_mgr
+                    )
                 case _:
                     # Send type error for unhandled pkt type
                     send_pkt(packet.pkt_err("type", pkt_hash))

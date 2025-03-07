@@ -1,18 +1,30 @@
 import os
 import subprocess
-import vfs
+import json
+import packet
 
 
-class CodeExecutioner:
-    def __init__(self, interpreter, data_path):
-        self.interpreter = interpreter
-        self.data_path = data_path
+def handle_vfs_execution_pkt(pkt, interpreter, vfs_mgr):
+    pkt_content = json.loads(str(pkt["content"]))
+    vfs_json = json.loads(str(pkt_content["vfs"]))
+    entry_point_file = str(pkt_content["entryPoint"])
 
-    def execute_vfs(self, vfs_json, entry_point):
-        write_path = os.path.join(self.data_path, str(vfs_json["name"]))
-        entry_point_path = os.path.join(write_path, entry_point)
-        vfs.write_vfs(vfs_json, write_path)
+    vfs_path = vfs_mgr.write_vfs(vfs_json)
+    entry_point_path = os.path.join(vfs_path, entry_point_file)
 
-        out = subprocess.check_output([self.interpreter, entry_point_path])
+    result = execute_python_src(interpreter, entry_point_path)
 
-        return out
+    return packet.build_packet("ces:ret", json.dumps({
+            "stdout": result[0],
+            "stderr": result[1],
+        }))
+
+
+def execute_python_src(interpreter, entry_point):
+    result = subprocess.run(
+            [interpreter, entry_point],
+            capture_output=True,
+            text=True
+    )
+
+    return (result.stdout, result.stderr)

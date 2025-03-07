@@ -21,3 +21,5 @@ class VFSMgr:
                 with open(abs_path, 'wb') as f:
                     f.write(block["content"])
                     f.close()
+
+        return vfs_path

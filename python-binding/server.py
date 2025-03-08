@@ -27,13 +27,17 @@ def build_reverse_proxy(interpreter, data_path):
             # Send received confirmation
             await send_pkt(packet.pkt_confirm(pkt_json))
 
-            packet_type = str(pkt_json["type"])
-            match packet_type:
+            pkt_type = str(pkt_json["type"])
+            match pkt_type:
                 case "ces:exec":
                     ret_pkt = code_execution.handle_vfs_execution_pkt(
                             pkt_json, interpreter, vfs_mgr
                     )
                     await send_pkt(ret_pkt)
+                case "rpx:end":
+                    pending = asyncio.all_tasks()
+                    for task in pending:
+                        task.cancel()
                 case _:
                     # Send type error for unhandled pkt type
                     await send_pkt(packet.pkt_err("type", pkt_hash))
@@ -45,7 +49,13 @@ async def server(port, interpreter, data_path):
     async with serve(
             build_reverse_proxy(interpreter, data_path), "localhost", port
             ) as server:
-        await server.serve_forever()
+        try:
+            global serve_task
+            serve_task = server.serve_forever()
+            await serve_task
+        except asyncio.exceptions.CancelledError:
+            print("Closed server")
+            pass
 
 
 if __name__ == "__main__":

@@ -55,45 +55,12 @@ vfs_string = json.dumps({
 entry_point = "/main.py"
 
 
-async def send_pkt_ok():
+async def send_pkt_close():
     async with connect("ws://localhost:56440") as websocket:
-        pkt = build_packet("ces:exec", json.dumps({
-            "vfs": vfs_string,
-            "entryPoint": entry_point,
-        }))
+        pkt = build_packet("rpx:end", "")
         await websocket.send(json.dumps(pkt))
         message = await websocket.recv()
         print(message)
-        message = await websocket.recv()
-        print(message)
-
-
-async def send_pkt_hash_err():
-    async with connect("ws://localhost:56440") as websocket:
-        pkt = build_packet("ces:exec", json.dumps({
-            "vfs": vfs_string,
-            "entryPoint": entry_point,
-        }))
-        pkt["hash"] = "invalidhash"
-        await websocket.send(json.dumps(pkt))
-        message = await websocket.recv()
-        print(message)
-
-
-async def send_pkt_type_err():
-    async with connect("ws://localhost:56440") as websocket:
-        pkt = build_packet("ces:nonexist", json.dumps({
-            "vfs": vfs_string,
-            "entryPoint": entry_point,
-        }))
-        await websocket.send(json.dumps(pkt))
-        message = await websocket.recv()
-        print(message)
-        message = await websocket.recv()
-        print(message)
-
 
 if __name__ == "__main__":
-    asyncio.run(send_pkt_ok())
-    asyncio.run(send_pkt_hash_err())
-    asyncio.run(send_pkt_type_err())
+    asyncio.run(send_pkt_close())

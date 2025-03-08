@@ -10,3 +10,6 @@ python-packed.tar.gz
 
 # Pycache
 __pycache__
+
+# Log files
+*.log

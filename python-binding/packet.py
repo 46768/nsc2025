@@ -1,5 +1,8 @@
 import hashlib
 import time
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def hash_packet(packet) -> str:
@@ -24,6 +27,21 @@ def build_packet(pkt_type, pkt_content):
     hash_str = hash_packet(packet)
     packet["hash"] = hash_str
     return packet
+
+
+def log_packet_issue(issue_str, pkt_json, computed_hash=None):
+    logger.warning("""
+Found unknown type, packet data:
+    packet hash: %s
+    computed hash: %s
+    packet time: %s
+    packet type: %s
+    packet content: %s""",
+                   str(pkt_json["hash"]),
+                   computed_hash or "N/A",
+                   str(pkt_json["time"]),
+                   str(pkt_json["type"]),
+                   str(pkt_json["content"]))
 
 
 def pkt_err(err_type, pkt_content):

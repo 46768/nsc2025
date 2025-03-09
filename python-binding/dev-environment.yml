@@ -1,0 +1,5 @@
+name: nsc-2025-dev
+dependencies:
+  - python=3.13
+  - conda-forge::websockets=15.0
+  - conda-forge::sphinx=8.2.3

@@ -1,3 +1,6 @@
+"""
+Packet utilites module
+"""
 import hashlib
 import time
 import logging
@@ -6,6 +9,15 @@ logger = logging.getLogger(__name__)
 
 
 def hash_packet(packet) -> str:
+    """
+    Compute the hash of a packet
+
+    Args:
+        packet (dict): The packet to compute the hash of
+
+    Returns:
+        (str): The sha256 hash of the packet
+    """
     pkt_time = packet["time"]
     pkt_type = packet["type"]
     pkt_content = packet["content"]
@@ -19,6 +31,16 @@ def hash_packet(packet) -> str:
 
 
 def build_packet(pkt_type, pkt_content):
+    """
+    Build a packet with given packet type and content
+
+    Args:
+        pkt_type (str): The type of the packet
+        pkt_content (str): String of the packet content
+
+    Returns:
+        (dict): A packet with the given type and content
+    """
     packet = {
         "time": str(time.time()),
         "type": str(pkt_type),
@@ -30,6 +52,14 @@ def build_packet(pkt_type, pkt_content):
 
 
 def log_packet_issue(issue_str, pkt_json, computed_hash=None):
+    """
+    Logs an issue with the given packet
+
+    Args:
+        issue_str (str): The issue with the packet
+        pkt_json (dict): The packet data
+        computed_hash (str): The computed hash of the packet (optional)
+    """
     logger.warning("""
 Found unknown type, packet data:
     packet hash: %s
@@ -45,8 +75,27 @@ Found unknown type, packet data:
 
 
 def pkt_err(err_type, pkt_content):
-    return build_packet("err:"+err_type, pkt_content)
+    """
+    Build an error packet with the given error type and content
+
+    Args:
+        err_type (str): Type of the error
+        pkt_content (str): String of the packet content
+
+    Returns:
+        (dict): The error packet
+    """
+    return build_packet("err:"+err_type, str(pkt_content))
 
 
 def pkt_confirm(pkt):
+    """
+    Build a received confirmation packet with the given packet hash as content
+
+    Args:
+        pkt (dict): Packet to confirm
+
+    Returns:
+        (dict) The confirmation packet
+    """
     return build_packet("pkt:recv", str(pkt["hash"]))

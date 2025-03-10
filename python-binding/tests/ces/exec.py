@@ -67,7 +67,7 @@ vfs_string_forbidden = json.dumps({
     },
     "/forbidden.py": {
         "type": 0,
-        "content": "import os;print(os.environ);eval('1+1');exec('x=1');__import__('subprocess')"
+        "content": "import os;print(os.environ);eval('1+1');exec('x=1');__import__('subprocess');x=__import__;x('os');eval=1"
     },
 })
 entry_point = "/main.py"

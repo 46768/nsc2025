@@ -3,6 +3,16 @@ AST parsing for code security when running a script
 """
 import ast
 import yaml
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+def log_ast_issue(name, issue_dict):
+    logger.warning("""
+Error with %s AST check:
+    %s""", name, issue_dict)
+    pass
 
 
 class Analyzer(ast.NodeVisitor):
@@ -16,6 +26,7 @@ class Analyzer(ast.NodeVisitor):
         self.visit(tree)
         for key, item in self.stats.items():
             if item:
+                log_ast_issue(self.name, err_dict)
                 return True
             else:
                 # Returns True if already have error, otherwise returns False
@@ -46,6 +57,16 @@ class IllegalNodeAnalyzer(Analyzer):
         self.stats.setdefault("function", [])
         if node.func.id in self.illegal_nodes["function"]:
             self.stats["function"].append(node.func.id)
+        self.generic_visit(node)
+
+    def visit_Assign(self, node):
+        self.stats.setdefault("function_alias", [])
+        if not isinstance(node.value, ast.Constant):
+            if node.value.id in self.illegal_nodes["function"]:
+                self.stats["function_alias"].append(node.value.id)
+        for target in node.targets:
+            if target.id in self.illegal_nodes["function"]:
+                self.stats["function_alias"].append(target.id)
         self.generic_visit(node)
 
 

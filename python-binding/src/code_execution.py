@@ -17,6 +17,7 @@ def check_vfs_safety(vfs, ast_checker):
     for file_name, file_data in vfs.items():
         # Type 0 is file type
         if file_name.endswith(".py") and file_data["type"] == 0:
+            logger.info("Checking file: %s", file_name)
             (ast_have_err, ast_res) = ast_checker.check_source(
                     file_data["content"])
             have_err = have_err or ast_have_err

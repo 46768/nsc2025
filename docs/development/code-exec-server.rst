@@ -12,8 +12,8 @@ to ensure python code are executed correctly.
 Functions
 =========
 
-.. autofunction:: server.cancel_all_tasks
-.. autofunction:: server.build_reverse_proxy
+.. automodule:: server
+    :members:
 
 ======
 Packet

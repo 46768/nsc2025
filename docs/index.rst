@@ -1,8 +1,3 @@
-.. Python Cyberlab NSC 2025 documentation master file, created by
-   sphinx-quickstart on Sun Mar  9 03:36:59 2025.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Python Cyberlab NSC 2025
 ========================
 

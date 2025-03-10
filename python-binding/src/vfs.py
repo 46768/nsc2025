@@ -24,7 +24,17 @@ def vfs_path_join(vfs_path, vfs_rel_path):
 
 
 class VFSMgr:
+    """
+    A VFS disk manager for managing and writing vfs to disk
+    """
+
     def __init__(self, data_path):
+        """
+        Initialize a manager with the given data directory path
+
+        Args:
+            data_path (str): absolute path to the directory
+        """
         logger.info(f"""
 Initializing VFS Manager:
     vfs data path: {data_path}""")
@@ -57,12 +67,12 @@ Writing VFS:
             current_path = vfs_queue.pop(0)
             abs_path = vfs_path_join(vfs_path, current_path)
             block = vfs[current_path]
-            if block["type"] == 0:  # Directory type
+            if block["type"] == 1:  # Directory type
                 vfs_queue.extend(block["content"].keys())
                 if not os.path.exists(abs_path):
                     logger.info("Creating directory: %s", abs_path)
                     os.mkdir(abs_path)
-            elif block["type"] == 1:  # File type
+            elif block["type"] == 0:  # File type
                 logger.info("Writing to file: %s", abs_path)
                 with open(abs_path, 'wb') as f:
                     f.write(bytes(block["content"], "ascii"))

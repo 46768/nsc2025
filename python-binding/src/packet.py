@@ -61,12 +61,13 @@ def log_packet_issue(issue_str, pkt_json, computed_hash=None):
         computed_hash (str): The computed hash of the packet (optional)
     """
     logger.warning("""
-Found unknown type, packet data:
+Found %s, packet data:
     packet hash: %s
     computed hash: %s
     packet time: %s
     packet type: %s
     packet content: %s""",
+                   issue_str,
                    str(pkt_json["hash"]),
                    computed_hash or "N/A",
                    str(pkt_json["time"]),

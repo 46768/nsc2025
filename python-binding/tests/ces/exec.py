@@ -49,7 +49,7 @@ vfs_string = json.dumps({
     },
     "/main.py": {
         "type": 0,
-        "content": "import sys;;;print('hello world!');print('hello error!',file=sys.stderr)"
+        "content": "import sys;print('hello world!');print('hello error!',file=sys.stderr)"
     },
 })
 vfs_string_forbidden = json.dumps({
@@ -67,7 +67,7 @@ vfs_string_forbidden = json.dumps({
     },
     "/forbidden.py": {
         "type": 0,
-        "content": "import os;print(os.environ)"
+        "content": "import os;print(os.environ);eval('1+1');exec('x=1');__import__('subprocess')"
     },
 })
 entry_point = "/main.py"

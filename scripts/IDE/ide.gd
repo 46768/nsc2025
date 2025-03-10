@@ -10,6 +10,7 @@ func _ready() -> void:
 		str(server_port),
 		ProjectSettings.globalize_path(PythonBinding.PYTHON3_BIN_PATH),
 	])
+	print("Hello!".sha256_text())
 	
 	for i in res:
 		print(i)

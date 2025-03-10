@@ -12,7 +12,6 @@ def log_ast_issue(name, issue_dict):
     logger.warning("""
 Error with %s AST check:
     %s""", name, issue_dict)
-    pass
 
 
 class Analyzer(ast.NodeVisitor):

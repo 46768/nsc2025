@@ -3,6 +3,7 @@ Packet reverse proxy server
 """
 import sys
 import os
+import atexit
 
 import json
 import packet
@@ -13,19 +14,14 @@ import ast_sec
 
 import logging
 
-import asyncio
-from websockets.asyncio.server import serve
+from http import server
+import threading
 
 logger = logging.getLogger(__name__)
 
 
-def cancel_all_tasks():
-    pending = asyncio.all_tasks()
-    for task in pending:
-        if not task.done():
-            logger.info("Canceling task '%s'", task.get_name())
-            task.cancel()
-    logger.info("Canceled all tasks")
+def exit_handler():
+    logger.info("Server process ending")
 
 
 def build_reverse_proxy(interpreter, data_path, ast_blacklist):
@@ -48,30 +44,42 @@ def build_reverse_proxy(interpreter, data_path, ast_blacklist):
     vfs_mgr = vfs.VFSMgr(vfs_cache_path)
     ast_checker = ast_sec.ASTChecker(ast_blacklist)
 
-    async def reverse_proxy(websocket):
+    class reverse_proxy(server.BaseHTTPRequestHandler):
         # websocket.send alias for sending packets
-        async def send_pkt(x): await websocket.send(json.dumps(x))
+        def send_pkt(self, x, code=200):
+            self.send_response(code)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps(x).encode('utf-8'))
+            self.wfile.flush()
 
         # Route packet to the target handler by type
-        async def route_packet(pkt_json):
+        def route_packet(self, pkt_json):
             pkt_hash = str(pkt_json["hash"])
             pkt_type = str(pkt_json["type"])
             match pkt_type:
                 case "ces:exec":  # Request code execution
                     ret_pkt = code_execution.handle_vfs_execution_pkt(
                             pkt_json, interpreter, vfs_mgr, ast_checker)
-                    await send_pkt(ret_pkt)
+                    self.send_pkt(ret_pkt)
+                case "rpx:ping":
+                    self.send_pkt(packet.build_packet("rpx:pong", pkt_hash))
                 case "rpx:end":  # Request to close the server
                     logger.info("Received stop server packet, stopping server")
-                    cancel_all_tasks()
+                    self.send_pkt(packet.build_packet("rpx:end", "goodbye"))
+                    threading.Thread(target=self.server.shutdown,
+                                     daemon=True).start()
+                    # self.server.shutdown()
                 case _:  # Send type error for unhandled pkt type
                     packet.log_packet_issue("invalid type", pkt_json)
-                    await send_pkt(
-                            packet.pkt_err("type", pkt_hash+":"+pkt_type))
+                    self.send_pkt(
+                            packet.pkt_err("type", pkt_hash+":"+pkt_type), 404)
 
         # Main loop
-        async for pkt_str in websocket:
-            pkt_json = json.loads(pkt_str)
+        def do_POST(self):
+            content_length = int(self.headers.get("Content-Length", 0))
+            post_data = self.rfile.read(content_length).decode('utf-8')
+            pkt_json = json.loads(post_data)
             pkt_hash = str(pkt_json["hash"])
 
             # Packet verifying to ensure no data corruption
@@ -79,18 +87,15 @@ def build_reverse_proxy(interpreter, data_path, ast_blacklist):
             if pkt_hash != computed_hash:
                 packet.log_packet_issue(
                         "mismatched hash", pkt_json, computed_hash)
-                await send_pkt(packet.pkt_err("hash", pkt_hash))
-                continue
+                self.send_pkt(packet.pkt_err("hash", pkt_hash))
+                return
 
-            # Send received confirmation
-            await send_pkt(packet.pkt_confirm(pkt_json))
-
-            await route_packet(pkt_json)
+            self.route_packet(pkt_json)
 
     return reverse_proxy
 
 
-async def server(port, interpreter, data_path, ast_blacklist):
+def start_server(port, interpreter, data_path, ast_blacklist):
     logger.info("""
 Starting server, server configurations:
     port: %s
@@ -100,16 +105,17 @@ Starting server, server configurations:
                 interpreter,
                 data_path)
 
-    async with serve(
-            build_reverse_proxy(interpreter,
-                                data_path,
-                                ast_blacklist), "localhost", port
-            ) as server:
-        try:
-            logger.info("Started server")
-            await server.serve_forever()
-        except asyncio.exceptions.CancelledError:
-            logger.info("Stopping server")
+    logger.info("Started server")
+    server_address = ("localhost", int(port))
+    servr = server.HTTPServer(server_address,
+                              build_reverse_proxy(interpreter,
+                                                  data_path,
+                                                  ast_blacklist))
+    try:
+        servr.serve_forever()
+    finally:
+        servr.server_close()
+        logger.info("Stopping server")
 
 
 if __name__ == "__main__":
@@ -133,8 +139,9 @@ if __name__ == "__main__":
             + "%(message)s",
             encoding="ascii",
             level=logging.INFO)
+    atexit.register(exit_handler)
 
-    asyncio.run(server(port,
-                       python_interpreter_path,
-                       data_path,
-                       ast_blacklist_path))
+    start_server(port,
+                 python_interpreter_path,
+                 data_path,
+                 ast_blacklist_path)

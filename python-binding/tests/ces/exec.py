@@ -1,7 +1,7 @@
 import json
 
-import asyncio
-from websockets.asyncio.client import connect
+from http import client
+import urllib
 
 import hashlib
 import time
@@ -73,59 +73,65 @@ vfs_string_forbidden = json.dumps({
 entry_point = "/main.py"
 
 
-async def send_pkt_ok():
-    async with connect("ws://localhost:56440") as websocket:
-        pkt = build_packet("ces:exec", json.dumps({
-            "vfs": vfs_string,
-            "entryPoint": entry_point,
-        }))
-        await websocket.send(json.dumps(pkt))
-        message = await websocket.recv()
-        print(message)
-        message = await websocket.recv()
-        print(message)
+def test_ok():
+    pkt = build_packet("ces:exec", json.dumps({
+        "vfs": vfs_string, "entryPoint": entry_point}))
+    content = json.dumps(pkt)
+    headers = {"Content-type": "application/json",
+               "Accept": "application/json"}
+    conn = client.HTTPConnection("localhost:56440")
+    conn.request("POST", "", content, headers)
+    respose = conn.getresponse()
+    print(respose.status, respose.reason)
+    print(respose.read())
+    conn.close()
 
 
-async def send_pkt_hash_err():
-    async with connect("ws://localhost:56440") as websocket:
-        pkt = build_packet("ces:exec", json.dumps({
-            "vfs": vfs_string,
-            "entryPoint": entry_point,
-        }))
-        pkt["time"] = str(float(pkt["time"])+0.000001)
-        await websocket.send(json.dumps(pkt))
-        message = await websocket.recv()
-        print(message)
+def test_hash_err():
+    pkt = build_packet("ces:exec", json.dumps({
+        "vfs": vfs_string, "entryPoint": entry_point}))
+    pkt["time"] = str(float(pkt["time"])+0.00001)
+    content = json.dumps(pkt)
+    headers = {"Content-type": "application/json",
+               "Accept": "application/json"}
+    conn = client.HTTPConnection("localhost:56440")
+    conn.request("POST", "", content, headers)
+    respose = conn.getresponse()
+    print(respose.status, respose.reason)
+    print(respose.read())
+    conn.close()
 
 
-async def send_pkt_type_err():
-    async with connect("ws://localhost:56440") as websocket:
-        pkt = build_packet("ces:nonexist", json.dumps({
-            "vfs": vfs_string,
-            "entryPoint": entry_point,
-        }))
-        await websocket.send(json.dumps(pkt))
-        message = await websocket.recv()
-        print(message)
-        message = await websocket.recv()
-        print(message)
+def test_type_err():
+    pkt = build_packet("ces:nonexist", json.dumps({
+        "vfs": vfs_string, "entryPoint": entry_point}))
+    content = json.dumps(pkt)
+    headers = {"Content-type": "application/json",
+               "Accept": "application/json"}
+    conn = client.HTTPConnection("localhost:56440")
+    conn.request("POST", "", content, headers)
+    respose = conn.getresponse()
+    print(respose.status, respose.reason)
+    print(respose.read())
+    conn.close()
 
 
-async def send_pkt_type_forbid():
-    async with connect("ws://localhost:56440") as websocket:
-        pkt = build_packet("ces:exec", json.dumps({
-            "vfs": vfs_string_forbidden,
-            "entryPoint": entry_point,
-        }))
-        await websocket.send(json.dumps(pkt))
-        message = await websocket.recv()
-        print(message)
-        message = await websocket.recv()
-        print(message)
+def test_forbid():
+    pkt = build_packet("ces:exec", json.dumps({
+        "vfs": vfs_string_forbidden, "entryPoint": entry_point}))
+    content = json.dumps(pkt)
+    headers = {"Content-type": "application/json",
+               "Accept": "application/json"}
+    conn = client.HTTPConnection("localhost:56440")
+    conn.request("POST", "", content, headers)
+    respose = conn.getresponse()
+    print(respose.status, respose.reason)
+    print(respose.read())
+    conn.close()
 
 
 if __name__ == "__main__":
-    asyncio.run(send_pkt_ok())
-    asyncio.run(send_pkt_hash_err())
-    asyncio.run(send_pkt_type_err())
-    asyncio.run(send_pkt_type_forbid())
+    test_ok()
+    test_hash_err()
+    test_type_err()
+    test_forbid()

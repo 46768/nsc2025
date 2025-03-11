@@ -6,30 +6,44 @@ func _ready() -> void:
 
 
 func hash_packet(packet: Dictionary) -> String:
-	var base_str = (str(packet["time"])
-				+ str(packet["type"])
+	var base_str = (str(packet["headers"]["p-time"])
+				+ str(packet["headers"]["p-type"])
 				+ str(packet["content"]))
 	return base_str.sha256_text()
 
 
-func build_packet(type: String, content: String) -> Dictionary:
+func build_packet(type: String, content: Dictionary) -> Dictionary:
 	var packet = {
-		"time": str(Time.get_unix_time_from_system()),
-		"type": type,
-		"content": content,
+		"headers": {
+			"p-time": str(Time.get_unix_time_from_system()),
+			"p-type": type,
+		},
+		"content": JSON.stringify(content),
 	}
-	packet["hash"] = hash_packet(packet)
+	packet["headers"]["p-hash"] = hash_packet(packet)
+	packet["headers"]["content-length"] = len(packet["content"])
 	return packet
 
 
-func format_packet_http(pkt: Dictionary) -> Dictionary:
+func decode_packet(headers: PackedStringArray, content: String) -> Dictionary:
+	var time_header: String = "pkt:404"
+	var type_header: String = "pkt:404"
+	var hash_header: String = "pkt:404"
+	
+	for header in headers:
+		if header.begins_with("p-time"):
+			time_header = header
+		elif header.begins_with("p-type"):
+			type_header = header
+		elif header.begins_with("p-hash"):
+			hash_header = header
+	
 	var http_pkt: Dictionary = {
-		"headers": PackedStringArray([
-			"Packet-Time: %s" % pkt["time"],
-			"Packet-Type: %s" % pkt["type"],
-			"Packet-Hash: %s" % pkt["hash"],
-			"Content-Type: application/json",
-		]),
-		"body": pkt["content"]
+		"headers": {
+			"p-time": time_header.split(": ")[-1],
+			"p-type": type_header.split(": ")[-1],
+			"p-hash": hash_header.split(": ")[-1],
+		},
+		"content": content
 	}
 	return http_pkt

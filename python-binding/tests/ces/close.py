@@ -7,34 +7,32 @@ import time
 
 
 def hash_packet(packet) -> str:
-    pkt_time = packet["time"]
-    pkt_type = packet["type"]
-    pkt_content = packet["content"]
-
     hash_str = hashlib.sha256(bytes(
-            str(pkt_time) +
-            str(pkt_type) +
-            str(pkt_content),
+            str(packet["headers"]["p-time"])
+            + str(packet["headers"]["p-type"])
+            + str(packet["content"]),
             "ascii")).hexdigest()
     return hash_str
 
 
 def build_packet(pkt_type, pkt_content):
     packet = {
-        "time": str(time.time()),
-        "type": str(pkt_type),
-        "content": str(pkt_content),
+        "headers": {
+            "p-time": str(time.time()),
+            "p-type": str(pkt_type),
+        },
+        "content": json.dumps(pkt_content),
     }
     hash_str = hash_packet(packet)
-    packet["hash"] = hash_str
+    packet["headers"]["p-hash"] = str(hash_str)
     return packet
 
 
 def send_close():
-    pkt = build_packet("rpx:end", "THY END IS NOW!!!")
-    content = json.dumps(pkt)
-    headers = {"Content-type": "application/json",
-               "Accept": "application/json"}
+    pkt = build_packet("rpx:end", {
+        "msg": "THY END IS NOW!!!"})
+    headers = pkt["headers"]
+    content = pkt["content"]
     conn = client.HTTPConnection("localhost:56440")
     conn.request("POST", "", content, headers)
     respose = conn.getresponse()

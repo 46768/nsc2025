@@ -5,7 +5,6 @@ import sys
 import os
 import atexit
 
-import json
 import packet
 
 import vfs
@@ -25,19 +24,6 @@ def exit_handler():
 
 
 def build_reverse_proxy(interpreter, data_path, ast_blacklist):
-    """
-    Builds a reverse proxy with code execution support
-
-    Args:
-        interpreter (str): The path to a python3 interpreter
-        data_path (str): The path to where logs and vfs cache will be stored
-        ast_blacklist (str): The path to the ast blacklist as .yml file
-
-    Returns:
-        (func): A function for handling websocket connection,
-        to be used with websockets.asyncio.server.serve
-    """
-
     vfs_cache_path = os.path.join(data_path, "vfs_cache")
     if not os.path.exists(vfs_cache_path):
         os.mkdir(vfs_cache_path)
@@ -46,48 +32,64 @@ def build_reverse_proxy(interpreter, data_path, ast_blacklist):
 
     class reverse_proxy(server.BaseHTTPRequestHandler):
         # websocket.send alias for sending packets
-        def send_pkt(self, x, code=200):
+        def send_pkt(self, pkt, code=200):
             self.send_response(code)
-            self.send_header("Content-Type", "application/json")
+            self.send_header("content-type", "application/json")
+            for k, v in pkt["headers"].items():
+                self.send_header(str(k), str(v))
             self.end_headers()
-            self.wfile.write(json.dumps(x).encode('utf-8'))
-            self.wfile.flush()
+            self.wfile.write(pkt["content"].encode('utf-8'))
 
         # Route packet to the target handler by type
         def route_packet(self, pkt_json):
-            pkt_hash = str(pkt_json["hash"])
-            pkt_type = str(pkt_json["type"])
+            pkt_type = str(pkt_json["headers"]["p-type"])
             match pkt_type:
-                case "ces:exec":  # Request code execution
+                # Request code execution
+                case "ces:exec":
                     ret_pkt = code_execution.handle_vfs_execution_pkt(
                             pkt_json, interpreter, vfs_mgr, ast_checker)
                     self.send_pkt(ret_pkt)
+
+                # Server response test
                 case "rpx:ping":
-                    self.send_pkt(packet.build_packet("rpx:pong", pkt_hash))
-                case "rpx:end":  # Request to close the server
+                    self.send_pkt(packet.build_packet("rpx:pong",
+                                                      {"msg": "pung"}))
+
+                # Request to close the server
+                case "rpx:end":
                     logger.info("Received stop server packet, stopping server")
-                    self.send_pkt(packet.build_packet("rpx:end", "goodbye"))
+                    self.send_pkt(packet.build_packet("rpx:end",
+                                                      {"msg": "Goodbye"}))
                     threading.Thread(target=self.server.shutdown,
                                      daemon=True).start()
-                    # self.server.shutdown()
-                case _:  # Send type error for unhandled pkt type
+
+                # Send type error for unhandled pkt type
+                case _:
                     packet.log_packet_issue("invalid type", pkt_json)
                     self.send_pkt(
-                            packet.pkt_err("type", pkt_hash+":"+pkt_type), 404)
+                            packet.build_packet("err:type",
+                                                {"invalid-type": pkt_type}),
+                            404)
 
-        # Main loop
-        def do_POST(self):
-            content_length = int(self.headers.get("Content-Length", 0))
-            post_data = self.rfile.read(content_length).decode('utf-8')
-            pkt_json = json.loads(post_data)
-            pkt_hash = str(pkt_json["hash"])
-
-            # Packet verifying to ensure no data corruption
+        def verify_packet(self, pkt_json):
+            pkt_hash = pkt_json["headers"]["p-hash"]
             computed_hash = packet.hash_packet(pkt_json)
             if pkt_hash != computed_hash:
                 packet.log_packet_issue(
                         "mismatched hash", pkt_json, computed_hash)
-                self.send_pkt(packet.pkt_err("hash", pkt_hash))
+                return False
+            return True
+
+        # Main loop
+        def do_POST(self):
+            content_length = int(self.headers.get("content-length", 0))
+            post_data = self.rfile.read(content_length).decode('utf-8')
+            pkt_json = packet.decode_packet(self.headers, post_data)
+
+            # Packet verifying to ensure no data corruption
+            if not self.verify_packet(pkt_json):
+                self.send_pkt(packet.build_packet("err:hash",
+                                                  {"msg": "Hash Error"}), 400)
                 return
 
             self.route_packet(pkt_json)
@@ -107,10 +109,10 @@ Starting server, server configurations:
 
     logger.info("Started server")
     server_address = ("localhost", int(port))
-    servr = server.HTTPServer(server_address,
-                              build_reverse_proxy(interpreter,
-                                                  data_path,
-                                                  ast_blacklist))
+    servr = server.HTTPServer(
+            server_address,
+            build_reverse_proxy(interpreter, data_path, ast_blacklist))
+
     try:
         servr.serve_forever()
     finally:

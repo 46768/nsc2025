@@ -72,27 +72,6 @@ func __unpack_python_env(archive_path: String, dest_path: String) -> void:
 	])
 
 
-# Recursively delete a directory
-func __clear_directory(dir_path: String, root_path: String):
-	var directory: String = ProjectSettings.globalize_path(dir_path)
-	var root_directory: String = ProjectSettings.globalize_path(root_path)
-	var sliced_dir: PackedStringArray = directory.split("/")
-	# Prevent deleting ancestor root
-	if (len(directory) < len(root_directory)
-	or not directory.begins_with(root_directory)): 
-		return
-	
-	# Prevent using . and .. to indirectly reference root directory
-	if ".." in sliced_dir:
-		return
-	
-	for file in DirAccess.get_files_at(directory):
-		DirAccess.remove_absolute(directory.path_join(file))
-	for dir in DirAccess.get_directories_at(directory):
-		__clear_directory(directory.path_join(dir), root_directory)
-	DirAccess.remove_absolute(directory)
-
-
 # Runs on game startup (Specified this script as
 # a global/singleton in project settings)
 func _ready() -> void:
@@ -128,7 +107,7 @@ func _ready() -> void:
 	
 	if not FileAccess.file_exists(PYTHON3_BIN_PATH):
 		# Clear and unpack again
-		__clear_directory(CONDA_PATH, CONDA_PATH)
+		Globals.delete_directory(CONDA_PATH, CONDA_PATH)
 		__unpack_python_env(USR_PACKED_PATH, CONDA_PATH)
 	
 	initialized = true

@@ -13,9 +13,9 @@ var SERVER_DATA: String
 var SERVER_CONFIG: String
 
 var server_started: bool = false
-var server_thread: Thread
+var server_url: String = "http://localhost:%d" % SERVER_PORT
 var server_pid: int
-var server_socket: WebSocketPeer
+var server_socket: HTTPRequest
 
 
 func _ready() -> void:
@@ -34,9 +34,54 @@ func _ready() -> void:
 	# Copy resource to data
 	if not DirAccess.dir_exists_absolute(server_dat):
 		print("copying")
-		__copy_directory(server_res, server_dat)
+		Globals.copy_directory(server_res, server_dat)
 		print("copied")
 	
+	__start_execution_server()
+	await Globals.wait(2)
+	
+	server_socket = HTTPRequest.new()
+	add_child(server_socket)
+	server_socket.request_completed.connect(_on_server_responded)
+	var pkt: Dictionary = Packet.format_packet_http(
+			Packet.build_packet("rpx:ping", "pang!!"))
+	server_socket.request("https://webhook.site/36e7b4a6-7821-432f-add5-eea0b721d502",
+						  pkt["headers"],
+						  HTTPClient.METHOD_POST,
+						  pkt["body"])
+
+
+func _on_server_responded(result: int,
+						  response_code: int,
+						  headers: PackedStringArray,
+						  body: PackedByteArray) -> void:
+	print(result)
+	print(response_code)
+	print(headers)
+	print(body.get_string_from_utf8())
+
+
+func _cleanup() -> void:
+	print("closing server")
+	server_socket.request(server_url,
+						  ["Content-Type: application/json"],
+						  HTTPClient.METHOD_POST,
+						  JSON.stringify(Packet.build_packet(
+								"rpx:end",
+								"THY END IS NOW!!!")))
+	OS.kill(server_pid)
+
+
+func _exit_tree() -> void:
+	_cleanup()
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST or what == NOTIFICATION_EXIT_TREE:
+		_cleanup()
+
+
+func __start_execution_server() -> void:
 	var script_path: String = Globals.join_paths([
 		PY_DATA_DIR, SERVER_SRC, SERVER_SCRIPT])
 	var interpreter_path: String = Globals.gpathize(
@@ -53,86 +98,3 @@ func _ready() -> void:
 		Globals.gpathize(ast_blacklist_path),
 	])
 	print(server_pid)
-	#server_thread = Thread.new()
-	#server_thread.start(__start_execution_server)
-	
-	server_socket = WebSocketPeer.new()
-	var err := server_socket.connect_to_url("ws://localhost:%d" % SERVER_PORT,
-								TLSOptions.client_unsafe())
-	print(server_socket.get_ready_state())
-	if err != OK:
-		printerr("Failed to get connection to server")
-		set_process(false)
-	else:
-		await Globals.wait(10)
-		server_socket.send_text(
-				JSON.stringify(Packet.build_packet("rpx:ping", "")))
-		server_started = true
-
-
-func _process(_delta: float) -> void:
-	server_socket.poll()
-	var state = server_socket.get_ready_state()
-	if state == WebSocketPeer.STATE_OPEN:
-		while server_socket.get_available_packet_count():
-			print(server_socket.get_packet().get_string_from_ascii())
-	elif state == WebSocketPeer.STATE_CLOSING:
-		pass
-	elif state == WebSocketPeer.STATE_CLOSED:
-		set_process(false)
-
-
-func _exit_tree() -> void:
-	print("closing game")
-	server_socket.send_text(
-			JSON.stringify(Packet.build_packet("rpx:end", "")))
-	OS.kill(server_pid)
-	await Globals.wait(4)
-	server_socket.close()
-
-
-func _notification(what: int) -> void:
-	if what == NOTIFICATION_WM_CLOSE_REQUEST or what == NOTIFICATION_EXIT_TREE:
-		print("closing game")
-		server_socket.send_text(
-				JSON.stringify(Packet.build_packet("rpx:end", "")))
-		await Globals.wait(4)
-		server_socket.close()
-
-
-func __copy_directory(from: String, to: String) -> void:
-	DirAccess.make_dir_recursive_absolute(to)
-	var src: String = from
-	var dst: String = to
-	if not src.ends_with("/"):
-		src += "/"
-	if not dst.ends_with("/"):
-		dst += "/"
-	
-	var source_dir = DirAccess.open(src);
-	
-	for filename in source_dir.get_files():
-		source_dir.copy(src + filename, dst + filename)
-		
-	for dir in source_dir.get_directories():
-		__copy_directory(src + dir + "/", dst + dir + "/")
-
-
-func __start_execution_server() -> void:
-	var script_path: String = Globals.join_paths([
-		PY_DATA_DIR, SERVER_SRC, SERVER_SCRIPT])
-	var interpreter_path: String = Globals.gpathize(
-			PythonBinding.PYTHON3_BIN_PATH)
-	var ast_blacklist_path: String = Globals.join_paths([
-		PY_DATA_DIR, SERVER_CONFIG, "ast-blacklist.yml"
-	])
-	if not DirAccess.dir_exists_absolute(SERVER_DATA):
-		DirAccess.make_dir_absolute(SERVER_DATA)
-	
-	var out = PythonBinding.run_script(script_path, [
-		str(SERVER_PORT), interpreter_path,
-		Globals.gpathize(SERVER_DATA),
-		Globals.gpathize(ast_blacklist_path),
-	])
-	print(out)
-	server_started = false

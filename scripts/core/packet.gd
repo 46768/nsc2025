@@ -20,3 +20,16 @@ func build_packet(type: String, content: String) -> Dictionary:
 	}
 	packet["hash"] = hash_packet(packet)
 	return packet
+
+
+func format_packet_http(pkt: Dictionary) -> Dictionary:
+	var http_pkt: Dictionary = {
+		"headers": PackedStringArray([
+			"Packet-Time: %s" % pkt["time"],
+			"Packet-Type: %s" % pkt["type"],
+			"Packet-Hash: %s" % pkt["hash"],
+			"Content-Type: application/json",
+		]),
+		"body": pkt["content"]
+	}
+	return http_pkt

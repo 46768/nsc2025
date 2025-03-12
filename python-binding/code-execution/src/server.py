@@ -31,6 +31,8 @@ def build_reverse_proxy(interpreter, data_path, ast_blacklist):
     ast_checker = ast_sec.ASTChecker(ast_blacklist)
 
     class reverse_proxy(server.BaseHTTPRequestHandler):
+        protocol_version = "HTTP/1.0"
+
         # websocket.send alias for sending packets
         def send_pkt(self, pkt, code=200):
             self.send_response(code)

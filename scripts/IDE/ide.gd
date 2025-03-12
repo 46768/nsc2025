@@ -39,6 +39,7 @@ func _ready() -> void:
 	$Margin.add_theme_constant_override("margin_right", margin)
 	
 	vfs = VFS.new()
+	vfs.set_name("ide_custom")
 	
 	get_tree().get_root().size_changed.connect(resize)
 	ide_initialized.emit(vfs)

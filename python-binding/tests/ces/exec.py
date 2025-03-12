@@ -25,6 +25,7 @@ def build_packet(pkt_type, pkt_content):
     }
     hash_str = hash_packet(packet)
     packet["headers"]["p-hash"] = str(hash_str)
+    packet["headers"]["content-length"] = len(packet["content"])
     return packet
 
 
@@ -38,10 +39,11 @@ def build_packet_static():
     }
     hash_str = hash_packet(packet)
     packet["headers"]["p-hash"] = str(hash_str)
+    packet["headers"]["content-length"] = len(packet["content"])
     return packet
 
 
-vfs_string = json.dumps({
+vfs_string = {
     "name": "testvfs",
     "/": {
         "type": 1,
@@ -53,8 +55,8 @@ vfs_string = json.dumps({
         "type": 0,
         "content": "import sys;print('hello world!');print('hello error!',file=sys.stderr)"
     },
-})
-vfs_string_forbidden = json.dumps({
+}
+vfs_string_forbidden = {
     "name": "testvfs",
     "/": {
         "type": 1,
@@ -71,14 +73,14 @@ vfs_string_forbidden = json.dumps({
         "type": 0,
         "content": "import os;print(os.environ);eval('1+1');exec('x=1');__import__('subprocess');x=__import__;x('os');eval=1"
     },
-})
+}
 entry_point = "/main.py"
 
 
 def test_ok_hash():
     pkt = build_packet_static()
     headers = pkt["headers"]
-    content = pkt["content"]
+    content = json.dumps(pkt["content"], separators=(",", ":"), sort_keys=True)
     conn = client.HTTPConnection("localhost:56440")
     conn.request("POST", "", content, headers)
     respose = conn.getresponse()
@@ -92,6 +94,7 @@ def test_ok():
         "vfs": vfs_string, "entryPoint": entry_point})
     headers = pkt["headers"]
     content = pkt["content"]
+    content = json.dumps(pkt["content"], separators=(",", ":"), sort_keys=True)
     conn = client.HTTPConnection("localhost:56440")
     conn.request("POST", "", content, headers)
     respose = conn.getresponse()
@@ -106,6 +109,7 @@ def test_hash_err():
     pkt["headers"]["p-time"] = str(float(pkt["headers"]["p-time"])+0.00001)
     headers = pkt["headers"]
     content = pkt["content"]
+    content = json.dumps(pkt["content"], separators=(",", ":"), sort_keys=True)
     conn = client.HTTPConnection("localhost:56440")
     conn.request("POST", "", content, headers)
     respose = conn.getresponse()
@@ -119,6 +123,7 @@ def test_type_err():
         "vfs": vfs_string, "entryPoint": entry_point})
     headers = pkt["headers"]
     content = pkt["content"]
+    content = json.dumps(pkt["content"], separators=(",", ":"), sort_keys=True)
     conn = client.HTTPConnection("localhost:56440")
     conn.request("POST", "", content, headers)
     respose = conn.getresponse()
@@ -132,6 +137,7 @@ def test_forbid():
         "vfs": vfs_string_forbidden, "entryPoint": entry_point})
     headers = pkt["headers"]
     content = pkt["content"]
+    content = json.dumps(pkt["content"], separators=(",", ":"), sort_keys=True)
     conn = client.HTTPConnection("localhost:56440")
     conn.request("POST", "", content, headers)
     respose = conn.getresponse()

@@ -13,9 +13,12 @@ logger = logging.getLogger(__name__)
 def check_vfs_safety(vfs, ast_checker):
     have_err = False
     err_dict = {}
+    print(vfs)
 
     for file_name, file_data in vfs.items():
         # Type 0 is file type
+        if file_name == "name":
+            continue
         if file_name.endswith(".py") and file_data["type"] == 0:
             logger.info("Checking file: %s", file_name)
             (ast_have_err, ast_res) = ast_checker.check_source(
@@ -29,7 +32,7 @@ def check_vfs_safety(vfs, ast_checker):
 
 def handle_vfs_execution_pkt(pkt, interpreter, vfs_mgr, ast_checker):
     pkt_content = json.loads(pkt["content"])
-    vfs_json = json.loads(pkt_content["vfs"])
+    vfs_json = pkt_content["vfs"]
     entry_point_file = pkt_content["entryPoint"]
 
     logger.info("""

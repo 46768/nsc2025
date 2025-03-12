@@ -25,7 +25,7 @@ def build_packet(pkt_type, pkt_content):
             "p-time": str(time.time()),
             "p-type": str(pkt_type),
         },
-        "content": str(json.dumps(pkt_content)),
+        "content": json.dumps(pkt_content),
     }
     hash_str = hash_packet(packet)
     packet["headers"]["p-hash"] = str(hash_str)

@@ -23,9 +23,9 @@ func _run_command(input: String) -> void:
 		return
 	if input != "":
 		var input_blocks: PackedStringArray = input.split(" ", false)
-		shell.run_command(input_blocks[0], input_blocks.slice(1))
+		await shell.run_command(input_blocks[0], input_blocks.slice(1))
 	else:
-		shell.run_command("", [])
+		await shell.run_command("", [])
 	output.text = shell.output_buffer
 	cmd_input.text = ""
 	cwd_label.text = " [%s@%s: %s]$ " % [shell.shell_user, shell.shell_machine, shell.cwd]
@@ -35,6 +35,7 @@ func _on_ide_initialized(ide_vfs: VFS) -> void:
 	vfs = ide_vfs
 	shell = COSH.new(vfs)
 	COSHTestModule.new().install_module(shell)
+	COSHPythonModule.new().install_module(shell)
 	
 	shell.cwd_changed.connect(cwd_changed.emit)
 	cwd_label.text = " [%s@%s: %s]$ " % [shell.shell_user, shell.shell_machine, shell.cwd]

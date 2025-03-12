@@ -6,6 +6,7 @@ func _ready() -> void:
 
 
 func hash_packet(packet: Dictionary) -> String:
+	print(packet["content"])
 	var base_str = (str(packet["headers"]["p-time"])
 				+ str(packet["headers"]["p-type"])
 				+ str(packet["content"]))

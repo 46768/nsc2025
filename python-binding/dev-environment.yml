@@ -2,6 +2,5 @@ name: nsc-2025-dev
 dependencies:
   - python=3.13
   - conda-forge::conda-pack=0.8.1
-  - conda-forge::websockets=15.0
   - conda-forge::sphinx=8.2.3
   - conda-forge::pyyaml=6.0.2

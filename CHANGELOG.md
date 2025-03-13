@@ -1,5 +1,14 @@
 # IDE
-- Added UI
-- Added file tree to the sidebar
-- Added syntax highlighting to editor
-- Added basic code completion to editor
+## Shell
+- Added a shell
+- Added shell modules
+- Added shell module signals
+- Added builtin shell module
+- Added editor shell module
+
+## Editor
+- Implemented VFS file loading
+- Implemented buffer saving
+
+# Core
+- Implemented a virtual file system

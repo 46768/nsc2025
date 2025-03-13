@@ -23,6 +23,7 @@ Globals="*res://scripts/core/globals.gd"
 Packet="*res://scripts/core/packet.gd"
 PythonBinding="*res://scripts/python-binding/python-binding.gd"
 CodeServer="*res://scripts/code-execution-server/interface.gd"
+Globals="*res://scripts/core/globals.gd"
 
 [editor]
 

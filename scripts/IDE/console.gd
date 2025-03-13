@@ -26,6 +26,7 @@ func _run_command(input: String) -> void:
 		await shell.run_command(input_blocks[0], input_blocks.slice(1))
 	else:
 		await shell.run_command("", [])
+
 	output.text = shell.output_buffer
 	cmd_input.text = ""
 	cwd_label.text = " [%s@%s: %s]$ " % [shell.shell_user, shell.shell_machine, shell.cwd]

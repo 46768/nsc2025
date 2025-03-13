@@ -1,5 +1,5 @@
 name: nsc-2025-env
 dependencies:
   - python=3.13
-  - conda-forge::websockets=15.0
+  - conda-forge::conda-pack=0.8.1
   - conda-forge::pyyaml=6.0.2

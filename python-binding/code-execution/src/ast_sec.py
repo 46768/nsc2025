@@ -54,7 +54,10 @@ class IllegalNodeAnalyzer(Analyzer):
 
     def visit_Call(self, node):
         self.stats.setdefault("function", [])
-        if node.func.id in self.illegal_nodes["function"]:
+        if isinstance(node.func, ast.Attribute):
+            if node.func.attr in self.illegal_nodes["function"]:
+                self.stats["function"].append(node.func.attr)
+        elif node.func.id in self.illegal_nodes["function"]:
             self.stats["function"].append(node.func.id)
         self.generic_visit(node)
 

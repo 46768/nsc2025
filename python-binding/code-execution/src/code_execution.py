@@ -13,9 +13,12 @@ logger = logging.getLogger(__name__)
 def check_vfs_safety(vfs, ast_checker):
     have_err = False
     err_dict = {}
+    print(vfs)
 
     for file_name, file_data in vfs.items():
         # Type 0 is file type
+        if file_name == "name":
+            continue
         if file_name.endswith(".py") and file_data["type"] == 0:
             logger.info("Checking file: %s", file_name)
             (ast_have_err, ast_res) = ast_checker.check_source(
@@ -28,20 +31,9 @@ def check_vfs_safety(vfs, ast_checker):
 
 
 def handle_vfs_execution_pkt(pkt, interpreter, vfs_mgr, ast_checker):
-    """
-    Handles an execution request packet
-
-    Args:
-        pkt (dict): The execution request packet
-        interpreter (str): The absolute path to the python interpreter
-        vfs_mgr (VFSMgr): A VFS manager
-
-    Returns:
-        (dict): The execution result packet
-    """
-    pkt_content = json.loads(str(pkt["content"]))
-    vfs_json = json.loads(str(pkt_content["vfs"]))
-    entry_point_file = str(pkt_content["entryPoint"])
+    pkt_content = json.loads(pkt["content"])
+    vfs_json = pkt_content["vfs"]
+    entry_point_file = pkt_content["entryPoint"]
 
     logger.info("""
 Code execution data:
@@ -61,23 +53,13 @@ Code execution data:
 
     return packet.build_packet(
             "ces:ret:ok",
-            json.dumps({
+            {
                 "stdout": result[0],
                 "stderr": result[1],
-            }))
+            })
 
 
 def execute_python_src(interpreter, entry_point):
-    """
-    Executes a python script using the provided interpreter
-
-    Args:
-        interpreter (str): The absolute path to the interpreter
-        entry_point (str): The absolute path to the script file
-
-    Returns:
-        (tuple): A tuple containing stdout ([0]) and stderr ([1])
-    """
     logger.info("""
 Python execution info:
     interpreter: %s

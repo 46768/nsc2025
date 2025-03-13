@@ -4,16 +4,19 @@ extends Node
 ## A binding script to allows python script to be
 ## ran within Godot
 
+
 # Python environment variables
-const PYTHON_PACKED_PATH: String = "res://python-binding/python-packed.tar.gz"
-const PYTHON_ENV_PATH: String = "user://python-env"
-var USR_PACKED_PATH: String = PYTHON_ENV_PATH+"/"+PYTHON_PACKED_PATH.get_file()
-const PYTHON_CONDA_PATH: String = PYTHON_ENV_PATH + "/conda"
-var PYTHON3_BIN_PATH: String = {
-	"Windows": PYTHON_CONDA_PATH+"/python.exe",
-	"Linux": PYTHON_CONDA_PATH+"/bin/python3",
-}[OS.get_name()]
-var instantiated: bool = false
+const RESOURCE_PATH: String = "res://python-binding"
+const DATA_PATH: String = "user://python-binding"
+const ARCHIVE_FNAME: String = "python-packed.tar.gz"
+
+var RES_PACKED_PATH: String
+var USR_PACKED_PATH: String
+
+var CONDA_PATH: String
+var PYTHON3_BIN_PATH: String
+
+var initialized: bool = false
 
 
 ## Run python script with given arguments in a blocking way
@@ -21,13 +24,14 @@ var instantiated: bool = false
 ## Run a python script with given arguments in a blocking way
 ## and return the stdout+stderr as an array with the return code
 ## appended to it
-func run(
+func run_script(
 	script_path: String, args: PackedStringArray
 ) -> Array:
-	var gpath = ProjectSettings.globalize_path(script_path)
-	var bin_path = ProjectSettings.globalize_path(PYTHON3_BIN_PATH)
-	var cmd_arg = PackedStringArray([gpath])
-	var output = []
+	var src_path: String = Globals.gpathize(script_path)
+	var bin_path: String = Globals.gpathize(PYTHON3_BIN_PATH)
+	var cmd_arg: PackedStringArray = PackedStringArray([src_path])
+	var output: Array = []
+	
 	cmd_arg.append_array(args)
 	var ret_code = OS.execute(
 		bin_path, cmd_arg,
@@ -38,62 +42,72 @@ func run(
 	return output
 
 
+## Run python script with given arguments in a separate process
+##
+## Run a python script with given arguments in a separate process
+## and return the pid of the process
+func create_script_process(
+	script_path: String, args: PackedStringArray
+) -> int:
+	var src_path: String = Globals.gpathize(script_path)
+	var bin_path: String = Globals.gpathize(PYTHON3_BIN_PATH)
+	var cmd_arg: PackedStringArray = PackedStringArray([src_path])
+	
+	cmd_arg.append_array(args)
+	var pid = OS.create_process(
+		bin_path, cmd_arg, false
+	)
+	
+	return pid
+
+
 # Unpack given conda .tar.gz archive into a directory
-func _unpack_python_env(pypck_path: String, dest_path: String) -> void:
-	var unpack_output: Array = []
+func __unpack_python_env(archive_path: String, dest_path: String) -> void:
+	DirAccess.make_dir_absolute(dest_path)
+	
 	# Using tar
 	OS.execute("tar", [
-		"-xvzf", ProjectSettings.globalize_path(pypck_path),
-		"-C", ProjectSettings.globalize_path(dest_path),
-	], unpack_output)
-
-
-# Recursively delete a directory
-func _clear_directory(dir_path: String, root_path: String):
-	var directory = ProjectSettings.globalize_path(dir_path)
-	var root_directory = ProjectSettings.globalize_path(root_path)
-	var sliced_dir = directory.split("/")
-	# Prevent deleting ancestor root
-	if len(directory) < len(root_directory) or not directory.begins_with(root_directory): 
-		return
-	# Prevent using . and .. to indirectly reference root directory
-	if "." in sliced_dir or ".." in sliced_dir:
-		return
-	for file in DirAccess.get_files_at(directory):
-		DirAccess.remove_absolute(directory.path_join(file))
-	for dir in DirAccess.get_directories_at(directory):
-		_clear_directory(directory.path_join(dir), root_directory)
-	DirAccess.remove_absolute(directory)
+		"-xvzf", Globals.gpathize(archive_path),
+		"-C", Globals.gpathize(dest_path),
+	])
 
 
 # Runs on game startup (Specified this script as
 # a global/singleton in project settings)
 func _ready() -> void:
+	RES_PACKED_PATH = Globals.join_paths(
+			[RESOURCE_PATH, ARCHIVE_FNAME])
+	USR_PACKED_PATH = Globals.join_paths([DATA_PATH, ARCHIVE_FNAME])
+
+	CONDA_PATH = Globals.join_paths([DATA_PATH, "conda"])
+	PYTHON3_BIN_PATH = {
+		"Windows": Globals.join_paths([CONDA_PATH, "python.exe"]),
+		"Linux": Globals.join_paths([CONDA_PATH, "bin", "python3"]),
+	}[OS.get_name()]
+
 	# Avoid repeated instantiation
-	if instantiated:
+	if initialized:
 		return
 	
 	# Prepare python environment
-	var data_dir = DirAccess.open("user://")
-	if not data_dir.dir_exists(PYTHON_ENV_PATH):
-		data_dir.make_dir(PYTHON_ENV_PATH)
+	if not DirAccess.dir_exists_absolute(DATA_PATH):
+		DirAccess.make_dir_absolute(DATA_PATH)
 	
 	# Copy packed env if not found
-	if not FileAccess.file_exists(PYTHON_PACKED_PATH) and not FileAccess.file_exists(USR_PACKED_PATH):
-		printerr("Cant find packed env file '%s'" % PYTHON_PACKED_PATH)
+	if not (FileAccess.file_exists(RES_PACKED_PATH)
+			or FileAccess.file_exists(USR_PACKED_PATH)):
+		printerr("Cant find packed env file '%s'" % RES_PACKED_PATH)
 		return
 	if not FileAccess.file_exists(USR_PACKED_PATH):
-		data_dir.copy(PYTHON_PACKED_PATH, USR_PACKED_PATH)
+		DirAccess.copy_absolute(RES_PACKED_PATH, USR_PACKED_PATH)
 	
 	# Unpack python environment
-	if not data_dir.dir_exists(PYTHON_CONDA_PATH):
-		data_dir.make_dir(PYTHON_CONDA_PATH)
-		_unpack_python_env(USR_PACKED_PATH, PYTHON_CONDA_PATH)
+	if not DirAccess.dir_exists_absolute(CONDA_PATH):
+		__unpack_python_env(USR_PACKED_PATH, CONDA_PATH)
 	
 	if not FileAccess.file_exists(PYTHON3_BIN_PATH):
 		# Clear and unpack again
-		_clear_directory(PYTHON_CONDA_PATH, PYTHON_CONDA_PATH)
-		data_dir.make_dir(PYTHON_CONDA_PATH)
-		_unpack_python_env(USR_PACKED_PATH, PYTHON_CONDA_PATH)
+		Globals.delete_directory(CONDA_PATH, CONDA_PATH)
+		__unpack_python_env(USR_PACKED_PATH, CONDA_PATH)
 	
-	instantiated = true
+	initialized = true

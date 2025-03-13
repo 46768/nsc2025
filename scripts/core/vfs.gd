@@ -49,6 +49,12 @@ static func resolve_path(path: String) -> String:
 	return "/" + "/".join(blocks)
 
 
+func set_name(name: String) -> void:
+	data["name"] = name
+func get_name() -> String:
+	return data.get("name", ":notfound:")
+
+
 func block_exists(path: String) -> bool:
 	return data.has(path)
 

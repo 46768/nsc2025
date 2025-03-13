@@ -4,7 +4,7 @@ extends Node
 signal received_packet
 
 const SERVER_PORT: int = 56440
-const SERVER_SCRIPT: String = "server.py"
+const SERVER_SCRIPT: String = "main.py"
 const SERVER_KILL: String = "kill.py"
 const SERVER_DIR: String = "code-execution"
 const PY_RES_DIR: String = PythonBinding.RESOURCE_PATH
@@ -44,7 +44,8 @@ func _ready() -> void:
 	add_child(server_socket)
 	server_socket.request_completed.connect(_on_server_responded)
 	server_socket.set_accept_gzip(false)
-	var pkt: Dictionary = Packet.build_packet("rpx:ping", {"msg": "pang"})
+	var pkt: Dictionary = Packet.build_packet("/net", "ping:pong", 000,
+			{"msg": "pang"})
 	await send_pkt(pkt)
 
 
@@ -52,12 +53,8 @@ func _on_server_responded(result: int,
 						  response_code: int,
 						  headers: PackedStringArray,
 						  body: PackedByteArray) -> void:
-	server_response = Packet.decode_packet(headers, body.get_string_from_utf8())
-	print(result)
-	print(response_code)
-	print(headers)
-	print(server_socket.get_body_size())
-	print(body.get_string_from_utf8())
+	server_response = Packet.decode_packet(
+			"/", headers, body.get_string_from_utf8())
 	received_packet.emit()
 	server_requesting = false
 
@@ -88,18 +85,18 @@ func send_pkt(packet: Dictionary) -> void:
 	for header in packet["headers"].keys():
 		headers.append("%s: %s" % [header, packet["headers"][header]])
 	var err = server_socket.request(
-			server_url, headers, HTTPClient.METHOD_POST,
+			server_url + packet["url"],
+			headers,
+			HTTPClient.METHOD_POST,
 			packet["content"])
 	server_requesting = true
-	print("request err: %d" % err)
 
 
 func request_execution(vfs: VFS, entry_point: String) -> PackedStringArray:
-	var request_packet: Dictionary = Packet.build_packet("ces:exec", {
-		"vfs": vfs.data,
-		"entryPoint": entry_point,
-	})
-	print(request_packet)
+	var request_packet: Dictionary = Packet.build_packet(
+		"/execution", "request", 000, {
+			"vfs": vfs.data,
+			"entryPoint": entry_point})
 	await send_pkt(request_packet)
 	var packet: Dictionary = await _get_response()
 	var response: Dictionary = JSON.parse_string(packet["content"])

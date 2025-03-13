@@ -40,7 +40,7 @@ class ReverseProxyHTTPRequestHandler(server.BaseHTTPRequestHandler):
         # Packet verifying to ensure no data corruption
         if not self.verify_packet(pkt_json):
             self.send_pkt(packet.build_packet(
-                    "/", "err:hash", 400, {"msg": "Mismatched Hash"}))
+                    "/net", "err:hash", 400, {"msg": "Mismatched Hash"}))
         else:
             try:
                 response_pkt = self.reverse_proxy.route_packet(pkt_json)

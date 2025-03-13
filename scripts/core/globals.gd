@@ -56,4 +56,5 @@ func wait(sec: float) -> void:
 
 
 func close_game() -> void:
+	CodeServer._cleanup()
 	get_tree().quit()

@@ -1,12 +1,141 @@
-[gd_scene load_steps=2 format=3 uid="uid://c44n34k18cx8m"]
+[gd_scene load_steps=5 format=3 uid="uid://c44n34k18cx8m"]
 
 [ext_resource type="Script" path="res://scripts/IDE/ide.gd" id="1_msfw7"]
+[ext_resource type="Script" path="res://scripts/IDE/editor.gd" id="2_kuje3"]
+[ext_resource type="Script" path="res://scripts/IDE/console.gd" id="4_16dsd"]
+[ext_resource type="Script" path="res://scripts/IDE/file-explorer.gd" id="6_5fjmn"]
 
 [node name="Ide" type="Control"]
+layout_direction = 2
 layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1152.0
+offset_bottom = -648.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_msfw7")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_msfw7")
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VerticalSplit" type="HSplitContainer" parent="Margin"]
+layout_mode = 2
+split_offset = 240
+
+[node name="SidebarSplit" type="VSplitContainer" parent="Margin/VerticalSplit"]
+layout_mode = 2
+split_offset = 120
+
+[node name="Sidebar" type="TabContainer" parent="Margin/VerticalSplit/SidebarSplit"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+current_tab = 0
+clip_tabs = false
+
+[node name="Problem Viewer" type="BoxContainer" parent="Margin/VerticalSplit/SidebarSplit/Sidebar"]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="ProblemStatement" type="RichTextLabel" parent="Margin/VerticalSplit/SidebarSplit/Sidebar/Problem Viewer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+bbcode_enabled = true
+text = "hello!"
+
+[node name="File Explorer" type="BoxContainer" parent="Margin/VerticalSplit/SidebarSplit/Sidebar"]
+visible = false
+layout_mode = 2
+script = ExtResource("6_5fjmn")
+metadata/_tab_index = 1
+
+[node name="FileTree" type="Tree" parent="Margin/VerticalSplit/SidebarSplit/Sidebar/File Explorer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Debugger" type="BoxContainer" parent="Margin/VerticalSplit/SidebarSplit/Sidebar"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="Notes" type="TextEdit" parent="Margin/VerticalSplit/SidebarSplit"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+placeholder_text = "Put your notes here"
+
+[node name="EditorSplit" type="VSplitContainer" parent="Margin/VerticalSplit"]
+layout_mode = 2
+split_offset = 120
+
+[node name="Editor" type="CodeEdit" parent="Margin/VerticalSplit/EditorSplit"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+placeholder_text = "Code here"
+draw_tabs = true
+line_folding = true
+gutters_draw_line_numbers = true
+code_completion_enabled = true
+indent_automatic = true
+auto_brace_completion_enabled = true
+auto_brace_completion_highlight_matching = true
+script = ExtResource("2_kuje3")
+
+[node name="Console" type="VBoxContainer" parent="Margin/VerticalSplit/EditorSplit"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("4_16dsd")
+
+[node name="ConsoleOutput" type="PanelContainer" parent="Margin/VerticalSplit/EditorSplit/Console"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ConsoleOutputText" type="RichTextLabel" parent="Margin/VerticalSplit/EditorSplit/Console/ConsoleOutput"]
+custom_minimum_size = Vector2(72, 96)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+focus_mode = 2
+bbcode_enabled = true
+scroll_following = true
+autowrap_mode = 2
+threaded = true
+selection_enabled = true
+
+[node name="ConsoleInput" type="HBoxContainer" parent="Margin/VerticalSplit/EditorSplit/Console"]
+layout_mode = 2
+
+[node name="ConsoleCWD" type="PanelContainer" parent="Margin/VerticalSplit/EditorSplit/Console/ConsoleInput"]
+layout_mode = 2
+
+[node name="CWDText" type="Label" parent="Margin/VerticalSplit/EditorSplit/Console/ConsoleInput/ConsoleCWD"]
+layout_mode = 2
+size_flags_vertical = 1
+
+[node name="ConsoleInputLine" type="LineEdit" parent="Margin/VerticalSplit/EditorSplit/Console/ConsoleInput"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+caret_blink = true
+
+[connection signal="ide_initialized" from="." to="Margin/VerticalSplit/SidebarSplit/Sidebar/File Explorer" method="_on_ide_initialized"]
+[connection signal="ide_initialized" from="." to="Margin/VerticalSplit/EditorSplit/Editor" method="_on_ide_initialized"]
+[connection signal="ide_initialized" from="." to="Margin/VerticalSplit/EditorSplit/Console" method="_on_ide_initialized"]
+[connection signal="editor_initialized" from="Margin/VerticalSplit/EditorSplit/Editor" to="Margin/VerticalSplit/EditorSplit/Console" method="_on_editor_initialized"]
+[connection signal="text_submitted" from="Margin/VerticalSplit/EditorSplit/Console/ConsoleInput/ConsoleInputLine" to="Margin/VerticalSplit/EditorSplit/Console" method="_run_command"]

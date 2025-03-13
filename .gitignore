@@ -7,3 +7,12 @@ exports/
 
 # Python packed archive
 python-packed.tar.gz
+
+# Pycache
+__pycache__
+
+# Log files
+*.log
+
+# Documentation build file
+docs/_build/*

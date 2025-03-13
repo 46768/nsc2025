@@ -1,6 +1,3 @@
-"""
-AST parsing for code security when running a script
-"""
 import ast
 import yaml
 import logging

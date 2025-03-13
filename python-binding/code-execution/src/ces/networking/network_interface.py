@@ -1,7 +1,7 @@
 """
 Code execution server networking interface
 """
-import packet
+from ces.networking import packet
 import logging
 from http import server
 import threading
@@ -9,9 +9,10 @@ import threading
 logger = logging.getLogger(__name__)
 
 
-class Handler(server.BaseHTTPRequestHandler):
-    def configure_reverse_proxy(self, rproxy):
-        self.reverse_proxy = rproxy
+class ReverseProxyHTTPRequestHandler(server.BaseHTTPRequestHandler):
+    def setup(self):
+        server.BaseHTTPRequestHandler.setup(self)
+        self.reverse_proxy = self.server.reverse_proxy
 
     def send_pkt(self, pkt):
         self.send_response(int(pkt["code"]))
@@ -34,26 +35,34 @@ class Handler(server.BaseHTTPRequestHandler):
     def do_POST(self):
         content_length = int(self.headers.get("content-length", 0))
         post_data = self.rfile.read(content_length).decode('utf-8')
-        pkt_json = packet.decode_packet(self.headers, post_data)
+        pkt_json = packet.decode_packet(self.path, self.headers, post_data)
 
         # Packet verifying to ensure no data corruption
         if not self.verify_packet(pkt_json):
             self.send_pkt(packet.build_packet(
                     "/", "err:hash", 400, {"msg": "Mismatched Hash"}))
         else:
-            response_pkt = self.reverse_proxy.route_packet(pkt_json)
-            self.send_pkt(response_pkt)
-            if response_pkt["url"] == "/net/shutdown":
-                logger.info("Received shutdown packet, shutting down server")
-                threading.Thread(target=self.server.shutdown,
-                                 daemon=True).start()
+            try:
+                response_pkt = self.reverse_proxy.route_packet(pkt_json)
+                self.send_pkt(response_pkt)
+                if (response_pkt["url"] == "/net"
+                        and response_pkt["headers"]["p-type"] == "shutdown"):
+                    logger.info(
+                            "Received shutdown packet, shutting down server")
+                    threading.Thread(target=self.server.shutdown,
+                                     daemon=True).start()
+            except Exception:
+                self.send_pkt(packet.build_packet(
+                        pkt_json["url"],
+                        pkt_json["headers"]["p-type"]+":err:internal", 500,
+                        {"msg": "Server Error"}))
 
 
 def start_server(port, rproxy):
     logger.info("Starting server")
     server_address = ("localhost", int(port))
-    servr = server.HTTPServer(server_address, Handler)
-    servr.RequestHandlerClass.configure_reverse_proxy(rproxy)
+    servr = server.HTTPServer(server_address, ReverseProxyHTTPRequestHandler)
+    servr.reverse_proxy = rproxy
 
     logger.info("Started server")
     try:

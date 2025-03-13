@@ -1,9 +1,15 @@
-import packet
+from ces.networking import packet
+import json
 
 
 class ReverseProxy:
     def __init__(self):
-        self.route_mapping = {}
+        self.route_mapping = {
+            "/net": {
+                "shutdown": self.pong_packet,
+                "ping:pong": self.pong_packet,
+            },
+        }
 
     def add_service(self, service_url):
         if service_url not in self.route_mapping:
@@ -22,6 +28,11 @@ class ReverseProxy:
         if service_url not in self.route_mapping:
             raise KeyError(f"URL '{service_url}' not found")
         self.route_mapping[service_url].pop(method_name)
+
+    def pong_packet(self, pkt):
+        return packet.build_packet(
+                pkt["url"], pkt["headers"]["p-type"], 200,
+                json.loads(pkt["content"]))
 
     # Route packet to the target handler by type
     def route_packet(self, pkt_json):

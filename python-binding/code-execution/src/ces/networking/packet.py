@@ -1,7 +1,3 @@
-"""
-Packet utilites module
-"""
-
 import hashlib
 import json
 import time
@@ -59,9 +55,9 @@ Found %s, packet data:
     packet hash: %s
     computed hash: %s""",
                    issue_str,
-                   pkt_json["headers"]["p-hash"],
-                   computed_hash or "N/A",
                    pkt_json["url"],
                    pkt_json["headers"]["p-time"],
                    pkt_json["headers"]["p-type"],
-                   pkt_json["content"])
+                   pkt_json["content"],
+                   pkt_json["headers"]["p-hash"],
+                   computed_hash or "N/A")

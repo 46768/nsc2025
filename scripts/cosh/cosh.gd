@@ -43,6 +43,7 @@ func run_command(cmd: String, arg: PackedStringArray) -> void:
 	elif cmd in command_reg:
 		var cmd_res = await command_reg[cmd].call(self, arg)
 		appending_string += str(cmd_res)
+
 	else:
 		appending_string += "%s: command not found\n" % cmd
 	output_buffer += appending_string + "\n"

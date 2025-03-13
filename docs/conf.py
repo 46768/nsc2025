@@ -27,7 +27,10 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 # -- Autodoc import path
 
-sys.path.insert(0, str(Path('..', 'python-binding', 'src').resolve()))
+sys.path.insert(0, str(Path('..',
+                            'python-binding',
+                            'code-execution',
+                            'src').resolve()))
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

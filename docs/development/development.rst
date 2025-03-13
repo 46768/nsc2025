@@ -7,4 +7,4 @@ The documentation for contributers of the project.
     :maxdepth: 2
     :caption: Contents:
 
-    code-exec-server
+    code-execution-server/code-execution-server

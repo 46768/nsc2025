@@ -1,10 +1,13 @@
-[gd_scene load_steps=2 format=3 uid="uid://dc0wkqvws5k6e"]
+[gd_scene load_steps=3 format=3 uid="uid://dc0wkqvws5k6e"]
 
+[ext_resource type="Script" uid="uid://cjnecbig4hetd" path="res://scripts/main/main.gd" id="1_a2087"]
 [ext_resource type="PackedScene" uid="uid://c44n34k18cx8m" path="res://scenes/IDE.tscn" id="1_xj0ui"]
 
 [node name="Main" type="Node2D"]
+script = ExtResource("1_a2087")
 
 [node name="Ide" parent="." instance=ExtResource("1_xj0ui")]
+visible = false
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0

@@ -1,6 +1,9 @@
 extends Node
 
 
+@onready var screen_resized: Signal = get_tree().get_root().size_changed
+
+
 func gpathize(path: String) -> String:
 	return ProjectSettings.globalize_path(path)
 

@@ -33,6 +33,7 @@ func build_packet(
 
 func decode_packet(
 		url: String,
+		code: int,
 		headers: PackedStringArray,
 		content: String) -> Dictionary:
 	var time_header: String = "pkt:404"
@@ -49,7 +50,7 @@ func decode_packet(
 	
 	var http_pkt: Dictionary = {
 		"url": url,
-		"code": 000,
+		"code": code,
 		"headers": {
 			"p-time": time_header.split(": ")[-1],
 			"p-type": type_header.split(": ")[-1],

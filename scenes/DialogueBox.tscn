@@ -1,0 +1,44 @@
+[gd_scene load_steps=3 format=3 uid="uid://b6xvkvbl5b81l"]
+
+[ext_resource type="Script" uid="uid://vlbschkurvl6" path="res://scripts/core/dialogue-system/dialogue_box.gd" id="1_r2og1"]
+[ext_resource type="Texture2D" uid="uid://ebjgaywwcvye" path="res://assets/textures/dialogue-system/nan.png" id="2_giuoe"]
+
+[node name="DialogueBox" type="MarginContainer"]
+offset_right = 174.0
+offset_bottom = 168.0
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+script = ExtResource("1_r2og1")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 2
+
+[node name="InnerMargin" type="MarginContainer" parent="PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="Layout" type="HBoxContainer" parent="PanelContainer/InnerMargin"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="CharacterTexture" type="TextureRect" parent="PanelContainer/InnerMargin/Layout"]
+layout_mode = 2
+texture = ExtResource("2_giuoe")
+stretch_mode = 3
+
+[node name="Message" type="RichTextLabel" parent="PanelContainer/InnerMargin/Layout"]
+layout_mode = 2
+size_flags_horizontal = 3
+bbcode_enabled = true
+scroll_following = true
+
+[node name="Button" type="Button" parent="PanelContainer"]
+layout_mode = 2
+flat = true
+
+[connection signal="pressed" from="PanelContainer/Button" to="." method="_on_button_pressed"]

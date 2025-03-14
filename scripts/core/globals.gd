@@ -1,6 +1,9 @@
 extends Node
 
 
+var IDE: Control = null
+
+
 func gpathize(path: String) -> String:
 	return ProjectSettings.globalize_path(path)
 

@@ -5,7 +5,7 @@ extends COSHModule
 signal cosh_editor_edit_sig(fpath: String, vfs: VFS)
 
 
-func _init(editor_mgr: EditorManager) -> void:
+func _init(buffer_mgr: BufferManager) -> void:
 	module_name = "Editor"
 	commands = {
 		"code": cosh_editor_edit
@@ -14,7 +14,7 @@ func _init(editor_mgr: EditorManager) -> void:
 		"cosh_editor_edit": cosh_editor_edit_sig
 	}
 	
-	cosh_editor_edit_sig.connect(editor_mgr.load_vfs_file)
+	cosh_editor_edit_sig.connect(buffer_mgr.open_buffer)
 
 
 func cosh_editor_edit(shell: COSH, args: PackedStringArray) -> String:
@@ -28,6 +28,6 @@ func cosh_editor_edit(shell: COSH, args: PackedStringArray) -> String:
 	if shell.attached_vfs.is_dir(abs_path):
 		return "code: failed opening '%s': Not a file\n" % path
 	
-	cosh_editor_edit_sig.emit(abs_path, shell.attached_vfs)
+	cosh_editor_edit_sig.emit(shell.attached_vfs, abs_path)
 	
 	return ""

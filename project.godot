@@ -14,7 +14,7 @@ config/name="nsc2025"
 config/version="0.0.0-demo"
 run/main_scene="res://main.tscn"
 config/use_custom_user_dir=true
-config/features=PackedStringArray("4.3", "GL Compatibility")
+config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
@@ -23,7 +23,6 @@ Globals="*res://scripts/core/globals.gd"
 Packet="*res://scripts/core/packet.gd"
 PythonBinding="*res://scripts/python-binding/python-binding.gd"
 CodeServer="*res://scripts/code-execution-server/interface.gd"
-Globals="*res://scripts/core/globals.gd"
 
 [editor]
 

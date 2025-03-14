@@ -42,4 +42,5 @@ func _ready() -> void:
 	vfs.set_name("ide_custom")
 	
 	get_tree().get_root().size_changed.connect(resize)
+	Globals.IDE = self
 	ide_initialized.emit(vfs)

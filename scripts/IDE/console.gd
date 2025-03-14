@@ -43,5 +43,5 @@ func _on_ide_initialized(ide_vfs: VFS) -> void:
 	ide_initialized = true
 
 
-func _on_editor_initialized(editor_mgr: EditorManager) -> void:
-	COSHEditor.new(editor_mgr).install_module(shell)
+func _on_buffer_initialized(buffer_mgr: BufferManager) -> void:
+	COSHEditor.new(buffer_mgr).install_module(shell)

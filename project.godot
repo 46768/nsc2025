@@ -19,10 +19,12 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-Globals="*res://scripts/core/globals.gd"
-Packet="*res://scripts/core/packet.gd"
+DiskUtil="*res://scripts/core/Autoloads/disk_utils.gd"
+Globals="*res://scripts/core/Autoloads/globals.gd"
+Packet="*res://scripts/core/Networking/packet.gd"
 PythonBinding="*res://scripts/python-binding/python-binding.gd"
 CodeServer="*res://scripts/code-execution-server/interface.gd"
+Dialogue="*res://scripts/core/dialogue-system/dialogue.gd"
 
 [editor]
 

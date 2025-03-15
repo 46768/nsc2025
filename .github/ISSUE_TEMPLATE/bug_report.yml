@@ -1,0 +1,29 @@
+name: Bug report
+description: Report a bug
+title: "[BUG]"
+labels: ["bug"]
+
+body:
+  - type: input
+    id: bug-brief
+    attributes:
+      label: The bug that's happening
+      description: Describe what is the bug about
+      placeholder: ex. Python server not shutting down after game exit
+
+  - type: textarea
+    id: reproduce-steps
+    attributes:
+      label: How the bug happens
+      description: Describe how the bug happened or how do you think it happened
+      placeholder: ex. |
+        1. open the game |
+        2. close the game |
+        3. find the server running in task manager
+
+  - type: input
+    id: game-log
+    attributes:
+      label: github gist link to runtime.log
+      description: The github gist link to the runtime.log
+      placeholder: https://gist.github.com/

@@ -16,6 +16,8 @@ scenes:
 
 script-templates:
   - gd
+  - uid
 
 scripts:
   - gd
+  - uid

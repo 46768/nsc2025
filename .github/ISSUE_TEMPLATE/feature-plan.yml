@@ -1,0 +1,33 @@
+name: Feature planning
+description: A planning for a feature to be implemented
+title: "[FEATURE]"
+labels: ["feature"]
+projects: ["46768/NSC2025"]
+
+body:
+  - type: textarea
+    id: feature-details
+    attributes:
+      label: Feature details
+      description: The details of the feature to be implemented
+      placeholder: ex. A server for running python code safely using ...
+
+  - type: textarea
+    id: feature-components
+    attributes:
+      label: Components of the feature
+      description: The components of the feature to implement into the game
+      placeholder: ex. |
+        - http server |
+        - reverse proxy |
+        - ...
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies of the feature
+      description: The dependencies that need to be implemented before this feature can be worked on
+      placeholder: ex. |
+        - python binding |
+        - ide |
+        - ...

@@ -13,6 +13,7 @@ func _init() -> void:
 		"rm": __cosh_rm,
 		"ls": __cosh_ls,
 		"cat": __cosh_cat,
+		"exit": __cosh_quit,
 	}
 
 
@@ -132,3 +133,8 @@ func __cosh_cat(shell: COSH, args: PackedStringArray):
 	if is_dir:
 		return "cat: '%s': Is a directory\n" % abs_path
 	return shell.attached_vfs.read_file(path) + "\n"
+
+
+func __cosh_quit(_shell: COSH, _args: PackedStringArray) -> String:
+	Globals.close_game()
+	return ""

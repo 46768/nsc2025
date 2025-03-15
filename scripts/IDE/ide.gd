@@ -31,19 +31,14 @@ func _ready() -> void:
 	vfs = VFS.new()
 	vfs.set_name("ide_custom")
 	
+	Globals.screen_resized.connect(_resize)
 	sidebar_split.dragged.connect(_sidebar_to_editor_sync)
 	editor_split.dragged.connect(_editor_to_sidebar_sync)
 	console.console_initialized.connect(_on_console_initialized)
 	buffer_tabs.buffer_tabs_initialized.connect(_on_buffer_initialized)
-	get_tree().get_root().size_changed.connect(_resize)
-	
-	Globals.IDE = self
-
-	Globals.screen_resized.connect(resize)
-	sidebar_split.dragged.connect(sidebar_to_editor_sync)
-	editor_split.dragged.connect(editor_to_sidebar_sync)
 	
 	ide_initialized.emit(vfs)
+	Globals.ide = self
 
 
 func _sidebar_to_editor_sync(offset: int) -> void:

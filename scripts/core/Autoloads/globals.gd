@@ -4,6 +4,7 @@ extends Node
 @onready var screen_resized: Signal = get_tree().get_root().size_changed
 @onready var screen_size: Vector2 = get_tree().get_root().size
 var main: Node2D = null
+var ide: Control = null
 
 
 func _ready() -> void:

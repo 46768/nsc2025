@@ -18,9 +18,14 @@ func _init(init_data = {}) -> void:
 
 
 static func _create_block(ftype: FileType) -> Dictionary:
+	var block_content
+	if ftype == FileType.FILE:
+		block_content = ""
+	else:
+		block_content = {}
 	return {
 		type = ftype,
-		content = "" if ftype == FileType.FILE else {}
+		content = block_content
 	}
 
 

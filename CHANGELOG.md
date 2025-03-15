@@ -1,3 +1,6 @@
+# Gameplay
+- Implemented dialogue system
+
 # Player
 - Implemented character movements
 

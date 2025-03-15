@@ -30,9 +30,6 @@ func _ready() -> void:
 	sidebar_split = $Margin/VerticalSplit/SidebarSplit
 	editor_split = $Margin/VerticalSplit/EditorSplit
 	
-	sidebar_split.dragged.connect(sidebar_to_editor_sync)
-	editor_split.dragged.connect(editor_to_sidebar_sync)
-	
 	$Margin.add_theme_constant_override("margin_bottom", margin)
 	$Margin.add_theme_constant_override("margin_left", margin)
 	$Margin.add_theme_constant_override("margin_top", margin)
@@ -43,4 +40,9 @@ func _ready() -> void:
 	
 	get_tree().get_root().size_changed.connect(resize)
 	Globals.IDE = self
+
+	Globals.screen_resized.connect(resize)
+	sidebar_split.dragged.connect(sidebar_to_editor_sync)
+	editor_split.dragged.connect(editor_to_sidebar_sync)
+	
 	ide_initialized.emit(vfs)

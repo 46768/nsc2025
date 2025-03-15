@@ -52,12 +52,3 @@ func copy_directory(from: String, to: String) -> void:
 		
 	for dir in source_dir.get_directories():
 		copy_directory(src + dir + "/", dst + dir + "/")
-
-
-func wait(sec: float) -> void:
-	await get_tree().create_timer(sec).timeout
-
-
-func close_game() -> void:
-	CodeServer._cleanup()
-	get_tree().quit()

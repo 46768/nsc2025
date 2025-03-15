@@ -11,8 +11,6 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = -1152.0
-offset_bottom = -648.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -123,10 +121,13 @@ size_flags_vertical = 1
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 size_flags_horizontal = 3
+keep_editing_on_text_submit = true
 caret_blink = true
 
 [connection signal="ide_initialized" from="." to="Margin/VerticalSplit/SidebarSplit/Sidebar/File Explorer" method="_on_ide_initialized"]
-[connection signal="ide_initialized" from="." to="Margin/VerticalSplit/EditorSplit/Console" method="_on_ide_initialized"]
 [connection signal="ide_initialized" from="." to="Margin/VerticalSplit/EditorSplit/BufferTabs" method="_on_ide_initialized"]
+[connection signal="ide_initialized" from="." to="Margin/VerticalSplit/EditorSplit/Console" method="_on_ide_initialized"]
+[connection signal="ide_vfs_changed" from="." to="Margin/VerticalSplit/SidebarSplit/Sidebar/File Explorer" method="_on_ide_vfs_changed"]
+[connection signal="ide_vfs_changed" from="." to="Margin/VerticalSplit/EditorSplit/Console" method="_on_ide_vfs_changed"]
 [connection signal="buffer_tabs_initialized" from="Margin/VerticalSplit/EditorSplit/BufferTabs" to="Margin/VerticalSplit/EditorSplit/Console" method="_on_buffer_initialized"]
 [connection signal="text_submitted" from="Margin/VerticalSplit/EditorSplit/Console/ConsoleInput/ConsoleInputLine" to="Margin/VerticalSplit/EditorSplit/Console" method="_run_command"]

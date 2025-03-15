@@ -2,20 +2,15 @@ extends Node
 
 ## Emit when current working directory changes
 signal cwd_changed(new_cwd: String)
+signal console_initialized(shell: COSH)
+
+@onready var output: RichTextLabel = $ConsoleOutput/ConsoleOutputText
+@onready var cmd_input: LineEdit = $ConsoleInput/ConsoleInputLine
+@onready var cwd_label: Label = $ConsoleInput/ConsoleCWD/CWDText
 
 var vfs: VFS
 var shell: COSH
-var output: RichTextLabel
-var cmd_input: LineEdit
-var cwd_label: Label
 var ide_initialized: bool = false
-
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	output = $ConsoleOutput/ConsoleOutputText
-	cmd_input = $ConsoleInput/ConsoleInputLine
-	cwd_label = $ConsoleInput/ConsoleCWD/CWDText
 
 
 func _run_command(input: String) -> void:
@@ -43,5 +38,11 @@ func _on_ide_initialized(ide_vfs: VFS) -> void:
 	ide_initialized = true
 
 
+func _on_ide_vfs_changed(new_vfs: VFS) -> void:
+	vfs = new_vfs
+	shell.change_vfs(new_vfs)
+
+
 func _on_buffer_initialized(buffer_mgr: BufferManager) -> void:
 	COSHEditor.new(buffer_mgr).install_module(shell)
+	console_initialized.emit(shell)

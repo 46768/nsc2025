@@ -1,2 +1,2 @@
 # IDE
-- Added editor buffers
+- Exposed APIs for the IDE to interact with programmatically

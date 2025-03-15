@@ -22,6 +22,11 @@ func _init(vfs: VFS) -> void:
 	COSHBuiltins.new().install_module(self)
 
 
+func change_vfs(new_vfs: VFS) -> void:
+	attached_vfs = new_vfs
+	cwd = "/"
+
+
 func set_command(cmd: String, fn: Callable) -> void:
 	command_reg[cmd] = fn
 

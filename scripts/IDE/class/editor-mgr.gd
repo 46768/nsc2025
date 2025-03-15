@@ -10,6 +10,15 @@ var current_buffer: Dictionary
 func _init(edit_ui: CodeEdit) -> void:
 	editor_ui = edit_ui
 	
+	editor_ui.set_line_folding_enabled(true)
+	editor_ui.set_auto_brace_completion_enabled(true)
+	editor_ui.set_highlight_matching_braces_enabled(true)
+	editor_ui.set_draw_line_numbers(true)
+	editor_ui.set_code_completion_enabled(true)
+	editor_ui.set_auto_indent_enabled(true)
+	editor_ui.set_draw_tabs(true)
+	editor_ui.set_line_length_guidelines([80, 100])
+	
 	load_colors("res://assets/json/IDE/syntax-highlighting/default.json")
 	parse_symbol_lut("res://assets/json/IDE/symbol_lut.json")
 	

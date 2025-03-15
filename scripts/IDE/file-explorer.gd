@@ -12,6 +12,14 @@ class VFSTree:
 	func _init(vfs: VFS, tree: Tree) -> void:
 		attached_vfs = vfs
 		attached_tree = tree
+		
+		attached_vfs.data_changed.connect(build_tree)
+	
+	
+	func change_vfs(new_vfs: VFS) -> void:
+		attached_vfs.data_changed.disconnect(build_tree)
+		attached_vfs = new_vfs
+		attached_vfs.data_changed.connect(build_tree)
 	
 	
 	func build_tree() -> void:
@@ -49,9 +57,8 @@ func _on_ide_initialized(ide_vfs: VFS) -> void:
 	vfstree = VFSTree.new(ide_vfs, tree_view)
 	vfstree.build_tree()
 	
-	ide_vfs.data_changed.connect(_on_vfs_modified)
 	ide_initialized = true
 
 
-func _on_vfs_modified() -> void:
-	vfstree.build_tree()
+func _on_ide_vfs_changed(new_vfs: VFS) -> void:
+	vfstree.change_vfs(new_vfs)

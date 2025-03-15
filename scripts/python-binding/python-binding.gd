@@ -27,8 +27,8 @@ var initialized: bool = false
 func run_script(
 	script_path: String, args: PackedStringArray
 ) -> Array:
-	var src_path: String = Globals.gpathize(script_path)
-	var bin_path: String = Globals.gpathize(PYTHON3_BIN_PATH)
+	var src_path: String = DiskUtil.gpathize(script_path)
+	var bin_path: String = DiskUtil.gpathize(PYTHON3_BIN_PATH)
 	var cmd_arg: PackedStringArray = PackedStringArray([src_path])
 	var output: Array = []
 	
@@ -49,8 +49,8 @@ func run_script(
 func create_script_process(
 	script_path: String, args: PackedStringArray
 ) -> int:
-	var src_path: String = Globals.gpathize(script_path)
-	var bin_path: String = Globals.gpathize(PYTHON3_BIN_PATH)
+	var src_path: String = DiskUtil.gpathize(script_path)
+	var bin_path: String = DiskUtil.gpathize(PYTHON3_BIN_PATH)
 	var cmd_arg: PackedStringArray = PackedStringArray([src_path])
 	
 	cmd_arg.append_array(args)
@@ -67,22 +67,22 @@ func __unpack_python_env(archive_path: String, dest_path: String) -> void:
 	
 	# Using tar
 	OS.execute("tar", [
-		"-xvzf", Globals.gpathize(archive_path),
-		"-C", Globals.gpathize(dest_path),
+		"-xvzf", DiskUtil.gpathize(archive_path),
+		"-C", DiskUtil.gpathize(dest_path),
 	])
 
 
 # Runs on game startup (Specified this script as
 # a global/singleton in project settings)
 func _ready() -> void:
-	RES_PACKED_PATH = Globals.join_paths(
+	RES_PACKED_PATH = DiskUtil.join_paths(
 			[RESOURCE_PATH, ARCHIVE_FNAME])
-	USR_PACKED_PATH = Globals.join_paths([DATA_PATH, ARCHIVE_FNAME])
+	USR_PACKED_PATH = DiskUtil.join_paths([DATA_PATH, ARCHIVE_FNAME])
 
-	CONDA_PATH = Globals.join_paths([DATA_PATH, "conda"])
+	CONDA_PATH = DiskUtil.join_paths([DATA_PATH, "conda"])
 	PYTHON3_BIN_PATH = {
-		"Windows": Globals.join_paths([CONDA_PATH, "python.exe"]),
-		"Linux": Globals.join_paths([CONDA_PATH, "bin", "python3"]),
+		"Windows": DiskUtil.join_paths([CONDA_PATH, "python.exe"]),
+		"Linux": DiskUtil.join_paths([CONDA_PATH, "bin", "python3"]),
 	}[OS.get_name()]
 
 	# Avoid repeated instantiation
@@ -107,7 +107,7 @@ func _ready() -> void:
 	
 	if not FileAccess.file_exists(PYTHON3_BIN_PATH):
 		# Clear and unpack again
-		Globals.delete_directory(CONDA_PATH, CONDA_PATH)
+		DiskUtil.delete_directory(CONDA_PATH, CONDA_PATH)
 		__unpack_python_env(USR_PACKED_PATH, CONDA_PATH)
 	
 	initialized = true

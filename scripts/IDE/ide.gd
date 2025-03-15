@@ -38,6 +38,11 @@ func _ready() -> void:
 	get_tree().get_root().size_changed.connect(_resize)
 	
 	Globals.IDE = self
+
+	Globals.screen_resized.connect(resize)
+	sidebar_split.dragged.connect(sidebar_to_editor_sync)
+	editor_split.dragged.connect(editor_to_sidebar_sync)
+	
 	ide_initialized.emit(vfs)
 
 

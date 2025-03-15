@@ -1,3 +1,6 @@
+# IDE
+- Added editor buffers
+
 # Gameplay
 - Implemented dialogue system
 

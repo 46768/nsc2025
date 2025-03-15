@@ -36,7 +36,7 @@ func delete_command(cmd: String) -> void:
 
 
 func run_command(cmd: String, arg: PackedStringArray) -> void:
-	var prev_cwd = cwd
+	var prev_cwd: String = cwd
 	var appending_string: String = "[%s@%s:%s]$ %s\n" % [
 		shell_user,
 		shell_machine,
@@ -46,7 +46,7 @@ func run_command(cmd: String, arg: PackedStringArray) -> void:
 	if cmd == "":
 		pass
 	elif cmd in command_reg:
-		var cmd_res = await command_reg[cmd].call(self, arg)
+		var cmd_res: String = await command_reg[cmd].call(self, arg)
 		appending_string += str(cmd_res)
 
 	else:

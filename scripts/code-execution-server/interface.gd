@@ -83,9 +83,9 @@ func send_pkt(packet: Dictionary) -> void:
 	if server_requesting:
 		await received_packet
 	var headers: PackedStringArray = PackedStringArray()
-	for header in packet["headers"].keys():
+	for header: String in packet["headers"].keys():
 		headers.append("%s: %s" % [header, packet["headers"][header]])
-	var _err = server_socket.request(
+	var _err: int = server_socket.request(
 			server_url + packet["url"],
 			headers,
 			HTTPClient.METHOD_POST,

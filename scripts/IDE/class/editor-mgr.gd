@@ -28,27 +28,27 @@ func _init(edit_ui: CodeEdit) -> void:
 
 
 func load_colors(json_path: String) -> void:
-	var json_file = FileAccess.open(json_path, FileAccess.READ)
-	var colors = JSON.parse_string(json_file.get_as_text())
+	var json_file: FileAccess = FileAccess.open(json_path, FileAccess.READ)
+	var colors: Dictionary = JSON.parse_string(json_file.get_as_text())
 	highlighter_data = colors
 	
-	var highlighter = CodeHighlighter.new()
+	var highlighter: CodeHighlighter = CodeHighlighter.new()
 	highlighter.number_color = colors["number"]
 	highlighter.symbol_color = colors["symbol"]
 	highlighter.function_color = colors["function"]
 	
-	for str_token in colors["string"]["token"]:
+	for str_token: String in colors["string"]["token"]:
 		highlighter.add_color_region(
 			str_token, str_token, 
 			colors["string"]["color"], false
 		)
 	
 	# Python keywords
-	for keyword in colors["keyword"]["token"]:
+	for keyword: String in colors["keyword"]["token"]:
 		highlighter.add_keyword_color(keyword, colors["keyword"]["color"])
 	
 	# Constants
-	for constant in colors["constant"]["token"]:
+	for constant: String in colors["constant"]["token"]:
 		highlighter.add_keyword_color(constant, colors["constant"]["color"])
 	
 	synt_highlighter = highlighter
@@ -65,15 +65,15 @@ func handle_autocomplete() -> void:
 		printerr("Symbol LUT not found")
 		return
 	
-	for fn in symbols_lut["function"]:
+	for fn: String in symbols_lut["function"]:
 		editor_ui.add_code_completion_option(
 			CodeEdit.KIND_FUNCTION, fn, fn+"(", highlighter_data["function"]
 		)
-	for constant in symbols_lut["constant"]:
+	for constant: String in symbols_lut["constant"]:
 		editor_ui.add_code_completion_option(
 			CodeEdit.KIND_CONSTANT, constant, constant, highlighter_data["constant"]["color"]
 		)
-	for keyword in symbols_lut["keyword"]:
+	for keyword: String in symbols_lut["keyword"]:
 		editor_ui.add_code_completion_option(
 			CodeEdit.KIND_CONSTANT, keyword, keyword, highlighter_data["keyword"]["color"]
 		)

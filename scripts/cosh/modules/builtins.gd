@@ -23,8 +23,8 @@ func __cosh_cd(shell: COSH, args: PackedStringArray) -> String:
 	if args.is_empty():
 		return "cd: missing path\n"
 	
-	var path = args[0]
-	var new_cwd = shell.cwd
+	var path: String = args[0]
+	var new_cwd: String = shell.cwd
 	
 	if path.begins_with("/"):
 		new_cwd = path
@@ -41,16 +41,16 @@ func __cosh_cd(shell: COSH, args: PackedStringArray) -> String:
 	return ""
 
 
-func __cosh_echo(_shell: COSH, args: PackedStringArray):
+func __cosh_echo(_shell: COSH, args: PackedStringArray) -> String:
 	return " ".join(args) + "\n"
 
 
-func __cosh_clear(shell: COSH, _args: PackedStringArray):
+func __cosh_clear(shell: COSH, _args: PackedStringArray) -> String:
 	shell.output_buffer = ""
 	return ""
 
 
-func __cosh_mkdir(shell: COSH, args: PackedStringArray):
+func __cosh_mkdir(shell: COSH, args: PackedStringArray) -> String:
 	if args.is_empty():
 		return "mkdir: missing path\n"
 	
@@ -70,7 +70,7 @@ func __cosh_mkdir(shell: COSH, args: PackedStringArray):
 		return ""
 
 
-func __cosh_touch(shell: COSH, args: PackedStringArray):
+func __cosh_touch(shell: COSH, args: PackedStringArray) -> String:
 	if args.is_empty():
 		return "touch: missing file operand\n"
 	var path: String = args[0]
@@ -82,7 +82,7 @@ func __cosh_touch(shell: COSH, args: PackedStringArray):
 	return ""
 
 
-func __cosh_rm(shell: COSH, args: PackedStringArray):
+func __cosh_rm(shell: COSH, args: PackedStringArray) -> String:
 	if args.is_empty():
 		return "rm: missing operand\n"
 	var path: String = args[0]
@@ -104,13 +104,13 @@ func __cosh_rm(shell: COSH, args: PackedStringArray):
 	return ""
 
 
-func __cosh_ls(shell: COSH, args: PackedStringArray):
+func __cosh_ls(shell: COSH, args: PackedStringArray) -> String:
 	var path: String = shell.cwd if args.is_empty() else args[0]
 	path = path if path.begins_with("/") else VFS.path_join(shell.cwd, path)
 	path = VFS.resolve_path(path)
 	var dir: Dictionary = shell.attached_vfs.get_block(path)
 	var ret_string_arr: PackedStringArray = PackedStringArray([])
-	for block in (dir.content as Dictionary).keys():
+	for block: String in (dir.content as Dictionary).keys():
 		var basename: String = VFS.get_basename(block)
 		if shell.attached_vfs.is_dir(block):
 			ret_string_arr.append("[color=7fb4ca]%s[/color]" % basename)
@@ -119,12 +119,12 @@ func __cosh_ls(shell: COSH, args: PackedStringArray):
 	return " ".join(ret_string_arr) + ("" if ret_string_arr.is_empty() else "\n")
 
 
-func __cosh_cat(shell: COSH, args: PackedStringArray):
+func __cosh_cat(shell: COSH, args: PackedStringArray) -> String:
 	if args.is_empty():
 		return "cat: missing path\n"
 	var path: String = args[0]
 	path = path if path.begins_with("/") else VFS.path_join(shell.cwd, path)
-	var abs_path = path
+	var abs_path: String = path
 	path = VFS.resolve_path(path)
 	if not shell.attached_vfs.block_exists(path):
 		return "cat: %s: No such file\n" % abs_path

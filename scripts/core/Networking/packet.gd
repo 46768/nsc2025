@@ -6,9 +6,9 @@ func _ready() -> void:
 
 
 func hash_packet(packet: Dictionary) -> String:
-	var base_str = (str(packet["headers"]["p-time"])
-				+ str(packet["headers"]["p-type"])
-				+ str(packet["content"]))
+	var base_str: String = (str(packet["headers"]["p-time"])
+							+ str(packet["headers"]["p-type"])
+							+ str(packet["content"]))
 	return base_str.sha256_text()
 
 
@@ -17,7 +17,7 @@ func build_packet(
 		type: String,
 		code: int,
 		content: Dictionary) -> Dictionary:
-	var packet = {
+	var packet: Dictionary = {
 		"url": url,
 		"code": code,
 		"headers": {
@@ -40,7 +40,7 @@ func decode_packet(
 	var type_header: String = "pkt:404"
 	var hash_header: String = "pkt:404"
 	
-	for header in headers:
+	for header: String in headers:
 		if header.begins_with("p-time"):
 			time_header = header
 		elif header.begins_with("p-type"):

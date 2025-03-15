@@ -10,7 +10,7 @@ enum FileType { FILE, DIRECTORY }
 var data: Dictionary
 
 
-func _init(init_data = {}) -> void:
+func _init(init_data: Dictionary = {}) -> void:
 	data = init_data.duplicate(true)
 	data_changed_connected = []
 	if not block_exists("/"):
@@ -18,7 +18,7 @@ func _init(init_data = {}) -> void:
 
 
 static func _create_block(ftype: FileType) -> Dictionary:
-	var block_content
+	var block_content: Variant
 	if ftype == FileType.FILE:
 		block_content = ""
 	else:
@@ -44,7 +44,7 @@ static func get_basename(path: String) -> String:
 static func resolve_path(path: String) -> String:
 	var blocks: PackedStringArray = PackedStringArray([])
 	var path_blocks: PackedStringArray = path.split("/", false)
-	for block in path_blocks:
+	for block: String in path_blocks:
 		if block == ".":
 			pass
 		elif block == "..":
@@ -120,7 +120,7 @@ func write_file(path: String, content: String) -> RET_CODE:
 	if not block_exists(path):
 		data[path] = _create_block(FileType.FILE)
 		parent.content[path] = true
-	var file = get_block(path)
+	var file: Dictionary = get_block(path)
 	if (file.type as FileType) == FileType.DIRECTORY:
 		return RET_CODE.ERR
 	file.content = content
@@ -132,7 +132,7 @@ func write_file(path: String, content: String) -> RET_CODE:
 func read_file(path: String) -> String:
 	if not block_exists(path):
 		return ""
-	var file = get_block(path)
+	var file: Dictionary = get_block(path)
 	if (file.type as FileType) == FileType.DIRECTORY:
 		return ""
 	

@@ -33,7 +33,7 @@ func run_script(
 	var output: Array = []
 	
 	cmd_arg.append_array(args)
-	var ret_code = OS.execute(
+	var ret_code: int = OS.execute(
 		bin_path, cmd_arg,
 		output, true
 	)
@@ -54,7 +54,7 @@ func create_script_process(
 	var cmd_arg: PackedStringArray = PackedStringArray([src_path])
 	
 	cmd_arg.append_array(args)
-	var pid = OS.create_process(
+	var pid: int = OS.create_process(
 		bin_path, cmd_arg, false
 	)
 	

@@ -1,0 +1,21 @@
+python-binding/code-execution/src:
+  - py
+
+python-binding/code-execution/config:
+  - yml
+  - yaml
+
+python-binding:
+  - py
+  - yml
+  - yaml
+
+scenes:
+  - tscn
+  - scn
+
+script-templates:
+  - gd
+
+scripts:
+  - gd

@@ -5,6 +5,7 @@ source code
 """
 
 import ast
+import traceback
 import yaml
 import logging
 
@@ -143,7 +144,8 @@ class ASTChecker:
         try:
             tree = ast.parse(src)
         except SyntaxError:
-            return (True, {"syntax_err": True})
+            tracebck = traceback.format_exc()
+            return (True, {"syntax_err": tracebck})
 
         have_err = False
         ret_dict = {}

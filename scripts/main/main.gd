@@ -10,8 +10,8 @@ func _ready() -> void:
 	$Ide.hide()
 	
 	Dialogue.spawn_dialogue("[wave]Test test hello world![/wave]", test_texture)
-	#await Globals.wait(10)
-	#Dialogue.clear_dialogue()
+	await Globals.wait(1)
+	Dialogue.clear_dialogue()
 
 
 func _process(_delta: float) -> void:

@@ -1,11 +1,13 @@
-[gd_scene load_steps=5 format=3 uid="uid://c44n34k18cx8m"]
+[gd_scene load_steps=6 format=3 uid="uid://c44n34k18cx8m"]
 
+[ext_resource type="Theme" uid="uid://bq4vvnvsx0a5q" path="res://themes/ide/ide-default.tres" id="1_eacvr"]
 [ext_resource type="Script" path="res://scripts/IDE/ide.gd" id="1_msfw7"]
 [ext_resource type="Script" uid="uid://dxs06js8hwkng" path="res://scripts/IDE/buffer_tabs.gd" id="3_eacvr"]
 [ext_resource type="Script" uid="uid://dq0odnd4pbbda" path="res://scripts/IDE/console.gd" id="4_16dsd"]
 [ext_resource type="Script" uid="uid://dxdthe64tvsa" path="res://scripts/IDE/file-explorer.gd" id="6_5fjmn"]
 
 [node name="Ide" type="Control"]
+z_index = 9
 layout_direction = 2
 layout_mode = 3
 anchors_preset = 15
@@ -15,9 +17,10 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme = ExtResource("1_eacvr")
 script = ExtResource("1_msfw7")
 
-[node name="Margin" type="MarginContainer" parent="."]
+[node name="OuterMargin" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -29,73 +32,84 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VerticalSplit" type="HSplitContainer" parent="Margin"]
+[node name="PanelContainer" type="PanelContainer" parent="OuterMargin"]
+layout_mode = 2
+theme = ExtResource("1_eacvr")
+
+[node name="InnerMargin" type="MarginContainer" parent="OuterMargin/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VerticalSplit" type="HSplitContainer" parent="OuterMargin/PanelContainer/InnerMargin"]
 layout_mode = 2
 split_offset = 240
 
-[node name="SidebarSplit" type="VSplitContainer" parent="Margin/VerticalSplit"]
+[node name="SidebarSplit" type="VSplitContainer" parent="OuterMargin/PanelContainer/InnerMargin/VerticalSplit"]
 layout_mode = 2
 split_offset = 120
 
-[node name="Sidebar" type="TabContainer" parent="Margin/VerticalSplit/SidebarSplit"]
+[node name="Sidebar" type="TabContainer" parent="OuterMargin/PanelContainer/InnerMargin/VerticalSplit/SidebarSplit"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 current_tab = 0
 clip_tabs = false
 
-[node name="Problem Viewer" type="BoxContainer" parent="Margin/VerticalSplit/SidebarSplit/Sidebar"]
+[node name="Problem Viewer" type="BoxContainer" parent="OuterMargin/PanelContainer/InnerMargin/VerticalSplit/SidebarSplit/Sidebar"]
 layout_mode = 2
 metadata/_tab_index = 0
 
-[node name="ProblemStatement" type="RichTextLabel" parent="Margin/VerticalSplit/SidebarSplit/Sidebar/Problem Viewer"]
+[node name="ProblemStatement" type="RichTextLabel" parent="OuterMargin/PanelContainer/InnerMargin/VerticalSplit/SidebarSplit/Sidebar/Problem Viewer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 bbcode_enabled = true
 text = "hello!"
 
-[node name="File Explorer" type="BoxContainer" parent="Margin/VerticalSplit/SidebarSplit/Sidebar"]
+[node name="File Explorer" type="BoxContainer" parent="OuterMargin/PanelContainer/InnerMargin/VerticalSplit/SidebarSplit/Sidebar"]
 visible = false
 layout_mode = 2
 script = ExtResource("6_5fjmn")
 metadata/_tab_index = 1
 
-[node name="FileTree" type="Tree" parent="Margin/VerticalSplit/SidebarSplit/Sidebar/File Explorer"]
+[node name="FileTree" type="Tree" parent="OuterMargin/PanelContainer/InnerMargin/VerticalSplit/SidebarSplit/Sidebar/File Explorer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Debugger" type="BoxContainer" parent="Margin/VerticalSplit/SidebarSplit/Sidebar"]
+[node name="Debugger" type="BoxContainer" parent="OuterMargin/PanelContainer/InnerMargin/VerticalSplit/SidebarSplit/Sidebar"]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
-[node name="Notes" type="TextEdit" parent="Margin/VerticalSplit/SidebarSplit"]
+[node name="Notes" type="TextEdit" parent="OuterMargin/PanelContainer/InnerMargin/VerticalSplit/SidebarSplit"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 placeholder_text = "Put your notes here"
 
-[node name="EditorSplit" type="VSplitContainer" parent="Margin/VerticalSplit"]
+[node name="EditorSplit" type="VSplitContainer" parent="OuterMargin/PanelContainer/InnerMargin/VerticalSplit"]
 layout_mode = 2
 split_offset = 120
 
-[node name="BufferTabs" type="TabContainer" parent="Margin/VerticalSplit/EditorSplit"]
+[node name="BufferTabs" type="TabContainer" parent="OuterMargin/PanelContainer/InnerMargin/VerticalSplit/EditorSplit"]
 layout_mode = 2
 size_flags_vertical = 3
 script = ExtResource("3_eacvr")
 
-[node name="Console" type="VBoxContainer" parent="Margin/VerticalSplit/EditorSplit"]
+[node name="Console" type="VBoxContainer" parent="OuterMargin/PanelContainer/InnerMargin/VerticalSplit/EditorSplit"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("4_16dsd")
 
-[node name="ConsoleOutput" type="PanelContainer" parent="Margin/VerticalSplit/EditorSplit/Console"]
+[node name="ConsoleOutput" type="PanelContainer" parent="OuterMargin/PanelContainer/InnerMargin/VerticalSplit/EditorSplit/Console"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ConsoleOutputText" type="RichTextLabel" parent="Margin/VerticalSplit/EditorSplit/Console/ConsoleOutput"]
+[node name="ConsoleOutputText" type="RichTextLabel" parent="OuterMargin/PanelContainer/InnerMargin/VerticalSplit/EditorSplit/Console/ConsoleOutput"]
 custom_minimum_size = Vector2(72, 96)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -107,27 +121,27 @@ autowrap_mode = 2
 threaded = true
 selection_enabled = true
 
-[node name="ConsoleInput" type="HBoxContainer" parent="Margin/VerticalSplit/EditorSplit/Console"]
+[node name="ConsoleInput" type="HBoxContainer" parent="OuterMargin/PanelContainer/InnerMargin/VerticalSplit/EditorSplit/Console"]
 layout_mode = 2
 
-[node name="ConsoleCWD" type="PanelContainer" parent="Margin/VerticalSplit/EditorSplit/Console/ConsoleInput"]
+[node name="ConsoleCWD" type="PanelContainer" parent="OuterMargin/PanelContainer/InnerMargin/VerticalSplit/EditorSplit/Console/ConsoleInput"]
 layout_mode = 2
 
-[node name="CWDText" type="Label" parent="Margin/VerticalSplit/EditorSplit/Console/ConsoleInput/ConsoleCWD"]
+[node name="CWDText" type="Label" parent="OuterMargin/PanelContainer/InnerMargin/VerticalSplit/EditorSplit/Console/ConsoleInput/ConsoleCWD"]
 layout_mode = 2
 size_flags_vertical = 1
 
-[node name="ConsoleInputLine" type="LineEdit" parent="Margin/VerticalSplit/EditorSplit/Console/ConsoleInput"]
+[node name="ConsoleInputLine" type="LineEdit" parent="OuterMargin/PanelContainer/InnerMargin/VerticalSplit/EditorSplit/Console/ConsoleInput"]
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 keep_editing_on_text_submit = true
 caret_blink = true
 
-[connection signal="ide_initialized" from="." to="Margin/VerticalSplit/SidebarSplit/Sidebar/File Explorer" method="_on_ide_initialized"]
-[connection signal="ide_initialized" from="." to="Margin/VerticalSplit/EditorSplit/BufferTabs" method="_on_ide_initialized"]
-[connection signal="ide_initialized" from="." to="Margin/VerticalSplit/EditorSplit/Console" method="_on_ide_initialized"]
-[connection signal="ide_vfs_changed" from="." to="Margin/VerticalSplit/SidebarSplit/Sidebar/File Explorer" method="_on_ide_vfs_changed"]
-[connection signal="ide_vfs_changed" from="." to="Margin/VerticalSplit/EditorSplit/Console" method="_on_ide_vfs_changed"]
-[connection signal="buffer_tabs_initialized" from="Margin/VerticalSplit/EditorSplit/BufferTabs" to="Margin/VerticalSplit/EditorSplit/Console" method="_on_buffer_initialized"]
-[connection signal="text_submitted" from="Margin/VerticalSplit/EditorSplit/Console/ConsoleInput/ConsoleInputLine" to="Margin/VerticalSplit/EditorSplit/Console" method="_run_command"]
+[connection signal="ide_initialized" from="." to="OuterMargin/PanelContainer/InnerMargin/VerticalSplit/SidebarSplit/Sidebar/File Explorer" method="_on_ide_initialized"]
+[connection signal="ide_initialized" from="." to="OuterMargin/PanelContainer/InnerMargin/VerticalSplit/EditorSplit/BufferTabs" method="_on_ide_initialized"]
+[connection signal="ide_initialized" from="." to="OuterMargin/PanelContainer/InnerMargin/VerticalSplit/EditorSplit/Console" method="_on_ide_initialized"]
+[connection signal="ide_vfs_changed" from="." to="OuterMargin/PanelContainer/InnerMargin/VerticalSplit/SidebarSplit/Sidebar/File Explorer" method="_on_ide_vfs_changed"]
+[connection signal="ide_vfs_changed" from="." to="OuterMargin/PanelContainer/InnerMargin/VerticalSplit/EditorSplit/Console" method="_on_ide_vfs_changed"]
+[connection signal="buffer_tabs_initialized" from="OuterMargin/PanelContainer/InnerMargin/VerticalSplit/EditorSplit/BufferTabs" to="OuterMargin/PanelContainer/InnerMargin/VerticalSplit/EditorSplit/Console" method="_on_buffer_initialized"]
+[connection signal="text_submitted" from="OuterMargin/PanelContainer/InnerMargin/VerticalSplit/EditorSplit/Console/ConsoleInput/ConsoleInputLine" to="OuterMargin/PanelContainer/InnerMargin/VerticalSplit/EditorSplit/Console" method="_run_command"]

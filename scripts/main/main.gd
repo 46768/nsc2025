@@ -29,8 +29,16 @@ func _on_ide_initialized(__: VFS) -> void:
 	test_seq = Sequence.new()
 	
 	test_seq.ram["test label"] = "mkdir test"
+	test_seq.ram["statement"] = """Hello! This is a test statement!
+So this is the print function [code]print[/code]
+It prints what we gives it, so for example [code]print(\"Hello!\")[/code]
+will print [code]Hello![/code] to the console you have below.
+Try running the program with [code]python main.py[/code] using the
+input line below!
+"""
+	test_seq.ram["sample_program"] = "print(\"Hello!\")"
 	
-	var seq_grp = test_seq.new_group()
+	var seq_grp: Variant = test_seq.new_group()
 	
 	seq_grp.parse_source("""
 		mov~$s.touch main.py~$m.move test
@@ -38,17 +46,14 @@ func _on_ide_initialized(__: VFS) -> void:
 		shell~%test label
 		shell~$s.cd test
 		shell~%.move test
+		shell~$s.write main.py~%sample_program
 		shell~$s.code main.py
+		set_statement~%statement
 	""")
 	
-	var seq_grp2 = test_seq.new_group()
+	var seq_grp2: Variant = test_seq.new_group()
 	
 	seq_grp2.parse_source("""
-		mov~$m.reg2~$m.reg1
-		mov~%.reg1~$m.reg3
-		mov~$s.echo test~%.reg3
-		shell~%.reg2
-		shell~%.reg1
 		dialogue~$s.[wave][color=red]Hello from DSL![/color][/wave]
 	""")
 	

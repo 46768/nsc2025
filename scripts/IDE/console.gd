@@ -32,6 +32,7 @@ func _on_ide_initialized(ide_vfs: VFS) -> void:
 	shell = COSH.new(vfs)
 	COSHTestModule.new().install_module(shell)
 	COSHPythonModule.new().install_module(shell)
+	COSHFSIOModule.new().install_module(shell)
 	
 	shell.cwd_changed.connect(cwd_changed.emit)
 	cwd_label.text = " [%s@%s: %s]$ " % [shell.shell_user, shell.shell_machine, shell.cwd]

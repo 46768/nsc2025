@@ -10,33 +10,33 @@ signal ide_vfs_changed(new_vfs: VFS)
 @export_range(0, 100) var outer_margin: int = 10
 @export_range(0, 100) var inner_margin: int = 10
 
-@onready var sidebar_split: VSplitContainer = (
-		$OuterMargin/PanelContainer/InnerMargin/VerticalSplit/SidebarSplit)
-@onready var editor_split: VSplitContainer = (
-		$OuterMargin/PanelContainer/InnerMargin/VerticalSplit/EditorSplit)
-@onready var console: VBoxContainer = (
-		$OuterMargin/PanelContainer/InnerMargin/VerticalSplit/EditorSplit/Console)
-@onready var buffer_tabs: TabContainer = (
-		$OuterMargin/PanelContainer/InnerMargin/VerticalSplit/EditorSplit/BufferTabs)
+@onready var sidebar_split: VSplitContainer = ($Omarg/Panelc/Imarg/Vsplit/SidebarSplit)
+@onready var editor_split: VSplitContainer = ($Omarg/Panelc/Imarg/Vsplit/EditorSplit)
+@onready var console: VBoxContainer = ($Omarg/Panelc/Imarg/Vsplit/EditorSplit/Console)
+@onready var buffer_tabs: TabContainer = ($Omarg/Panelc/Imarg/Vsplit/EditorSplit/BufferTabs)
+@onready var omarg: MarginContainer = $Omarg
+@onready var imarg: MarginContainer = $Omarg/Panelc/Imarg
 
 var vfs: VFS = null
 var shell: COSH = null
 var buffer_mgr: BufferManager = null
+@onready var problem_statement: RichTextLabel = (
+		$"Omarg/Panelc/Imarg/Vsplit/SidebarSplit/Sidebar/Problem Viewer/Txt")
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	_resize()
 	
-	$OuterMargin.add_theme_constant_override("margin_bottom", outer_margin)
-	$OuterMargin.add_theme_constant_override("margin_left", outer_margin)
-	$OuterMargin.add_theme_constant_override("margin_top", outer_margin)
-	$OuterMargin.add_theme_constant_override("margin_right", outer_margin)
+	omarg.add_theme_constant_override("margin_bottom", outer_margin)
+	omarg.add_theme_constant_override("margin_left", outer_margin)
+	omarg.add_theme_constant_override("margin_top", outer_margin)
+	omarg.add_theme_constant_override("margin_right", outer_margin)
 	
-	$OuterMargin/PanelContainer/InnerMargin.add_theme_constant_override("margin_bottom", inner_margin)
-	$OuterMargin/PanelContainer/InnerMargin.add_theme_constant_override("margin_left", inner_margin)
-	$OuterMargin/PanelContainer/InnerMargin.add_theme_constant_override("margin_top", inner_margin)
-	$OuterMargin/PanelContainer/InnerMargin.add_theme_constant_override("margin_right", inner_margin)
+	imarg.add_theme_constant_override("margin_bottom", inner_margin)
+	imarg.add_theme_constant_override("margin_left", inner_margin)
+	imarg.add_theme_constant_override("margin_top", inner_margin)
+	imarg.add_theme_constant_override("margin_right", inner_margin)
 	
 	vfs = VFS.new()
 	vfs.set_name("ide_custom")

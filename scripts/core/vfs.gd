@@ -2,6 +2,7 @@ class_name VFS
 extends Object
 
 signal data_changed
+signal buffer_reload
 var data_changed_connected: Array
 
 enum RET_CODE { SUCCESS, ERR }

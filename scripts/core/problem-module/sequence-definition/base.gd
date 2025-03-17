@@ -42,6 +42,10 @@ func highlight_buffer(args: Array) -> void:
 		args[4],
 	)
 
+func clear_highlight(_args: Array) -> void:
+	var buffer_mgr: BufferManager = Globals.ide.buffer_mgr
+	buffer_mgr.clear_current_buffer_highlight()
+
 
 func mov(args: Array) -> void:
 	var ram: Dictionary = args[0]

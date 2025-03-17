@@ -6,6 +6,7 @@ var editor_ui: CodeEdit
 var highlighter_data: Dictionary; var synt_highlighter: CodeHighlighter
 var symbols_lut: Dictionary
 var current_buffer: Dictionary
+var refresh_sig_handler: Callable
 
 func _init(edit_ui: CodeEdit) -> void:
 	editor_ui = edit_ui
@@ -84,7 +85,19 @@ func handle_autocomplete() -> void:
 func load_vfs_file(fpath: String, vfs: VFS) -> void:
 	current_buffer["vfs"] = vfs
 	current_buffer["fpath"] = fpath
+	var caret_line: int = editor_ui.get_caret_line()
+	var caret_column: int = editor_ui.get_caret_column()
 	editor_ui.text = vfs.read_file(fpath)
+	editor_ui.set_caret_column(caret_column)
+	editor_ui.set_caret_line(caret_line)
+
+
+func reload_data() -> void:
+	var caret_line: int = editor_ui.get_caret_line()
+	var caret_column: int = editor_ui.get_caret_column()
+	editor_ui.text = current_buffer["vfs"].read_file(current_buffer["fpath"])
+	editor_ui.set_caret_column(caret_column)
+	editor_ui.set_caret_line(caret_line)
 
 
 func save_buffer() -> void:

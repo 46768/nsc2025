@@ -23,4 +23,5 @@ func write_file(shell: COSH, args: PackedStringArray) -> String:
 	elif not shell.attached_vfs.is_dir(path):
 		shell.attached_vfs.write_file(path, content)
 	
+	shell.attached_vfs.buffer_reload.emit()
 	return ""

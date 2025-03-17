@@ -21,11 +21,12 @@ func new_group() -> SequenceGroup:
 	return group
 
 
-func next() -> void:
+func next() -> bool:
 	if sequence_idx >= len(sequence):
-		return
+		return false
 	sequence[sequence_idx].run()
 	sequence_idx += 1
+	return true
 
 
 class SequenceGroup:

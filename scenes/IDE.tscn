@@ -9,7 +9,7 @@
 [ext_resource type="StyleBox" uid="uid://dvrweogbshbqa" path="res://themes/ide/consolepanel.stylebox" id="7_pngv2"]
 
 [node name="Ide" type="Control"]
-z_index = 9
+z_index = 1
 layout_direction = 2
 layout_mode = 3
 anchors_preset = 15

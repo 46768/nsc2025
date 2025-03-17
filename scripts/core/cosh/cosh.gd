@@ -2,6 +2,7 @@ class_name COSH
 extends Object
 
 signal cwd_changed(new_cwd: String)
+signal output_changed
 
 var attached_vfs: VFS
 var cwd: String = "/"
@@ -52,6 +53,19 @@ func run_command(cmd: String, arg: PackedStringArray) -> void:
 	else:
 		appending_string += "%s: command not found\n" % cmd
 	output_buffer += appending_string + "\n"
+	if prev_cwd != cwd:
+		cwd_changed.emit(cwd)
+	
+	output_changed.emit()
+
+
+func run_command_slient(cmd: String, arg: PackedStringArray) -> void:
+	var prev_cwd: String = cwd
+	if cmd == "":
+		pass
+	elif cmd in command_reg:
+		await command_reg[cmd].call(self, arg)
+
 	if prev_cwd != cwd:
 		cwd_changed.emit(cwd)
 

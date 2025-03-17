@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://ebjgaywwcvye" path="res://assets/textures/dialogue-system/nan.png" id="2_giuoe"]
 
 [node name="DialogueBox" type="MarginContainer"]
+z_index = 2
 offset_right = 174.0
 offset_bottom = 168.0
 theme_override_constants/margin_left = 15

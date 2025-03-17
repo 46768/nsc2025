@@ -36,7 +36,10 @@ will print [code]Hello![/code] to the console you have below.
 Try running the program with [code]python main.py[/code] using the
 input line below!
 """
+	test_seq.ram["statement2"] = """Hi again! I hope i fix this into
+a proper code now, cya!"""
 	test_seq.ram["sample_program"] = "print(\"Hello!\")"
+	test_seq.ram["dialogue_texture"] = test_texture
 	
 	var seq_grp: Variant = test_seq.new_group()
 	
@@ -54,8 +57,23 @@ input line below!
 	var seq_grp2: Variant = test_seq.new_group()
 	
 	seq_grp2.parse_source("""
-		dialogue~$s.[wave][color=red]Hello from DSL![/color][/wave]
+		dialogue~$s.[wave][color=red]Hello from DSL![/color][/wave]~%dialogue_texture
 	""")
 	
-	test_seq.next()
-	test_seq.next()
+	var seq_grp3: Variant = test_seq.new_group()
+	
+	seq_grp3.parse_source("""
+		dialogue~$s.[wave][color=red]Hello from DSL2![/color][/wave]~%dialogue_texture
+		set_statement~%statement2
+		highlight_buffer~$d.0~$d.0~$d.0~$d.15
+	""")
+	
+	test_seq.next() # Run first group
+	test_seq.next() # Run second group
+	test_seq.ram["latestDialogue"].dialogue_closed.connect(func()->void:
+		print("hello 1")
+		test_seq.next()
+		test_seq.ram["latestDialogue"].dialogue_closed.connect(func()->void:
+			print("Hello 2")
+		)
+	)

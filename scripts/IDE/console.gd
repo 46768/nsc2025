@@ -27,6 +27,10 @@ func _run_command(input: String) -> void:
 	cwd_label.text = " [%s@%s: %s]$ " % [shell.shell_user, shell.shell_machine, shell.cwd]
 
 
+func _on_shell_output_changed() -> void:
+	output.text = shell.output_buffer
+
+
 func _on_ide_initialized(ide_vfs: VFS) -> void:
 	vfs = ide_vfs
 	shell = COSH.new(vfs)
@@ -35,6 +39,7 @@ func _on_ide_initialized(ide_vfs: VFS) -> void:
 	COSHFSIOModule.new().install_module(shell)
 	
 	shell.cwd_changed.connect(cwd_changed.emit)
+	shell.output_changed.connect(_on_shell_output_changed)
 	cwd_label.text = " [%s@%s: %s]$ " % [shell.shell_user, shell.shell_machine, shell.cwd]
 	ide_initialized = true
 

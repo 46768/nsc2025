@@ -36,3 +36,12 @@ func close_buffer(buffer_idx: int) -> void:
 	
 	buffer_mapping.erase(fpath)
 	buffers.remove_at(buffer_idx)
+
+
+func highlight_current_buffer(
+		start_line: int,
+		start_column: int, 
+		caret_line: int, 
+		caret_column: int) -> void:
+	var editor: CodeEdit = tab_container.get_current_tab_control()
+	editor.select(start_line, start_column, caret_line, caret_column)

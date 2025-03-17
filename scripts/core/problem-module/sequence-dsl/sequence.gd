@@ -50,7 +50,7 @@ class SequenceGroup:
 		
 		for i: int in range(len(lines)):
 			var line: String = lines[i]
-			var tokenized_line: PackedStringArray = SequenceDSL.tokenize(line)
+			var tokenized_line: Array = SequenceDSL.tokenize(line)
 			
 			for j: int in range(1, len(tokenized_line)):
 				var parsed_operand: Variant = SequenceDSL.parse_operand(

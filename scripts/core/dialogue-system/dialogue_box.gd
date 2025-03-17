@@ -1,6 +1,8 @@
 extends MarginContainer
 
 
+signal dialogue_closed
+
 @onready var dialogue_texture_rect: TextureRect = (
 		$PanelContainer/InnerMargin/Layout/CharacterTexture)
 @onready var dialogue_message_box: RichTextLabel = (
@@ -31,7 +33,10 @@ func _on_screen_resize() -> void:
 
 func cleanup() -> void:
 	Globals.screen_resized.disconnect(_on_screen_resize)
+	for connection: Dictionary in dialogue_closed.get_connections():
+		dialogue_closed.disconnect(connection["callable"])
 
 
 func _on_button_pressed() -> void:
+	dialogue_closed.emit()
 	Dialogue.delete_dialogue(dialogue_hash)

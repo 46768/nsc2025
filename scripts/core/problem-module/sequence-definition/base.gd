@@ -5,23 +5,28 @@ var types: Dictionary[String, Callable] = {
 }
 
 
-func shell(_ram: Dictionary, cmd: String, extra: String = "") -> void:
+func shell(args: Array) -> void:
+	var cmd: String = args[1]
 	var cmd_blocks: PackedStringArray = cmd.split(" ")
+	cmd_blocks.append_array(PackedStringArray(args.slice(2)))
 	var cmd_cmd: String = cmd_blocks[0]
 	var cmd_args: PackedStringArray = cmd_blocks.slice(1)
-	cmd_args.append(extra)
 	Globals.ide.shell.run_command(cmd_cmd, cmd_args)
 
 
-func dialogue(_ram: Dictionary, text: String) -> void:
-	Dialogue.spawn_dialogue(text)
+func dialogue(args: Array) -> void:
+	Dialogue.spawn_dialogue(args[1])
 
 
-func set_statement(_ram: Dictionary, text: String) -> void:
-	Globals.ide.problem_statement.set_text(text)
+func set_statement(args: Array) -> void:
+	Globals.ide.problem_statement.set_text(args[1])
 
 
-func mov(ram: Dictionary, src: Variant, dest: String) -> void:
+func mov(args: Array) -> void:
+	var ram: Dictionary = args[0]
+	var src: Variant = args[1]
+	var dest: String = args[2]
+	
 	if dest.begins_with("!??"):
 		ram[dest.right(-3)] = src
 	else:

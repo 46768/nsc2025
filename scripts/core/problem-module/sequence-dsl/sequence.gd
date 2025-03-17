@@ -79,4 +79,4 @@ class SequenceGroup:
 			
 			if len(opcode) == 1:
 				if Sequence.BASE.has_method(opcode[0]):
-					Sequence.BASE.callv(opcode[0], operand)
+					Sequence.BASE.call(opcode[0], operand)

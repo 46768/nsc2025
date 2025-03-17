@@ -16,7 +16,6 @@ var dialogue_hash: String = ""
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	print(Globals.screen_size)
 	dialogue_texture_rect.texture = dialogue_texture
 	dialogue_message_box.text = dialogue_message
 	

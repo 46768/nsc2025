@@ -47,8 +47,8 @@ func _ready() -> void:
 	console.console_initialized.connect(_on_console_initialized)
 	buffer_tabs.buffer_tabs_initialized.connect(_on_buffer_initialized)
 	
-	ide_initialized.emit(vfs)
 	Globals.ide = self
+	ide_initialized.emit(vfs)
 
 
 func _sidebar_to_editor_sync(offset: int) -> void:

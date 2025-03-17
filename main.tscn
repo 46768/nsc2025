@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cjnecbig4hetd" path="res://scripts/main/main.gd" id="1_a2087"]
 [ext_resource type="PackedScene" uid="uid://c44n34k18cx8m" path="res://scenes/IDE.tscn" id="1_xj0ui"]
 [ext_resource type="PackedScene" uid="uid://cixmrgx1jxv8p" path="res://scenes/Player.tscn" id="3_h2yge"]
-[ext_resource type="Texture2D" uid="uid://dswreolxusiw3" path="res://icon.svg" id="4_1bvp3"]
+[ext_resource type="Texture2D" uid="uid://dadmwkga8kc6s" path="res://assets/textures/placeholder.jpg" id="4_1bvp3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lquwl"]
 size = Vector2(1280, 128)
@@ -32,3 +32,5 @@ texture = ExtResource("4_1bvp3")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Floor"]
 shape = SubResource("RectangleShape2D_lquwl")
+
+[connection signal="ide_initialized" from="Ide" to="." method="_on_ide_initialized"]

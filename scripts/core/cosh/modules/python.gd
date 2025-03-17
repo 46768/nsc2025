@@ -31,7 +31,7 @@ func request_execution(shell: COSH, args: PackedStringArray) -> String:
 		return "python3: missing file"
 	var path: String = args[0]
 	var abs_path: String = path if path.begins_with("/") else VFS.path_join(shell.cwd, path)
-	abs_path = VFS.resolve_path(path)
+	abs_path = VFS.resolve_path(abs_path)
 	
 	if not shell.attached_vfs.block_exists(abs_path):
 		return "python3: file not found"

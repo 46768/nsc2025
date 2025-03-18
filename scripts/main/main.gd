@@ -99,3 +99,26 @@ in the console
 	
 	# Run sequence
 	await test_sequence.next()
+	
+	var test_conditional: Sequence = Sequence.new()
+	test_conditional.load_source("""
+	mov~$d.0~$m.reg1
+	mov~$d.1~$m.reg2
+	mov~$d.0~$m.temp
+	
+	loop:
+		mov~%.reg1~$m.temp
+		mov~%.reg2~$m.reg1
+		mov~%.temp~$m.reg2
+		add~%.reg1~$m.reg2
+		cmp~%.reg1~$d.1000
+		jg~>exit
+		dialogue~%.reg1
+		wait_sig~%.latestDialogueClosedSig
+		jmp~>loop
+	
+	exit:
+		cpu_halt
+	""")
+	
+	await test_conditional.next()

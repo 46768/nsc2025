@@ -2,26 +2,25 @@ class_name SequenceCPU
 extends RefCounted
 
 
-static var BASE: Variant = preload(
-		"res://scripts/core/problem-module/sequence-isa/base.gd").new()
-static var IDE: Variant = preload(
-		"res://scripts/core/problem-module/sequence-isa/ide.gd").new()
-var isa: Dictionary[String, Object] = {
-	"BASE": BASE,
-	"IDE": IDE,
+var isa: Dictionary[String, Variant] = {
+	"BASE": preload(
+		"res://scripts/core/problem-module/sequence-isa/base.gd").new(),
+	"IDE": preload(
+		"res://scripts/core/problem-module/sequence-isa/ide.gd").new(),
 }
 var ram: Dictionary
 var program: Array[Array] = []
 var instruction_ptr: int = 0
 
 # CPU flags
+	#	2nd: zero flag
 	#	1st: halt flag
 	#	0th: yield flag
-var flags: int = 0b00
+var flags: int = 0b000
 
 
 func _process_operand(instruction: Array) -> Array:
-	var operand: Array = [[self, ram, flags]]
+	var operand: Array = [[self, ram]]
 		
 	for operand_token: Variant in instruction.slice(1):
 		# Runtime substitution
@@ -42,6 +41,7 @@ func load_program(program_code: Array[Array]) -> void:
 
 func reset_program() -> void:
 	instruction_ptr = 0
+	flags = 0b000
 	ram.clear()
 
 

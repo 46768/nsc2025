@@ -1,5 +1,5 @@
 class_name COSHModule
-extends Object
+extends RefCounted
 
 
 var module_name: String = ""

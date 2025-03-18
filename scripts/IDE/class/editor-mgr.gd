@@ -1,5 +1,5 @@
 class_name EditorManager
-extends Object
+extends RefCounted
 
 
 var editor_ui: CodeEdit

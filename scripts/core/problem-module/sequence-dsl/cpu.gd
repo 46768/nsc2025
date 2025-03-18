@@ -1,4 +1,6 @@
 class_name SequenceCPU
+extends RefCounted
+
 
 static var BASE: Variant = preload(
 		"res://scripts/core/problem-module/sequence-definition/base.gd").new()
@@ -32,6 +34,12 @@ func _process_operand(instruction: Array) -> Array:
 
 func load_program(program_code: Array[Array]) -> void:
 	program = program_code.duplicate(true)
+	reset_program()
+
+
+func reset_program() -> void:
+	instruction_ptr = 0
+	ram.clear()
 
 
 # Note: no data sanitization since its eaiser to catch errors using Godot than

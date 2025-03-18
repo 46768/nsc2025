@@ -3,7 +3,6 @@ extends Object
 
 signal data_changed
 signal buffer_reload
-var data_changed_connected: Array
 
 enum RET_CODE { SUCCESS, ERR }
 enum FileType { FILE, DIRECTORY }
@@ -13,7 +12,6 @@ var data: Dictionary
 
 func _init(init_data: Dictionary = {}) -> void:
 	data = init_data.duplicate(true)
-	data_changed_connected = []
 	if not block_exists("/"):
 		data["/"] = _create_block(VFS.FileType.DIRECTORY)
 

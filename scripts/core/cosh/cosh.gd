@@ -1,5 +1,5 @@
 class_name COSH
-extends Object
+extends RefCounted
 
 signal cwd_changed(new_cwd: String)
 signal output_changed

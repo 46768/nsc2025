@@ -1,5 +1,5 @@
 class_name BufferManager
-extends  Object
+extends RefCounted
 
 
 const CLOSE_TEXTURE: Texture2D = preload("res://assets/textures/IDE/close.svg")

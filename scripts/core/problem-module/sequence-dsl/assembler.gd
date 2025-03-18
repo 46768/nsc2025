@@ -5,7 +5,7 @@ const ERR_HEX: int = 0xDEADBEEFCAFE
 
 # Base DSL mnemonics definitions
 var BASE: Variant = preload(
-		"res://scripts/core/problem-module/sequence-definition/base.gd").new()
+		"res://scripts/core/problem-module/sequence-isa/base.gd").new()
 
 
 func tokenize(line: String) -> PackedStringArray:

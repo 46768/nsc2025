@@ -3,9 +3,12 @@ extends RefCounted
 
 
 static var BASE: Variant = preload(
-		"res://scripts/core/problem-module/sequence-definition/base.gd").new()
+		"res://scripts/core/problem-module/sequence-isa/base.gd").new()
+static var IDE: Variant = preload(
+		"res://scripts/core/problem-module/sequence-isa/ide.gd").new()
 var isa: Dictionary[String, Object] = {
 	"BASE": BASE,
+	"IDE": IDE,
 }
 var ram: Dictionary
 var program: Array[Array] = []

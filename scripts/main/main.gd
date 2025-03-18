@@ -62,12 +62,12 @@ in the console
 		shell_s~$s.touch main.py
 		shell_s~$s.write main.py~%sample_program1
 		shell_s~$s.code main.py
-		set_statement~%man_print
+		IDE::set_statement~%man_print
 		dialogue~%setup1_txt~%dtex
 		wait_sig~%.latestDialogueClosedSig
 	
 	; Explain1
-		highlight_buffer~$d.0~$d.0~$d.0~$d.21
+		IDE::highlight_buffer~$d.0~$d.0~$d.0~$d.21
 		dialogue~%explain1_txt~%dtex
 		wait_sig~%.latestDialogueClosedSig
 		
@@ -77,24 +77,24 @@ in the console
 		wait_sig~%.latestDialogueClosedSig
 	
 	; Explain2
-		highlight_buffer~$d.0~$d.6~$d.0~$d.20
+		IDE::highlight_buffer~$d.0~$d.6~$d.0~$d.20
 		dialogue~%explain2_txt~%dtex
 		wait_sig~%.latestDialogueClosedSig
 	
 	; Demonst2
-		highlight_buffer~$d.0~$d.0~$d.0~$d.0
+		IDE::highlight_buffer~$d.0~$d.0~$d.0~$d.0
 		shell_s~$s.write main.py~%sample_program2
 		shell~$s.python main.py
 		dialogue~%demonst2_txt~%dtex
 		wait_sig~%.latestDialogueClosedSig
 	
 	; Explain3
-		highlight_buffer~$d.0~$d.6~$d.0~$d.10
+		IDE::highlight_buffer~$d.0~$d.6~$d.0~$d.10
 		dialogue~%explain3_txt~%dtex
 		wait_sig~%.latestDialogueClosedSig
 		
 	; Cleanup
-		clear_highlight
+		IDE::clear_highlight
 	""")
 	
 	# Run sequence

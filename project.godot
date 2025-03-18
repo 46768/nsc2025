@@ -24,7 +24,8 @@ Globals="*res://scripts/core/autoloads/globals.gd"
 Packet="*res://scripts/core/networking/packet.gd"
 PythonBinding="*res://scripts/python-binding/python-binding.gd"
 CodeServer="*res://scripts/code-execution-server/interface.gd"
-SequenceDSL="*res://scripts/core/problem-module/sequence-dsl/sequence-assembler.gd"
+Dialogue="*res://scripts/core/dialogue-system/dialogue.gd"
+SequenceDSL="*res://scripts/core/problem-module/sequence-dsl/assembler.gd"
 Problem="*res://scripts/core/problem-module/problem-module.gd"
 
 [debug]

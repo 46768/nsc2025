@@ -19,7 +19,6 @@ func _format_traceback(traceback: String, fname: String, indent_cnt: int = 2) ->
 	for __: int in range(5):
 		traceback_lines.remove_at(1)
 	
-	print(traceback_lines)
 	traceback_lines[1] = traceback_lines[1].replace("\"<unknown>\"", "\"%s\"" % fname)
 	
 	print("\n".join(traceback_lines))

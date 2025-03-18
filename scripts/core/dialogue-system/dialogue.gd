@@ -1,12 +1,12 @@
-class_name Dialogue
+extends Node
 
 
 const DIALOGUE: PackedScene = preload("res://scenes/DialogueBox.tscn")
 
-static var current_dialogue: Dictionary[String, Node] = {}
+var current_dialogue: Dictionary[String, Node] = {}
 
 
-static func spawn_dialogue(message: String, texture: Texture2D=null) -> String:
+func spawn_dialogue(message: String, texture: Texture2D=null) -> String:
 	var dialogue: Node = DIALOGUE.instantiate()
 	var dialogue_hash: String = (
 			message + Time.get_datetime_string_from_system()).sha256_text()
@@ -21,7 +21,7 @@ static func spawn_dialogue(message: String, texture: Texture2D=null) -> String:
 	return dialogue_hash
 
 
-static func delete_dialogue(dialogue_hash: String) -> void:
+func delete_dialogue(dialogue_hash: String) -> void:
 	if not current_dialogue.has(dialogue_hash):
 		printerr("Dialogue '%s' does not exists" % dialogue_hash)
 		return
@@ -32,6 +32,6 @@ static func delete_dialogue(dialogue_hash: String) -> void:
 	current_dialogue.erase(dialogue_hash)
 
 
-static func clear_dialogue() -> void:
+func clear_dialogue() -> void:
 	for dialogue_hash: String in current_dialogue:
 		Dialogue.delete_dialogue(dialogue_hash)

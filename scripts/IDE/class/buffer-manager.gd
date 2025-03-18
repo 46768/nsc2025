@@ -52,4 +52,3 @@ func highlight_current_buffer(
 func clear_current_buffer_highlight() -> void:
 	var editor: CodeEdit = buffer_mapping[buffers[tab_container.current_tab]].editor_ui
 	editor.deselect(0)
-	print("%d %d" % [editor.get_caret_line(), editor.get_caret_column()])

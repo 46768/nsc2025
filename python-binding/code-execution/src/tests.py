@@ -16,6 +16,19 @@ vfs_string = {
         "content": "import sys;print('hello world!');print('hello error!',file=sys.stderr)"
     },
 }
+vfs_string_syntax = {
+    "name": "testvfs",
+    "/": {
+        "type": 1,
+        "content": {
+            "/main.py": True,
+        },
+    },
+    "/main.py": {
+        "type": 0,
+        "content": "name = jogn doe"
+    },
+}
 vfs_string_forbidden = {
     "name": "testvfs",
     "/": {
@@ -54,6 +67,20 @@ def test_ping_pong():
 def test_exec():
     pkt = packet.build_packet("/execution", "request", 000, {
         "vfs": vfs_string,
+        "entryPoint": entry_point})
+    headers = pkt["headers"]
+    content = pkt["content"]
+    conn = client.HTTPConnection(f"localhost:{port}")
+    conn.request("POST", pkt["url"], content, headers)
+    respose = conn.getresponse()
+    print(respose.status, respose.reason)
+    print(respose.read())
+    conn.close()
+
+
+def test_exec_syntax():
+    pkt = packet.build_packet("/execution", "request", 000, {
+        "vfs": vfs_string_syntax,
         "entryPoint": entry_point})
     headers = pkt["headers"]
     content = pkt["content"]
@@ -131,6 +158,7 @@ if __name__ == "__main__":
 
     test_ping_pong()
     test_exec()
+    test_exec_syntax()
     test_exec_forbid()
     test_bad_url()
     test_bad_method()

@@ -1,7 +1,8 @@
 class_name COSH
-extends Object
+extends RefCounted
 
 signal cwd_changed(new_cwd: String)
+signal output_changed
 
 var attached_vfs: VFS
 var cwd: String = "/"
@@ -36,7 +37,7 @@ func delete_command(cmd: String) -> void:
 
 
 func run_command(cmd: String, arg: PackedStringArray) -> void:
-	var prev_cwd = cwd
+	var prev_cwd: String = cwd
 	var appending_string: String = "[%s@%s:%s]$ %s\n" % [
 		shell_user,
 		shell_machine,
@@ -46,12 +47,25 @@ func run_command(cmd: String, arg: PackedStringArray) -> void:
 	if cmd == "":
 		pass
 	elif cmd in command_reg:
-		var cmd_res = await command_reg[cmd].call(self, arg)
+		var cmd_res: String = await command_reg[cmd].call(self, arg)
 		appending_string += str(cmd_res)
 
 	else:
 		appending_string += "%s: command not found\n" % cmd
 	output_buffer += appending_string + "\n"
+	if prev_cwd != cwd:
+		cwd_changed.emit(cwd)
+	
+	output_changed.emit()
+
+
+func run_command_slient(cmd: String, arg: PackedStringArray) -> void:
+	var prev_cwd: String = cwd
+	if cmd == "":
+		pass
+	elif cmd in command_reg:
+		await command_reg[cmd].call(self, arg)
+
 	if prev_cwd != cwd:
 		cwd_changed.emit(cwd)
 

@@ -106,6 +106,7 @@ class ExecutionUnit:
 
         (have_err, scan_res) = self.scan_vfs(vfs_json)
         if have_err:
+            scan_res["ast_failed"] = True
             return packet.build_packet("/execution", "ast:fail", 403, scan_res)
 
         vfs_path = self.vfs_mgr.write_vfs(vfs_json)

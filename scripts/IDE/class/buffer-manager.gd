@@ -1,5 +1,5 @@
 class_name BufferManager
-extends  Object
+extends RefCounted
 
 
 const CLOSE_TEXTURE: Texture2D = preload("res://assets/textures/IDE/close.svg")
@@ -21,6 +21,7 @@ func open_buffer(vfs: VFS, fpath: String) -> void:
 	
 	tab_container.add_child(editor)
 	editor_mgr.load_vfs_file(fpath, vfs)
+	vfs.buffer_reload.connect(editor_mgr.reload_data)
 	
 	buffers.append(fpath)
 	buffer_mapping[fpath] = editor_mgr
@@ -31,8 +32,23 @@ func open_buffer(vfs: VFS, fpath: String) -> void:
 func close_buffer(buffer_idx: int) -> void:
 	var fpath: String = buffers[buffer_idx]
 	var editor_mgr: EditorManager = buffer_mapping[fpath]
-	
+
+	editor_mgr.current_buffer["vfs"].buffer_reload.disconnect(editor_mgr.reload_data)
 	editor_mgr.editor_ui.queue_free()
 	
 	buffer_mapping.erase(fpath)
 	buffers.remove_at(buffer_idx)
+
+
+func highlight_current_buffer(
+		start_line: int,
+		start_column: int, 
+		caret_line: int, 
+		caret_column: int) -> void:
+	var editor: CodeEdit = buffer_mapping[buffers[tab_container.current_tab]].editor_ui
+	editor.select(start_line, start_column, caret_line, caret_column)
+
+
+func clear_current_buffer_highlight() -> void:
+	var editor: CodeEdit = buffer_mapping[buffers[tab_container.current_tab]].editor_ui
+	editor.deselect(0)

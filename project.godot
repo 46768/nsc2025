@@ -19,12 +19,19 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-DiskUtil="*res://scripts/core/Autoloads/disk_utils.gd"
-Globals="*res://scripts/core/Autoloads/globals.gd"
-Packet="*res://scripts/core/Networking/packet.gd"
+DiskUtil="*res://scripts/core/autoloads/disk_utils.gd"
+Globals="*res://scripts/core/autoloads/globals.gd"
+Packet="*res://scripts/core/networking/packet.gd"
 PythonBinding="*res://scripts/python-binding/python-binding.gd"
 CodeServer="*res://scripts/code-execution-server/interface.gd"
 Dialogue="*res://scripts/core/dialogue-system/dialogue.gd"
+SequenceDSL="*res://scripts/core/problem-module/sequence-dsl/assembler.gd"
+Problem="*res://scripts/core/problem-module/problem-module.gd"
+
+[debug]
+
+gdscript/warnings/untyped_declaration=1
+gdscript/warnings/inferred_declaration=1
 
 [editor]
 

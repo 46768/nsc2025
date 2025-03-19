@@ -7,7 +7,7 @@ var current_dialogue: Dictionary[String, Node] = {}
 
 
 func spawn_dialogue(message: String, texture: Texture2D=null) -> String:
-	var dialogue = DIALOGUE.instantiate()
+	var dialogue: Node = DIALOGUE.instantiate()
 	var dialogue_hash: String = (
 			message + Time.get_datetime_string_from_system()).sha256_text()
 	dialogue.dialogue_message = message
@@ -33,5 +33,5 @@ func delete_dialogue(dialogue_hash: String) -> void:
 
 
 func clear_dialogue() -> void:
-	for dialogue_hash in current_dialogue:
-		self.delete_dialogue(dialogue_hash)
+	for dialogue_hash: String in current_dialogue:
+		Dialogue.delete_dialogue(dialogue_hash)

@@ -83,9 +83,9 @@ func send_pkt(packet: Dictionary) -> void:
 	if server_requesting:
 		await received_packet
 	var headers: PackedStringArray = PackedStringArray()
-	for header in packet["headers"].keys():
+	for header: String in packet["headers"].keys():
 		headers.append("%s: %s" % [header, packet["headers"][header]])
-	var err = server_socket.request(
+	var _err: int = server_socket.request(
 			server_url + packet["url"],
 			headers,
 			HTTPClient.METHOD_POST,
@@ -93,7 +93,7 @@ func send_pkt(packet: Dictionary) -> void:
 	server_requesting = true
 
 
-func request_execution(vfs: VFS, entry_point: String) -> PackedStringArray:
+func request_execution(vfs: VFS, entry_point: String) -> Dictionary:
 	var request_packet: Dictionary = Packet.build_packet(
 		"/execution", "request", 000, {
 			"vfs": vfs.data,
@@ -101,7 +101,7 @@ func request_execution(vfs: VFS, entry_point: String) -> PackedStringArray:
 	await send_pkt(request_packet)
 	var packet: Dictionary = await _get_response()
 	var response: Dictionary = JSON.parse_string(packet["content"])
-	return PackedStringArray([response["stdout"], response["stderr"]])
+	return response
 
 
 func __start_execution_server() -> void:

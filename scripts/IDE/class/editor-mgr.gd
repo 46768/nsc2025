@@ -1,11 +1,12 @@
 class_name EditorManager
-extends Object
+extends RefCounted
 
 
 var editor_ui: CodeEdit
 var highlighter_data: Dictionary; var synt_highlighter: CodeHighlighter
 var symbols_lut: Dictionary
 var current_buffer: Dictionary
+var refresh_sig_handler: Callable
 
 func _init(edit_ui: CodeEdit) -> void:
 	editor_ui = edit_ui
@@ -28,27 +29,27 @@ func _init(edit_ui: CodeEdit) -> void:
 
 
 func load_colors(json_path: String) -> void:
-	var json_file = FileAccess.open(json_path, FileAccess.READ)
-	var colors = JSON.parse_string(json_file.get_as_text())
+	var json_file: FileAccess = FileAccess.open(json_path, FileAccess.READ)
+	var colors: Dictionary = JSON.parse_string(json_file.get_as_text())
 	highlighter_data = colors
 	
-	var highlighter = CodeHighlighter.new()
+	var highlighter: CodeHighlighter = CodeHighlighter.new()
 	highlighter.number_color = colors["number"]
 	highlighter.symbol_color = colors["symbol"]
 	highlighter.function_color = colors["function"]
 	
-	for str_token in colors["string"]["token"]:
+	for str_token: String in colors["string"]["token"]:
 		highlighter.add_color_region(
 			str_token, str_token, 
 			colors["string"]["color"], false
 		)
 	
 	# Python keywords
-	for keyword in colors["keyword"]["token"]:
+	for keyword: String in colors["keyword"]["token"]:
 		highlighter.add_keyword_color(keyword, colors["keyword"]["color"])
 	
 	# Constants
-	for constant in colors["constant"]["token"]:
+	for constant: String in colors["constant"]["token"]:
 		highlighter.add_keyword_color(constant, colors["constant"]["color"])
 	
 	synt_highlighter = highlighter
@@ -65,15 +66,15 @@ func handle_autocomplete() -> void:
 		printerr("Symbol LUT not found")
 		return
 	
-	for fn in symbols_lut["function"]:
+	for fn: String in symbols_lut["function"]:
 		editor_ui.add_code_completion_option(
 			CodeEdit.KIND_FUNCTION, fn, fn+"(", highlighter_data["function"]
 		)
-	for constant in symbols_lut["constant"]:
+	for constant: String in symbols_lut["constant"]:
 		editor_ui.add_code_completion_option(
 			CodeEdit.KIND_CONSTANT, constant, constant, highlighter_data["constant"]["color"]
 		)
-	for keyword in symbols_lut["keyword"]:
+	for keyword: String in symbols_lut["keyword"]:
 		editor_ui.add_code_completion_option(
 			CodeEdit.KIND_CONSTANT, keyword, keyword, highlighter_data["keyword"]["color"]
 		)
@@ -84,7 +85,19 @@ func handle_autocomplete() -> void:
 func load_vfs_file(fpath: String, vfs: VFS) -> void:
 	current_buffer["vfs"] = vfs
 	current_buffer["fpath"] = fpath
+	var caret_line: int = editor_ui.get_caret_line()
+	var caret_column: int = editor_ui.get_caret_column()
 	editor_ui.text = vfs.read_file(fpath)
+	editor_ui.set_caret_column(caret_column)
+	editor_ui.set_caret_line(caret_line)
+
+
+func reload_data() -> void:
+	var caret_line: int = editor_ui.get_caret_line()
+	var caret_column: int = editor_ui.get_caret_column()
+	editor_ui.text = current_buffer["vfs"].read_file(current_buffer["fpath"])
+	editor_ui.set_caret_column(caret_column)
+	editor_ui.set_caret_line(caret_line)
 
 
 func save_buffer() -> void:

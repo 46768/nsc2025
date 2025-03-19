@@ -10,13 +10,13 @@ func gpathize(path: String) -> String:
 
 func join_paths(paths: PackedStringArray) -> String:
 	var path: String = ""
-	for block in paths:
+	for block: String in paths:
 		path = path.path_join(block)
 	return path
 
 
 # Recursively delete a directory
-func delete_directory(dir_path: String, root_path: String):
+func delete_directory(dir_path: String, root_path: String) -> void:
 	var directory: String = ProjectSettings.globalize_path(dir_path)
 	var root_directory: String = ProjectSettings.globalize_path(root_path)
 	var sliced_dir: PackedStringArray = directory.split("/")
@@ -29,9 +29,9 @@ func delete_directory(dir_path: String, root_path: String):
 	if ".." in sliced_dir:
 		return
 	
-	for file in DirAccess.get_files_at(directory):
+	for file: String in DirAccess.get_files_at(directory):
 		DirAccess.remove_absolute(directory.path_join(file))
-	for dir in DirAccess.get_directories_at(directory):
+	for dir: String in DirAccess.get_directories_at(directory):
 		delete_directory(directory.path_join(dir), root_directory)
 	DirAccess.remove_absolute(directory)
 
@@ -45,10 +45,10 @@ func copy_directory(from: String, to: String) -> void:
 	if not dst.ends_with("/"):
 		dst += "/"
 	
-	var source_dir = DirAccess.open(src);
+	var source_dir: DirAccess = DirAccess.open(src);
 	
-	for filename in source_dir.get_files():
+	for filename: String in source_dir.get_files():
 		source_dir.copy(src + filename, dst + filename)
 		
-	for dir in source_dir.get_directories():
+	for dir: String in source_dir.get_directories():
 		copy_directory(src + dir + "/", dst + dir + "/")

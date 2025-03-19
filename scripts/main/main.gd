@@ -21,10 +21,11 @@ func _process(_delta: float) -> void:
 func _on_ide_initialized(__: VFS) -> void:
 	await Globals.wait(1)
 	
-	var test_sequence: Sequence = Sequence.new()
+	Problem.create("TestProblem", VFS.new())
+	var problem: ProblemClass = Problem.loaded_problem["TestProblem"]
+	var test_sequence: Sequence = problem.sequence
 	
 	# Write initial RAM
-	test_sequence.write_rom("dtex", test_texture)
 	test_sequence.write_rom("intro1_txt", "Oh hello there! So I'll teach you Python's print function today")
 	test_sequence.write_rom("intro2_txt", "So, press [code]Shift + i[/code] to bring up the editor")
 	test_sequence.write_rom("setup1_txt", "Ok so I set up a simple script for you here")
@@ -51,11 +52,11 @@ in the console
 	
 	test_sequence.load_source("""
 	; Intro
-		dialogue~%intro1_txt~%dtex
+		dialogue~%intro1_txt
 		wait_sig~%.latestDialogueClosedSig
 	
 	; Intro2
-		dialogue~%intro2_txt~%dtex
+		dialogue~%intro2_txt
 		wait_sig~%.latestDialogueClosedSig
 	
 	; Setup1
@@ -63,62 +64,41 @@ in the console
 		shell_s~$s.write main.py~%sample_program1
 		shell_s~$s.code main.py
 		IDE::set_statement~%man_print
-		dialogue~%setup1_txt~%dtex
+		dialogue~%setup1_txt
 		wait_sig~%.latestDialogueClosedSig
 	
 	; Explain1
 		IDE::highlight_buffer~$d.0~$d.0~$d.0~$d.21
-		dialogue~%explain1_txt~%dtex
+		dialogue~%explain1_txt
 		wait_sig~%.latestDialogueClosedSig
 		
 	; Demonst1
 		shell~$s.python main.py
-		dialogue~%demonst1_txt~%dtex
+		dialogue~%demonst1_txt
 		wait_sig~%.latestDialogueClosedSig
 	
 	; Explain2
 		IDE::highlight_buffer~$d.0~$d.6~$d.0~$d.20
-		dialogue~%explain2_txt~%dtex
+		dialogue~%explain2_txt
 		wait_sig~%.latestDialogueClosedSig
 	
 	; Demonst2
 		IDE::highlight_buffer~$d.0~$d.0~$d.0~$d.0
 		shell_s~$s.write main.py~%sample_program2
 		shell~$s.python main.py
-		dialogue~%demonst2_txt~%dtex
+		dialogue~%demonst2_txt
 		wait_sig~%.latestDialogueClosedSig
 	
 	; Explain3
 		IDE::highlight_buffer~$d.0~$d.6~$d.0~$d.10
-		dialogue~%explain3_txt~%dtex
+		dialogue~%explain3_txt
 		wait_sig~%.latestDialogueClosedSig
 		
 	; Cleanup
 		IDE::clear_highlight
 	""")
 	
-	# Run sequence
-	await test_sequence.next()
-	
-	var test_conditional: Sequence = Sequence.new()
-	test_conditional.load_source("""
-	mov~$d.0~$m.reg1
-	mov~$d.1~$m.reg2
-	mov~$d.0~$m.temp
-	
-	loop:
-		mov~%.reg1~$m.temp
-		mov~%.reg2~$m.reg1
-		mov~%.temp~$m.reg2
-		add~%.reg1~$m.reg2
-		cmp~%.reg1~$d.1000
-		jg~>exit
-		dialogue~%.reg1
-		wait_sig~%.latestDialogueClosedSig
-		jmp~>loop
-	
-	exit:
-		cpu_halt
-	""")
-	
-	await test_conditional.next()
+	var serialized: String = Problem.serialize_loaded_problem("TestProblem")
+	var unserialzied: ProblemClass = Problem.load_from_string(serialized)
+	problem.prnt()
+	unserialzied.prnt()

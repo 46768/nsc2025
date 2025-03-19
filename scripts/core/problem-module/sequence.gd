@@ -8,7 +8,7 @@ var program_source: String = ""
 
 
 ## Load data dictionary to ROM
-func load_rom(rom_data: Dictionary[String, Variant]) -> void:
+func load_rom(rom_data: Dictionary) -> void:
 	rom = rom_data.duplicate(true)
 
 ## Write data to ROM

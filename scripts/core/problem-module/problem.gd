@@ -24,3 +24,10 @@ static func load_json(json: String) -> ProblemClass:
 	problem.sequence.load_source(sequence_source)
 	
 	return problem
+
+
+func prnt() -> void:
+	print(name)
+	print(vfs.data)
+	print(sequence.rom)
+	print(sequence.program_source)

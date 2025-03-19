@@ -13,7 +13,7 @@ func load_from_string(json: String) -> ProblemClass:
 	var json_dict: Dictionary = JSON.parse_string(json)
 	var problem_name: String = json_dict["name"]
 	var vfs_class: VFS = VFS.new(json_dict["vfs"])
-	var sequence_rom: Dictionary[String, Variant] = json_dict["sequence"]["rom"]
+	var sequence_rom: Dictionary = json_dict["sequence"]["rom"]
 	var sequence_source: String = json_dict["sequence"]["source"]
 	
 	var problem: ProblemClass = create(problem_name, vfs_class)
@@ -27,6 +27,22 @@ func load_from_path(path: String) -> ProblemClass:
 	var data: String = data_file.get_as_text(true)
 	
 	return load_from_string(data)
+
+func serialize_problem(problem: ProblemClass) -> String:
+	var json_data: Dictionary = {
+		"name": problem.name,
+		"vfs": problem.vfs.data,
+		"sequence": {
+			"rom": problem.sequence.rom,
+			"source": problem.sequence.program_source.replace("\t", ""),
+		},
+	}
+	
+	return JSON.stringify(json_data, "\t")
+
+func serialize_loaded_problem(problem_name: String) -> String:
+	var problem: ProblemClass = loaded_problem[problem_name]
+	return serialize_problem(problem)
 
 
 func unload_problem(problem_name: String) -> void:

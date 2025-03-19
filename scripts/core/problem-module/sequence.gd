@@ -29,5 +29,5 @@ func load_source(source: String) -> void:
 
 ## Step to next yield, running instructions between yields
 func next() -> bool:
-	await cpu.run()
-	return true
+	var is_halted: bool = await cpu.run()
+	return not is_halted

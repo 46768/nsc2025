@@ -102,3 +102,4 @@ in the console
 	var unserialzied: ProblemClass = Problem.load_from_string(serialized)
 	problem.prnt()
 	unserialzied.prnt()
+	unserialzied.sequence.next()

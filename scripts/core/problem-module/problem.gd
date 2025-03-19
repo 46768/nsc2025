@@ -7,11 +7,6 @@ var vfs: VFS
 var sequence: Sequence = Sequence.new()
 
 
-func _init(iname: String, ivfs: VFS) -> void:
-	name = iname
-	vfs = ivfs
-
-
 static func load_json(json: String) -> ProblemClass:
 	var json_dict: Dictionary = JSON.parse_string(json)
 	var problem_name: String = json_dict["name"]
@@ -24,6 +19,15 @@ static func load_json(json: String) -> ProblemClass:
 	problem.sequence.load_source(sequence_source)
 	
 	return problem
+
+
+func _init(iname: String, ivfs: VFS) -> void:
+	name = iname
+	vfs = ivfs
+
+
+func start() -> void:
+	sequence.next()
 
 
 func prnt() -> void:

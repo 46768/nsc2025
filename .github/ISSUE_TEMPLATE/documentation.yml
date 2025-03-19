@@ -1,0 +1,17 @@
+name: Bug report
+description: Report a bug
+title: "[DOCUMENTATION]"
+labels: ["documentation"]
+
+body:
+  - type: textarea
+    id: documentation-detail
+    attributes:
+      label: Documentation Details
+      description: Tell what are you going to document/fix in the documentation
+
+  - type: textarea
+    id: feature-list
+    attributes:
+      label: Features to docuemnt
+      description: What feature are you planning to document/fix the document of

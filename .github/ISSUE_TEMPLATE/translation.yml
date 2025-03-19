@@ -1,0 +1,17 @@
+name: Translation request
+description: Request a translation or fix in translation
+title: "[TRANSLATION]"
+labels: ["translation"]
+
+body:
+  - type: textarea
+    id: translation-detail
+    attributes:
+      label: Translation Details
+      description: Tell what are you going to translate/fix in the translation
+
+  - type: textarea
+    id: translation-list
+    attributes:
+      label: Translations area
+      description: Where are you planning to translate/fix the traslation

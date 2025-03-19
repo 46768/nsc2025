@@ -17,17 +17,17 @@ body:
     attributes:
       label: Components of the feature
       description: The components of the feature to implement into the game
-      placeholder: ex. |
-        - http server |
-        - reverse proxy |
-        - ...
+      placeholder: |
+        ex.
+        - http server
+        - reverse proxy
+        - packet structure
 
   - type: textarea
     id: dependencies
     attributes:
       label: Dependencies of the feature
       description: The dependencies that need to be implemented before this feature can be worked on
-      placeholder: ex. |
-        - python binding |
-        - ide |
-        - ...
+      placeholder: |
+        - python binding
+        - ide

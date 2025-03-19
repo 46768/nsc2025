@@ -16,9 +16,10 @@ body:
     attributes:
       label: How the bug happens
       description: Describe how the bug happened or how do you think it happened
-      placeholder: ex. |
-        1. open the game |
-        2. close the game |
+      placeholder: |
+        ex.
+        1. open the game
+        2. close the game
         3. find the server running in task manager
 
   - type: input

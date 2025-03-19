@@ -1,5 +1,5 @@
-name: Bug report
-description: Report a bug
+name: Documentation request
+description: Request documentation or fix in documentation
 title: "[DOCUMENTATION]"
 labels: ["documentation"]
 

@@ -6,7 +6,6 @@ signal ide_initialized(ide_vfs: VFS)
 ## Emit when VFS changes
 signal ide_vfs_changed(new_vfs: VFS)
 
-@export_range(49152, 65535) var server_port: int = 56440
 @export_range(0, 100) var outer_margin: int = 10
 @export_range(0, 100) var inner_margin: int = 10
 
@@ -24,15 +23,16 @@ var buffer_mgr: BufferManager = null
 		$"Omarg/Panelc/Imarg/Vsplit/SidebarSplit/Sidebar/Problem Viewer/Txt")
 
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	_resize()
 	
+	# Set outer margins
 	omarg.add_theme_constant_override("margin_bottom", outer_margin)
 	omarg.add_theme_constant_override("margin_left", outer_margin)
 	omarg.add_theme_constant_override("margin_top", outer_margin)
 	omarg.add_theme_constant_override("margin_right", outer_margin)
 	
+	# Set inner margins
 	imarg.add_theme_constant_override("margin_bottom", inner_margin)
 	imarg.add_theme_constant_override("margin_left", inner_margin)
 	imarg.add_theme_constant_override("margin_top", inner_margin)

@@ -104,12 +104,12 @@ func parse_operand(
 		
 		# Label substitution
 		_:
-			if label_map.has(label_global+operand_data):
-				return label_map[label_global+operand_data] - label_offset
-			elif label_map.has(operand_data):
-				return label_map[operand_data] - label_offset
+			if label_map.has(label_global+operand):
+				return label_map[label_global+operand] - label_offset
+			elif label_map.has(operand):
+				return label_map[operand] - label_offset
 			else:
-				printerr("Unknow label '%s'" % operand_data)
+				printerr("Unknow label '%s'" % operand)
 				return ERR_HEX
 		
 

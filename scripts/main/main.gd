@@ -30,7 +30,7 @@ func _on_ide_initialized(__: VFS) -> void:
 	
 	loop:
 		cmp %.counter, $d.25
-		je >exit
+		je exit
 		mov %.reg1, $m.temp
 		mov %.reg2, $m.reg1
 		mov %.temp, $m.reg2
@@ -38,7 +38,7 @@ func _on_ide_initialized(__: VFS) -> void:
 		dialogue %.reg1
 		wait_sig %.latestDialogueClosedSig
 		inc $m.counter
-		jmp >loop
+		jmp loop
 	
 	exit:
 		cpu_halt

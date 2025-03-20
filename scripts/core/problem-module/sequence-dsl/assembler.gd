@@ -22,8 +22,21 @@ var BASE: Variant = preload(
 ## Returns:
 ##		PackedStringArray: A string array containing the tokens in the line
 func tokenize(line: String) -> PackedStringArray:
-	# Get rid of comments -> strip extra spaces -> split into tokens
-	return line.get_slice(";", 0).strip_edges().split("~")
+	var stripped: String = line.get_slice(";", 0).strip_edges()
+	var opcode: String = line.get_slice(" ", 0)
+	var tokens: PackedStringArray = PackedStringArray([opcode])
+	
+	var operand_str: String = line.right(-len(opcode)-1)
+	var operands: PackedStringArray = operand_str.split(",")
+	
+	if operand_str.is_empty():
+		return tokens
+	
+	# Strip non-printables from operands
+	for operand: String in operands:
+		tokens.append(operand.strip_edges())
+	
+	return tokens
 
 
 ## Parse an opcode into its namespace and mnemonic
@@ -79,7 +92,7 @@ func parse_operand(
 			var literal_type: String = operand_data.get_slice(".", 0)
 			return BASE.types[literal_type].call(operand_data.right(-len(literal_type)-1))
 		
-		# Memory substitution
+		# Memory reference
 		"%":
 			# Parse compile time substitution modifier (%)
 			if operand[1] != ".":
@@ -167,6 +180,7 @@ func assemble(source: String, rom: Dictionary) -> Array[Array]:
 			continue
 		
 		var tokenized_line: Array = SequenceDSL.tokenize(line)
+		print(tokenized_line)
 		
 		# Global label
 		if line.ends_with(":"):
@@ -183,6 +197,7 @@ func assemble(source: String, rom: Dictionary) -> Array[Array]:
 		
 		# Loops through each tokens, replace the tokens with parsed operand
 		for j: int in range(1, len(tokenized_line)):
+			print(j)
 			var parsed_operand: Variant = SequenceDSL.parse_operand(
 					tokenized_line[j], rom, label_map, label_global,
 					label_offset)

@@ -103,7 +103,7 @@ func parse_operand(
 				return operand
 		
 		# Label substitution
-		">":
+		_:
 			if label_map.has(label_global+operand_data):
 				return label_map[label_global+operand_data] - label_offset
 			elif label_map.has(operand_data):
@@ -112,11 +112,6 @@ func parse_operand(
 				printerr("Unknow label '%s'" % operand_data)
 				return ERR_HEX
 		
-		# Unknown or no modifier
-		_:
-			printerr("Unknown operand modifier '%s'" % operand[0])
-			return ERR_HEX
-
 
 ## Parse source code as string array into label table
 ##

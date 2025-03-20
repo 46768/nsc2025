@@ -1,5 +1,11 @@
 class_name COSHModule
 extends Object
+## A base shell module implementation
+##
+## When making a shell module, commands should
+## be defined as a function then added to the
+## command dictionary in the _init function
+## 
 
 
 var module_name: String = ""
@@ -7,6 +13,10 @@ var commands: Dictionary = {}
 var signals: Dictionary = {}
 
 
+## Installs a shell module to the shell
+##
+## Args:
+##		shell (COSH): The shell to install to
 func install_module(shell: COSH) -> bool:
 	if shell.module_reg.has(module_name):
 		return false
@@ -18,6 +28,10 @@ func install_module(shell: COSH) -> bool:
 	return true
 
 
+## Uninstalls a shell module to the shell
+##
+## Args:
+##		shell (COSH): The shell to uninstall from
 func uninstall_module(shell: COSH) -> bool:
 	if not shell.module_reg.has(module_name):
 		return false

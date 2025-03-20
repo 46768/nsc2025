@@ -23,7 +23,7 @@ var BASE: Variant = preload(
 ##		PackedStringArray: A string array containing the tokens in the line
 func tokenize(line: String) -> PackedStringArray:
 	# Get rid of comments -> strip extra spaces -> split into tokens
-	return line.get_slice(";", 0).strip(" \t").split("~")
+	return line.get_slice(";", 0).strip_edges().split("~")
 
 
 ## Parse an opcode into its namespace and mnemonic

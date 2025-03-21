@@ -1,4 +1,9 @@
 extends RefCounted
+## IDE ISA for SeqASM
+##
+## Implements mnemonics for interacting with the IDE
+## allowing for programmatically modifying the IDE
+## states
 
 var isa_name: StringName = &"IDE"
 var types: Dictionary[String, Callable] = {}

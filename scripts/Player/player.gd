@@ -2,7 +2,13 @@ extends CharacterBody2D
 
 
 const SPEED: float = 300.0
-const JUMP_VELOCITY: float = -400.0
+const JUMP_VELOCITY: float = -800.0
+
+var player: Player = Player.new()
+
+
+func _process(_delta: float) -> void:
+	player.process_interactions()
 
 
 func _physics_process(delta: float) -> void:

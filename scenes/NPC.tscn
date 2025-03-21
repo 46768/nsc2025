@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3 uid="uid://cmn85kjdxt2ni"]
+
+[ext_resource type="Script" uid="uid://b50atfpcwlhk7" path="res://scripts/NPC/npc.gd" id="1_6xvi5"]
+[ext_resource type="Texture2D" uid="uid://dswreolxusiw3" path="res://icon.svg" id="1_mhefn"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t62y5"]
+size = Vector2(128, 128)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mhefn"]
+size = Vector2(384, 192)
+
+[node name="NPC" type="Node2D"]
+script = ExtResource("1_6xvi5")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_mhefn")
+
+[node name="Collision" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Collision"]
+shape = SubResource("RectangleShape2D_t62y5")
+
+[node name="InteractionArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea"]
+position = Vector2(0, -32)
+shape = SubResource("RectangleShape2D_mhefn")
+debug_color = Color(0, 0.633559, 0.43909, 0.42)
+
+[connection signal="body_entered" from="InteractionArea" to="." method="_on_interaction_area_body_entered"]
+[connection signal="body_exited" from="InteractionArea" to="." method="_on_interaction_area_body_exited"]

@@ -8,3 +8,4 @@ The documentation for contributers of the project.
     :caption: Contents:
 
     code-execution-server/code-execution-server
+    cosh/cosh

@@ -1,5 +1,7 @@
-# Github
-- Added `documentation.yml` for documentation issues/requests
-- Added `translation.yml` for translation issues/requests
-- Renamed `bug_report.yml` to `bug-report.yml` for naming consistency
-- Fixed `bug-report.yml` and `feature-plan.yml` having bad placeholder string
+# SeqASM
+- BREAKING CHANGE: SeqASM now use space as separator between opcode and operand, `,` as separator for operands
+- BREAKING CHANGE: SeqASM now dont need `>` as opcode modifier for labels
+- Documented SeqASM CPU in source
+- Documented SeqASM assembler in source
+- Documented base SeqASM ISA
+- Documented IDE SeqASM ISA

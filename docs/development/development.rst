@@ -8,4 +8,5 @@ The documentation for contributers of the project.
     :caption: Features:
 
     code-execution-server/code-execution-server
+    cosh/cosh
     seqasm/seqasm

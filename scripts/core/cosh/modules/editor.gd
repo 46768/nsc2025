@@ -1,7 +1,9 @@
 class_name COSHEditor
 extends COSHModule
+## A shell module for editing files using the editor
 
 
+## Emit when the user want to edit a file
 signal cosh_editor_edit_sig(fpath: String, vfs: VFS)
 
 
@@ -17,6 +19,10 @@ func _init(buffer_mgr: BufferManager) -> void:
 	cosh_editor_edit_sig.connect(buffer_mgr.open_buffer)
 
 
+## Opens a buffer to edit the given file
+##
+## Args:
+##		[0] (str): Path to the file to edit
 func cosh_editor_edit(shell: COSH, args: PackedStringArray) -> String:
 	if args.is_empty():
 		return "code: missing path\n"

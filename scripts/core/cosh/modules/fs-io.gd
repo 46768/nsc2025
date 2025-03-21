@@ -1,5 +1,8 @@
 class_name COSHFSIOModule
 extends COSHModule
+## A shell module for more advanced filesystem interactions
+##
+## Implements more filesystem interactions commands like writng files
 
 
 func _init() -> void:
@@ -10,6 +13,11 @@ func _init() -> void:
 	signals = {}
 
 
+## Write text to a file
+##
+## Args:
+##		[0] (str): Path to the new directory, can be relative and absolute
+##		*args (str): Content to write to file, each arguments are separated with spaces
 func write_file(shell: COSH, args: PackedStringArray) -> String:
 	if args.is_empty():
 		return "touch: missing file operand\n"

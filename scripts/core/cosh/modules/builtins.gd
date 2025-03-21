@@ -1,5 +1,9 @@
 class_name COSHBuiltins
 extends COSHModule
+## Builtin shell commands, get loaded by a shell on creation by default
+##
+## Contains commands for basic shell interactions and basic filesystem
+## management
 
 
 func _init() -> void:
@@ -19,6 +23,10 @@ func _init() -> void:
 
 # Builtin programs
 
+## Change directory of the shell's current working directory
+##
+## Args:
+##		[0] (str): Path to the new directory, can be relative and absolute
 func __cosh_cd(shell: COSH, args: PackedStringArray) -> String:
 	if args.is_empty():
 		return "cd: missing path\n"
@@ -41,15 +49,27 @@ func __cosh_cd(shell: COSH, args: PackedStringArray) -> String:
 	return ""
 
 
+## Print out the given arguments separated by space
+##
+## Args:
+##		*args (str): Arguments to print out
 func __cosh_echo(_shell: COSH, args: PackedStringArray) -> String:
 	return " ".join(args) + "\n"
 
 
+## Clear the shell's output buffer
+##
+## Args:
+##		[0] (str): Path to the new directory, can be relative and absolute
 func __cosh_clear(shell: COSH, _args: PackedStringArray) -> String:
 	shell.output_buffer = ""
 	return ""
 
 
+## Create a directory at the given path
+##
+## Args:
+##		[0] (str): Path to the new directory, can be relative and absolute
 func __cosh_mkdir(shell: COSH, args: PackedStringArray) -> String:
 	if args.is_empty():
 		return "mkdir: missing path\n"
@@ -70,6 +90,10 @@ func __cosh_mkdir(shell: COSH, args: PackedStringArray) -> String:
 		return ""
 
 
+## Create a new file if file does not exist
+##
+## Args:
+##		[0] (str): Path to the file to create, does nothing if file exists
 func __cosh_touch(shell: COSH, args: PackedStringArray) -> String:
 	if args.is_empty():
 		return "touch: missing file operand\n"
@@ -82,6 +106,13 @@ func __cosh_touch(shell: COSH, args: PackedStringArray) -> String:
 	return ""
 
 
+## Delete a file or a directory from the filesystem
+##
+## To delete a directory, a `-r` flag must be used
+##
+## Args:
+##		[0] (str): Path to the file/directory to delete
+##		[flag] ('-r'): Delete recursively
 func __cosh_rm(shell: COSH, args: PackedStringArray) -> String:
 	if args.is_empty():
 		return "rm: missing operand\n"
@@ -104,6 +135,10 @@ func __cosh_rm(shell: COSH, args: PackedStringArray) -> String:
 	return ""
 
 
+## List content of a directory, defaults to current directory if not given
+##
+## Args:
+##		[0] (:obj:`str`, optional): Path to the directory, defaults to cwd
 func __cosh_ls(shell: COSH, args: PackedStringArray) -> String:
 	var path: String = shell.cwd if args.is_empty() else args[0]
 	path = path if path.begins_with("/") else VFS.path_join(shell.cwd, path)
@@ -119,6 +154,10 @@ func __cosh_ls(shell: COSH, args: PackedStringArray) -> String:
 	return " ".join(ret_string_arr) + ("" if ret_string_arr.is_empty() else "\n")
 
 
+## Prints out the content of a file
+##
+## Args:
+##		[0] (str): Path to the file to print the content of
 func __cosh_cat(shell: COSH, args: PackedStringArray) -> String:
 	if args.is_empty():
 		return "cat: missing path\n"
@@ -135,6 +174,7 @@ func __cosh_cat(shell: COSH, args: PackedStringArray) -> String:
 	return shell.attached_vfs.read_file(path) + "\n"
 
 
+## Exits the **game**, not the shell
 func __cosh_quit(_shell: COSH, _args: PackedStringArray) -> String:
 	Globals.close_game()
 	return ""

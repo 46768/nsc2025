@@ -1,6 +1,7 @@
 [gd_scene load_steps=2 format=3 uid="uid://c25m8c075r46v"]
 
-[ext_resource type="Texture2D" uid="uid://lg2y3devuxdo" path="res://scripts/malecharacter.png" id="1_mo8qy"]
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_12k7y"]
+load_path = "res://.godot/imported/malecharacter.png-ff0901194379ae21c519d6b3ff01f80c.s3tc.ctex"
 
 [node name="CharacterSelection" type="Control"]
 layout_mode = 3
@@ -25,4 +26,4 @@ offset_left = -430.202
 offset_top = -310.816
 offset_right = -229.777
 offset_bottom = 288.624
-texture_pressed = ExtResource("1_mo8qy")
+texture_pressed = SubResource("CompressedTexture2D_12k7y")

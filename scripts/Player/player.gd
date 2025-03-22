@@ -6,12 +6,13 @@ extends CharacterBody2D
 
 @onready var sprite: Sprite2D = $Sprite
 @onready var camera: Camera2D = $Camera
+@onready var camera_ui: CanvasLayer = $Camera/CameraUI
 
 var player: Player
 
 
 func _ready() -> void:
-	player = Player.new(sprite, camera)
+	player = Player.new(sprite, camera, camera_ui)
 	Globals.player = player
 
 

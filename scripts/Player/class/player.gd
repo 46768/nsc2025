@@ -4,13 +4,15 @@ extends RefCounted
 
 var sprite: Sprite2D
 var camera: Camera2D
+var camera_ui: CanvasLayer
 
 var available_interactions: Dictionary[Callable, StringName] = {}
 
 
-func _init(isprite: Sprite2D, icamera: Camera2D) -> void:
+func _init(isprite: Sprite2D, icamera: Camera2D, icamera_ui: CanvasLayer) -> void:
 	sprite = isprite
 	camera = icamera
+	camera_ui = icamera_ui
 
 
 func add_interaction(keybind: StringName, callback: Callable) -> void:

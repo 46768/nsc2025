@@ -6,6 +6,7 @@ extends Node
 
 var main: Node2D = null
 var ide: Control = null
+var player: Player = null
 
 
 func _ready() -> void:

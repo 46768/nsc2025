@@ -2,6 +2,8 @@ extends Node2D
 
 
 @onready var test_texture: Texture2D = preload("res://assets/textures/placeholder.jpg")
+@onready var player_ui: CanvasLayer = $UI
+@onready var ide_ui: Control = $UI/Ide
 
 var test_seq: Sequence
 
@@ -9,13 +11,17 @@ var test_seq: Sequence
 func _ready() -> void:
 	# Variable initializations
 	Globals.main = self
+	Globals.player_ui = player_ui
 	
-	$Ide.hide()
+	if Globals.player != null:
+		Globals.player_ui.reparent(Globals.player.camera)
+	
+	ide_ui.hide()
 
 
 func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("ToggleIDE"):
-		$Ide.set_visible(not $Ide.is_visible())
+		ide_ui.set_visible(not ide_ui.is_visible())
 
 
 func _on_ide_initialized(__: VFS) -> void:

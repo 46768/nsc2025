@@ -21,7 +21,7 @@ grow_horizontal = 1
 grow_vertical = 1
 
 [node name="Player" parent="." instance=ExtResource("3_h2yge")]
-position = Vector2(124, 432)
+position = Vector2(695, 425)
 
 [node name="Floor" type="StaticBody2D" parent="."]
 position = Vector2(586, 569)

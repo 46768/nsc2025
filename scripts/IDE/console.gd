@@ -36,6 +36,7 @@ func _on_ide_initialized(ide_vfs: VFS) -> void:
 	vfs = ide_vfs
 	shell = COSH.new(vfs)
 	COSHTestModule.new().install_module(shell)
+	COSHTempSignal.new().install_module(shell)
 	COSHPythonModule.new().install_module(shell) # Python commands
 	COSHFSIOModule.new().install_module(shell) # Virtual filesystem interactions
 	

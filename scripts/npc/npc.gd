@@ -26,12 +26,13 @@ func _ready() -> void:
 	_on_screen_resize()
 	
 	Globals.screen_resized.connect(_on_screen_resize)
-	SignalBus.on_main_initialized.connect(
-			func()->void: )
+	SignalBus.on_main_initialized.connect(_on_main_initialized)
 
 
 func _on_main_initialized() -> void:
 	interaction_text.reparent(Globals.player_ui)
+	
+	await get_tree().process_frame
 
 	var seq: Sequence = npc_problem.sequence
 	

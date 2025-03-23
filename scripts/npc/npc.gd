@@ -1,28 +1,27 @@
-class_name Interactive
-extends Area2D
+extends StaticBody2D
 
 
-@export var interaction_path: String
+@export var npc_data_resource: JSON = null
+
+var npc_data: Dictionary
+var interact_key: StringName
 
 var text_shift: int = 192
-var interaction_text: Label
-
-var npc_problem: ProblemClass
+var interaction_text: Label = null
 
 
+# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	print("json text")
-	var file: FileAccess = FileAccess.open(interaction_path, FileAccess.READ)
-	print(JSON.parse_string(file.get_as_text()))
+	npc_data = npc_data_resource.data
+	
+	interact_key = StringName(npc_data.get("interactKey", "<null>"))
 	
 	interaction_text = Label.new()
-	interaction_text.set_text("press E to interact")
+	interaction_text.set_text(npc_data.get("interactText", "<null>"))
 	interaction_text.set_horizontal_alignment(HORIZONTAL_ALIGNMENT_CENTER)
 	interaction_text.set_vertical_alignment(VERTICAL_ALIGNMENT_CENTER)
 	_on_screen_resize()
 	interaction_text.hide()
-	
-	npc_problem = Problem.create("NPCProblem", VFS.new())
 	
 	Globals.screen_resized.connect(_on_screen_resize)
 	SignalBus.on_main_initialized.connect(_on_main_initialized)
@@ -45,7 +44,7 @@ func _interact(get_keybind: bool, cleanup: bool) -> StringName:
 	if get_keybind:
 		# Put code for when adding interaction
 		interaction_text.show()
-		return &"KeyE"
+		return interact_key
 	
 	if cleanup:
 		# Put code for when removing interaction

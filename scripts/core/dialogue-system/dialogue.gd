@@ -15,7 +15,7 @@ func spawn_dialogue(message: String, texture: Texture2D=null) -> String:
 	if not texture == null:
 		dialogue.dialogue_texture = texture
 	
-	Globals.main.add_child(dialogue)
+	Globals.player_ui.add_child(dialogue)
 	current_dialogue[dialogue_hash] = dialogue
 	
 	return dialogue_hash

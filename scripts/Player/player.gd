@@ -37,3 +37,15 @@ func _physics_process(delta: float) -> void:
 		velocity.x = move_toward(velocity.x, 0, speed)
 
 	move_and_slide()
+
+
+func _on_node_entered(body: Node2D) -> void:
+	if body.has_method(&"_interact"):
+		var keybind: StringName = body._interact(true, false)
+		player.add_interaction(keybind, body._interact)
+
+
+func _on_node_exited(body: Node2D) -> void:
+	if body.has_method(&"_interact"):
+		body._interact(false, true)
+		player.remove_interaction(body._interact)

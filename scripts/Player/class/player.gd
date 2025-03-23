@@ -26,4 +26,4 @@ func process_interactions() -> void:
 		var keybind: StringName = available_interactions.get(callback, &"")
 		if (InputMap.has_action(keybind)
 		and Input.is_action_just_pressed(keybind)):
-			callback.call()
+			callback.call(false, false)

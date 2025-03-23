@@ -29,9 +29,6 @@ shape = SubResource("RectangleShape2D_lquwl")
 [node name="NPC" parent="." instance=ExtResource("5_lquwl")]
 position = Vector2(957, 435)
 
-[connection signal="main_initialized" from="." to="NPC" method="_on_main_initialized"]
-[connection signal="ide_initialized" from="Ide" to="." method="_on_ide_initialized"]
-
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="Ide" parent="UI" instance=ExtResource("1_xj0ui")]
@@ -42,4 +39,5 @@ anchor_bottom = 0.0
 grow_horizontal = 1
 grow_vertical = 1
 
+[connection signal="main_initialized" from="." to="NPC" method="_on_main_initialized"]
 [connection signal="ide_initialized" from="UI/Ide" to="." method="_on_ide_initialized"]

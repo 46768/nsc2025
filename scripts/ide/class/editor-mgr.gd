@@ -28,8 +28,8 @@ func _init(edit_ui: CodeEdit) -> void:
 	editor_ui.set_line_length_guidelines([80, 100])
 	
 	# Load syntax highlighting and code completion
-	load_colors("res://assets/json/IDE/syntax-highlighting/default.json")
-	parse_symbol_lut("res://assets/json/IDE/symbol_lut.json")
+	load_colors("res://assets/json/ide/syntax-highlighting/default.json")
+	parse_symbol_lut("res://assets/json/ide/symbol_lut.json")
 	
 	# Connect signals
 	editor_ui.code_completion_requested.connect(handle_autocomplete)

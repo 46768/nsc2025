@@ -1,6 +1,5 @@
-[gd_scene load_steps=5 format=3 uid="uid://cmn85kjdxt2ni"]
+[gd_scene load_steps=4 format=3 uid="uid://cmn85kjdxt2ni"]
 
-[ext_resource type="Script" uid="uid://b50atfpcwlhk7" path="res://scripts/NPC/npc.gd" id="1_6xvi5"]
 [ext_resource type="Texture2D" uid="uid://dswreolxusiw3" path="res://icon.svg" id="1_mhefn"]
 [ext_resource type="Script" uid="uid://bkr7npwr87vq1" path="res://scripts/core/nodes/interactive.gd" id="3_ktgr7"]
 
@@ -8,7 +7,6 @@
 size = Vector2(128, 128)
 
 [node name="NPC" type="StaticBody2D"]
-script = ExtResource("1_6xvi5")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_mhefn")
@@ -18,4 +16,8 @@ shape = SubResource("RectangleShape2D_t62y5")
 
 [node name="Interactive" type="Area2D" parent="."]
 script = ExtResource("3_ktgr7")
+interaction_path = "res://assets/json/IDE/symbol_lut.json"
 metadata/_custom_type_script = "uid://bkr7npwr87vq1"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactive"]
+shape = SubResource("RectangleShape2D_t62y5")

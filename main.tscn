@@ -39,5 +39,4 @@ anchor_bottom = 0.0
 grow_horizontal = 1
 grow_vertical = 1
 
-[connection signal="main_initialized" from="." to="NPC" method="_on_main_initialized"]
 [connection signal="ide_initialized" from="UI/Ide" to="." method="_on_ide_initialized"]

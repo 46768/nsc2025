@@ -21,6 +21,7 @@ func _ready() -> void:
 	ide_ui.hide()
 
 	main_initialized.emit()
+	SignalBus.on_main_initialized.emit()
 
 
 func _process(_delta: float) -> void:

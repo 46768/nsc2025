@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://dc0wkqvws5k6e"]
+[gd_scene load_steps=8 format=3 uid="uid://dc0wkqvws5k6e"]
 
 [ext_resource type="Script" uid="uid://cjnecbig4hetd" path="res://scripts/main/main.gd" id="1_a2087"]
 [ext_resource type="PackedScene" uid="uid://c44n34k18cx8m" path="res://scenes/IDE.tscn" id="1_xj0ui"]
 [ext_resource type="PackedScene" uid="uid://cixmrgx1jxv8p" path="res://scenes/Player.tscn" id="3_h2yge"]
 [ext_resource type="Texture2D" uid="uid://dadmwkga8kc6s" path="res://assets/textures/placeholder.jpg" id="4_1bvp3"]
+[ext_resource type="JSON" path="res://assets/json/npc/demo.json" id="5_7mycd"]
 [ext_resource type="PackedScene" uid="uid://cmn85kjdxt2ni" path="res://scenes/NPC.tscn" id="5_lquwl"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lquwl"]
@@ -12,16 +13,8 @@ size = Vector2(1280, 128)
 [node name="Main" type="Node2D"]
 script = ExtResource("1_a2087")
 
-[node name="Ide" parent="." instance=ExtResource("1_xj0ui")]
-visible = false
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-grow_horizontal = 1
-grow_vertical = 1
-
 [node name="Player" parent="." instance=ExtResource("3_h2yge")]
-position = Vector2(695, 425)
+position = Vector2(612, 402)
 
 [node name="Floor" type="StaticBody2D" parent="."]
 position = Vector2(586, 569)
@@ -36,6 +29,17 @@ shape = SubResource("RectangleShape2D_lquwl")
 
 [node name="NPC" parent="." instance=ExtResource("5_lquwl")]
 position = Vector2(957, 435)
+npc_data_resource = ExtResource("5_7mycd")
+npc_texture = ExtResource("4_1bvp3")
 
-[connection signal="main_initialized" from="." to="NPC" method="_on_main_initialized"]
-[connection signal="ide_initialized" from="Ide" to="." method="_on_ide_initialized"]
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Ide" parent="UI" instance=ExtResource("1_xj0ui")]
+visible = false
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+grow_horizontal = 1
+grow_vertical = 1
+
+[connection signal="ide_initialized" from="UI/Ide" to="." method="_on_ide_initialized"]

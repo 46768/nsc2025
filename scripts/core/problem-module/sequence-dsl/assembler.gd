@@ -22,7 +22,6 @@ var BASE: Variant = preload(
 ## Returns:
 ##		PackedStringArray: A string array containing the tokens in the line
 func tokenize(line: String) -> PackedStringArray:
-	var stripped: String = line.get_slice(";", 0).strip_edges()
 	var opcode: String = line.get_slice(" ", 0)
 	var tokens: PackedStringArray = PackedStringArray([opcode])
 	

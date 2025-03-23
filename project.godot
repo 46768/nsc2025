@@ -19,7 +19,8 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-DiskUtil="*res://scripts/core/autoloads/disk_utils.gd"
+SignalBus="*res://scripts/core/autoloads/signal-bus.gd"
+DiskUtil="*res://scripts/core/autoloads/disk-utils.gd"
 Globals="*res://scripts/core/autoloads/globals.gd"
 Packet="*res://scripts/core/networking/packet.gd"
 PythonBinding="*res://scripts/python-binding/python-binding.gd"

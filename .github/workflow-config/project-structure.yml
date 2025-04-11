@@ -9,6 +9,8 @@ python-binding:
   - py
   - yml
   - yaml
+  - cfg
+  - xml
 
 scenes:
   - tscn

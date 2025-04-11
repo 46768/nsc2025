@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graph>
+	<GroupOrder>
+		<Order index="0">AbsBeginner</Order>
+		<Order index="1">Beginner</Order>
+		<Order index="2">Intermediate</Order>
+		<Order index="3">Advanced</Order>
+	</GroupOrder>
+
+	<AbsBeginner isGroup="true">
+		<Node>
+			<Name>OS usage</Name>
+			<Dependencies>
+			</Dependencies>
+		</Node>
+		<Node>
+			<Name>IDE usage</Name>
+			<Dependencies>
+				<Dependency>OS usage</Dependency>
+			</Dependencies>
+		</Node>
+		<Node>
+			<Name>Dev env usage</Name>
+			<Dependencies>
+				<Dependency>OS usage</Dependency>
+			</Dependencies>
+		</Node>
+		<Node>
+			<Name>Using the shell</Name>
+			<Dependencies>
+				<Dependency>IDE usage</Dependency>
+			</Dependencies>
+		</Node>
+		<Node>
+			<Name>Shell commands</Name>
+			<Dependencies>
+				<Dependency>Using the shell</Dependency>
+				<Dependency>Dev env usage</Dependency>
+			</Dependencies>
+		</Node>
+	</AbsBeginner>
+
+	<Beginner isGroup="true">
+		<Node>
+			<Name>Variables</Name>
+			<Dependencies>
+				<Dependency>Running python code</Dependency>
+			</Dependencies>
+		</Node>
+		<Node>
+			<Name>Basic datatypes</Name>
+			<Dependencies>
+			</Dependencies>
+		</Node>
+		<Node>
+			<Name>Assignment</Name>
+			<Dependencies>
+				<Dependency>Variables</Dependency>
+				<Dependency>Basic datatypes</Dependency>
+			</Dependencies>
+		</Node>
+		<Node>
+			<Name>Print</Name>
+			<Dependencies>
+				<Dependency>Python code flow</Dependency>
+			</Dependencies>
+		</Node>
+		<Node>
+			<Name>Python code flow</Name>
+			<Dependencies>
+				<Dependency>Operators</Dependency>
+			</Dependencies>
+		</Node>
+		<Node>
+			<Name>Running python code</Name>
+			<Dependencies>
+				<Dependency>Shell commands</Dependency>
+			</Dependencies>
+		</Node>
+		<Node>
+			<Name>Operators</Name>
+			<Dependencies>
+				<Dependency>Assignment</Dependency>
+			</Dependencies>
+		</Node>
+		<Node>
+			<Name>Reading docs 1</Name>
+			<Dependencies>
+				<Dependency>Print</Dependency>
+			</Dependencies>
+		</Node>
+		<Node>
+			<Name>Comments</Name>
+			<Dependencies>
+				<Dependency>Print</Dependency>
+			</Dependencies>
+		</Node>
+	</Beginner>
+
+	<Intermediate isGroup="true">
+		<Node>
+			<Name>Conditionals</Name>
+			<Dependencies>
+				<Dependency>Boolean logics</Dependency>
+			</Dependencies>
+		</Node>
+		<Node>
+			<Name>For loops</Name>
+			<Dependencies>
+				<Dependency>Variables</Dependency>
+				<Dependency>Lists</Dependency>
+			</Dependencies>
+		</Node>
+		<Node>
+			<Name>While loops</Name>
+			<Dependencies>
+				<Dependency>Boolean logics</Dependency>
+			</Dependencies>
+		</Node>
+		<Node>
+			<Name>Functions</Name>
+			<Dependencies>
+				<Dependency>For loops</Dependency>
+				<Dependency>While loops</Dependency>
+				<Dependency>Conditionals</Dependency>
+				<Dependency>Reading errors</Dependency>
+				<Dependency>Reading docs 2</Dependency>
+			</Dependencies>
+		</Node>
+		<Node>
+			<Name>Boolean logics</Name>
+			<Dependencies>
+				<Dependency>Operators</Dependency>
+				<Dependency>Python code flow</Dependency>
+			</Dependencies>
+		</Node>
+		<Node>
+			<Name>Lists</Name>
+			<Dependencies>
+				<Dependency>Variables</Dependency>
+				<Dependency>Basic datatypes</Dependency>
+				<Dependency>Assignment</Dependency>
+			</Dependencies>
+		</Node>
+		<Node>
+			<Name>Reading docs 2</Name>
+			<Dependencies>
+				<Dependency>Reading docs 1</Dependency>
+			</Dependencies>
+		</Node>
+		<Node>
+			<Name>Reading errors</Name>
+			<Dependencies>
+				<Dependency>Running python code</Dependency>
+			</Dependencies>
+		</Node>
+		<Node>
+			<Name>User I/O</Name>
+			<Dependencies>
+				<Dependency>Variables</Dependency>
+				<Dependency>Assignment</Dependency>
+				<Dependency>Basic datatypes</Dependency>
+			</Dependencies>
+		</Node>
+	</Intermediate>
+
+	<Advanced isGroup="true">
+		<Node>
+			<Name>Dictionary</Name>
+			<Dependencies>
+				<Dependency>Lists</Dependency>
+			</Dependencies>
+		</Node>
+		<Node>
+			<Name>Recursion</Name>
+			<Dependencies>
+				<Dependency>Functions</Dependency>
+			</Dependencies>
+		</Node>
+		<Node>
+			<Name>Reading docs 3</Name>
+			<Dependencies>
+				<Dependency>Reading docs 2</Dependency>
+			</Dependencies>
+		</Node>
+		<Node>
+			<Name>Reading logs</Name>
+			<Dependencies>
+				<Dependency>Reading docs 2</Dependency>
+			</Dependencies>
+		</Node>
+		<Node>
+			<Name>Time complexity</Name>
+			<Dependencies>
+				<Dependency>Functions</Dependency>
+				<Dependency>Basic algorithms</Dependency>
+			</Dependencies>
+		</Node>
+		<Node>
+			<Name>Modules</Name>
+			<Dependencies>
+				<Dependency>Functions</Dependency>
+			</Dependencies>
+		</Node>
+		<Node>
+			<Name>File I/O</Name>
+			<Dependencies>
+				<Dependency>User I/O</Dependency>
+			</Dependencies>
+		</Node>
+		<Node>
+			<Name>Basic datastructures</Name>
+			<Dependencies>
+				<Dependency>Lists</Dependency>
+				<Dependency>Dictionary</Dependency>
+				<Dependency>Basic datatypes</Dependency>
+			</Dependencies>
+		</Node>
+		<Node>
+			<Name>Basic algorithms</Name>
+			<Dependencies>
+				<Dependency>Functions</Dependency>
+				<Dependency>For loops</Dependency>
+				<Dependency>While loops</Dependency>
+				<Dependency>Recursion</Dependency>
+			</Dependencies>
+		</Node>
+	</Advanced>
+</graph>

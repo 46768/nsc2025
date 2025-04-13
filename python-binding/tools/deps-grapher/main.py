@@ -148,8 +148,6 @@ graph_parser = GraphParser()
 graph_parser.parse_graph(xml_data)
 graph_data = graph_parser.get_graph()
 
-print(graph_data)
-
 DG = nx.DiGraph()
 
 graph_groups = graph_data["groups"]

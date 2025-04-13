@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <graph>
 	<GroupOrder>
-		<Order index="0">AbsBeginner</Order>
-		<Order index="1">Beginner</Order>
-		<Order index="2">Intermediate</Order>
-		<Order index="3">Advanced</Order>
+		<Order>AbsBeginner</Order>
+		<Order>Beginner</Order>
+		<Order>Intermediate</Order>
+		<Order>Advanced</Order>
 	</GroupOrder>
 
-	<AbsBeginner isGroup="true">
+	<AbsoluteBeginner isGroup="true" groupColor="#11fc09">
 		<Node>
 			<Name>OS usage</Name>
+			<IsRoot/>
 			<Dependencies>
 			</Dependencies>
 		</Node>
@@ -38,9 +39,9 @@
 				<Dependency>Dev env usage</Dependency>
 			</Dependencies>
 		</Node>
-	</AbsBeginner>
+	</AbsoluteBeginner>
 
-	<Beginner isGroup="true">
+	<Beginner isGroup="true" groupColor="#1dad18">
 		<Node>
 			<Name>Variables</Name>
 			<Dependencies>
@@ -97,7 +98,7 @@
 		</Node>
 	</Beginner>
 
-	<Intermediate isGroup="true">
+	<Intermediate isGroup="true" groupColor="#eff701">
 		<Node>
 			<Name>Conditionals</Name>
 			<Dependencies>
@@ -164,7 +165,7 @@
 		</Node>
 	</Intermediate>
 
-	<Advanced isGroup="true">
+	<Advanced isGroup="true" groupColor="#e80f0f">
 		<Node>
 			<Name>Dictionary</Name>
 			<Dependencies>

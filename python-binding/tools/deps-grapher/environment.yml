@@ -1,0 +1,8 @@
+name: nsc-2025-deps-grapher
+dependencies:
+  - conda-forge::python=3.13.2
+  - conda-forge::networkx=3.4.2
+  - conda-forge::matplotlib=3.10.1
+  - conda-forge::scipy=1.15.2
+  - conda-forge::numpy=2.2.4
+  - conda-forge::pydot=3.0.4

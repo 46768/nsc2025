@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <graph>
 	<GroupOrder>
-		<Order>AbsBeginner</Order>
+		<Order>AbsoluteBeginner</Order>
 		<Order>Beginner</Order>
 		<Order>Intermediate</Order>
 		<Order>Advanced</Order>

@@ -5,199 +5,205 @@
         "Intermediate",
         "Advanced"
     ],
-    "AbsoluteBeginner": {
-        "color": "#11fc09",
-        "nodes": {
-            "OS usage": {
-				"root_node": true,
-                "dependencies": []
-            },
-            "IDE usage": {
-                "dependencies": [
-                    "OS usage"
-                ]
-            },
-            "Dev env usage": {
-                "dependencies": [
-                    "OS usage"
-                ]
-            },
-            "Using the shell": {
-                "dependencies": [
-                    "IDE usage"
-                ]
-            },
-            "Shell commands": {
-                "dependencies": [
-                    "Using the shell",
-                    "Dev env usage"
-                ]
-            }
-        }
-    },
-    "Beginner": {
-        "color": "#1dad18",
-        "nodes": {
-            "Variables": {
-                "dependencies": [
-                    "Running python code"
-                ]
-            },
-            "Basic datatypes": {
-                "dependencies": []
-            },
-            "Assignment": {
-                "dependencies": [
-                    "Variables",
-                    "Basic datatypes"
-                ]
-            },
-            "Print": {
-                "dependencies": [
-                    "Python code flow"
-                ]
-            },
-            "Python code flow": {
-                "dependencies": [
-                    "Operators"
-                ]
-            },
-            "Running python code": {
-                "dependencies": [
-                    "Shell commands"
-                ]
-            },
-            "Operators": {
-                "dependencies": [
-                    "Assignment"
-                ]
-            },
-            "Reading docs 1": {
-                "dependencies": [
-                    "Print"
-                ]
-            },
-            "Comments": {
-                "dependencies": [
-                    "Print"
-                ]
-            }
-        }
-    },
-    "Intermediate": {
-        "color": "#eff701",
-        "nodes": {
-            "Conditionals": {
-                "dependencies": [
-                    "Boolean logics"
-                ]
-            },
-            "For loops": {
-                "dependencies": [
-                    "Variables",
-                    "Lists"
-                ]
-            },
-            "While loops": {
-                "dependencies": [
-                    "Boolean logics"
-                ]
-            },
-            "Functions": {
-                "dependencies": [
-                    "For loops",
-                    "While loops",
-                    "Conditionals",
-                    "Reading errors",
-                    "Reading docs 2"
-                ]
-            },
-            "Boolean logics": {
-                "dependencies": [
-                    "Operators",
-                    "Python code flow"
-                ]
-            },
-            "Lists": {
-                "dependencies": [
-                    "Variables",
-                    "Basic datatypes",
-                    "Assignment"
-                ]
-            },
-            "Reading docs 2": {
-                "dependencies": [
-                    "Reading docs 1"
-                ]
-            },
-            "Reading errors": {
-                "dependencies": [
-                    "Running python code"
-                ]
-            },
-            "User I/O": {
-                "dependencies": [
-                    "Variables",
-                    "Assignment",
-                    "Basic datatypes"
-                ]
-            }
-        }
-    },
-    "Advanced": {
-        "color": "#e80f0f",
-        "nodes": {
-            "Dictionary": {
-                "dependencies": [
-                    "Lists"
-                ]
-            },
-            "Recursion": {
-                "dependencies": [
-                    "Functions"
-                ]
-            },
-            "Reading docs 3": {
-                "dependencies": [
-                    "Reading docs 2"
-                ]
-            },
-            "Reading logs": {
-                "dependencies": [
-                    "Reading docs 2"
-                ]
-            },
-            "Time complexity": {
-                "dependencies": [
-                    "Functions",
-                    "Basic algorithms"
-                ]
-            },
-            "Modules": {
-                "dependencies": [
-                    "Functions"
-                ]
-            },
-            "File I/O": {
-                "dependencies": [
-                    "User I/O"
-                ]
-            },
-            "Basic datastructures": {
-                "dependencies": [
-                    "Lists",
-                    "Dictionary",
-                    "Basic datatypes"
-                ]
-            },
-            "Basic algorithms": {
-                "dependencies": [
-                    "Functions",
-                    "For loops",
-                    "While loops",
-                    "Recursion"
-                ]
-            }
-        }
-    }
+
+	"groups": {
+		"AbsoluteBeginner": {
+			"color": "#11fc09",
+			"nodes": {
+				"OS usage": {
+					"root_node": true,
+					"dependencies": []
+				},
+				"IDE usage": {
+					"dependencies": [
+						"OS usage"
+					]
+				},
+				"Dev env usage": {
+					"dependencies": [
+						"OS usage"
+					]
+				},
+				"Using the shell": {
+					"dependencies": [
+						"IDE usage"
+					]
+				},
+				"Shell commands": {
+					"dependencies": [
+						"Using the shell",
+						"Dev env usage"
+					]
+				}
+			}
+		},
+
+		"Beginner": {
+			"color": "#1dad18",
+			"nodes": {
+				"Basic datatypes": {
+					"dependencies": []
+				},
+				"Running python code": {
+					"dependencies": [
+						"Shell commands"
+					]
+				},
+				"Variables": {
+					"dependencies": [
+						"Running python code"
+					]
+				},
+				"Assignment": {
+					"dependencies": [
+						"Variables",
+						"Basic datatypes"
+					]
+				},
+				"Operators": {
+					"dependencies": [
+						"Assignment"
+					]
+				},
+				"Python code flow": {
+					"dependencies": [
+						"Operators"
+					]
+				},
+				"Print": {
+					"dependencies": [
+						"Python code flow"
+					]
+				},
+				"Reading docs 1": {
+					"dependencies": [
+						"Print"
+					]
+				},
+				"Comments": {
+					"dependencies": [
+						"Print"
+					]
+				}
+			}
+		},
+
+		"Intermediate": {
+			"color": "#eff701",
+			"nodes": {
+				"Boolean logics": {
+					"dependencies": [
+						"Operators",
+						"Python code flow"
+					]
+				},
+				"Lists": {
+					"dependencies": [
+						"Variables",
+						"Basic datatypes",
+						"Assignment"
+					]
+				},
+				"Conditionals": {
+					"dependencies": [
+						"Boolean logics"
+					]
+				},
+				"For loops": {
+					"dependencies": [
+						"Variables",
+						"Lists"
+					]
+				},
+				"While loops": {
+					"dependencies": [
+						"Boolean logics"
+					]
+				},
+				"Functions": {
+					"dependencies": [
+						"For loops",
+						"While loops",
+						"Conditionals",
+						"Reading errors",
+						"Reading docs 2"
+					]
+				},
+				"Reading docs 2": {
+					"dependencies": [
+						"Reading docs 1"
+					]
+				},
+				"Reading errors": {
+					"dependencies": [
+						"Running python code"
+					]
+				},
+				"User I/O": {
+					"dependencies": [
+						"Variables",
+						"Assignment",
+						"Basic datatypes"
+					]
+				}
+			}
+		},
+
+		"Advanced": {
+			"color": "#e80f0f",
+			"nodes": {
+				"Dictionary": {
+					"dependencies": [
+						"Lists"
+					]
+				},
+				"Recursion": {
+					"dependencies": [
+						"Functions"
+					]
+				},
+				"Reading docs 3": {
+					"dependencies": [
+						"Reading docs 2"
+					]
+				},
+				"Reading logs": {
+					"dependencies": [
+						"Reading docs 2"
+					]
+				},
+				"Time complexity": {
+					"dependencies": [
+						"Functions",
+						"Basic algorithms"
+					]
+				},
+				"Modules": {
+					"dependencies": [
+						"Functions"
+					]
+				},
+				"File I/O": {
+					"dependencies": [
+						"User I/O"
+					]
+				},
+				"Basic datastructures": {
+					"dependencies": [
+						"Lists",
+						"Dictionary",
+						"Basic datatypes"
+					]
+				},
+				"Basic algorithms": {
+					"dependencies": [
+						"Functions",
+						"For loops",
+						"While loops",
+						"Recursion"
+					]
+				}
+			}
+		}
+	}
 }

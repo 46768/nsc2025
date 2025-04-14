@@ -1,0 +1,52 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"title": "Virtual Filesystem",
+	"description": "Schema for Virtual filesystem used in this project",
+	"type": "object",
+	"required": [ "/" ],
+
+	"properties": {
+		"/": {
+			"type": "object",
+			"$ref": "#/$def/directory"
+		}
+	},
+	"patternProperties": {
+		"^(/[^/]+)+$": {
+			"type": "object",
+			"oneOf": [
+				{ "$ref": "#/$def/file" },
+				{ "$ref": "#/$def/directory" }
+			]
+		}
+	},
+	"additionalProperties": false,
+
+	"$def": {
+		"file": {
+			"required": [ "type", "content" ],
+			"properties": {
+				"type": { "const": 0 },
+				"content": {
+					"type": "string"
+				}
+			}
+		},
+		"directory": {
+			"required": [ "type", "content" ],
+			"properties": {
+				"type": { "const": 1 },
+				"content": {
+					"type": "object",
+					"patternProperties": {
+						"^(/[^/]+)+$": {
+							"const": true
+						}
+					},
+					"additionalProperties": false
+				}
+			}
+		}
+	}
+}
+

@@ -1,18 +1,52 @@
 {
-  "type": "object",
-  "properties": {
-    "first_name": { "type": "string" },
-    "last_name": { "type": "string" },
-    "birthday": { "type": "string", "format": "date" },
-    "address": {
-       "type": "object",
-       "properties": {
-         "street_address": { "type": "string" },
-         "city": { "type": "string" },
-         "state": { "type": "string" },
-         "country": { "type" : "string" }
-       }
-    }
-  }
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"title": "Virtual Filesystem",
+	"description": "Schema for Virtual filesystem used in this project",
+	"type": "object",
+	"required": [ "/" ],
+
+	"properties": {
+		"/": {
+			"type": "object",
+			"$ref": "#/$def/directory"
+		}
+	},
+	"patternProperties": {
+		"^(/[^/]+)+$": {
+			"type": "object",
+			"oneOf": [
+				{ "$ref": "#/$def/file" },
+				{ "$ref": "#/$def/directory" }
+			]
+		}
+	},
+	"additionalProperties": false,
+
+	"$def": {
+		"file": {
+			"required": [ "type", "content" ],
+			"properties": {
+				"type": { "const": 0 },
+				"content": {
+					"type": "string"
+				}
+			}
+		},
+		"directory": {
+			"required": [ "type", "content" ],
+			"properties": {
+				"type": { "const": 1 },
+				"content": {
+					"type": "object",
+					"patternProperties": {
+						"^(/[^/]+)+$": {
+							"const": true
+						}
+					},
+					"additionalProperties": false
+				}
+			}
+		}
+	}
 }
 

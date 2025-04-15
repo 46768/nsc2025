@@ -1,0 +1,11 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"title": "Virtual Filesystem",
+	"description": "Schema for Virtual filesystem used in this project",
+	"type": "array",
+	"items": {
+		"type": "integer"
+	},
+	"minItems": 5,
+	"uniqueItems": true
+}

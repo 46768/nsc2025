@@ -6,10 +6,12 @@ cli_parser = argparse.ArgumentParser(prog="schematotext",
                                      description="Converts schemas to human "
                                      + "readable text")
 cli_parser.add_argument("schemaType")
+cli_parser.add_argument("outputFormat")
 cli_parser.add_argument("schemaFile")
 
 args = cli_parser.parse_args()
 schema_type = args.schemaType
+output_format = args.outputFormat
 schema_file = args.schemaFile
 
 with open(schema_file) as f:
@@ -33,4 +35,6 @@ def lazy_import(name):
 
 
 parser = lazy_import("schema_parsers."+schema_type)
-parser.parse_schema(schema_data)
+formatter = lazy_import("formatter."+output_format)
+schema = parser.parse_schema(schema_data)
+print(formatter.format_schema(schema))

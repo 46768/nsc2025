@@ -7,13 +7,11 @@
 
 	"properties": {
 		"/": {
-			"type": "object",
 			"$ref": "#/$def/directory"
 		}
 	},
 	"patternProperties": {
 		"^(/[^/]+)+$": {
-			"type": "object",
 			"oneOf": [
 				{ "$ref": "#/$def/file" },
 				{ "$ref": "#/$def/directory" }
@@ -24,6 +22,7 @@
 
 	"$def": {
 		"file": {
+			"type": "object",
 			"required": [ "type", "content" ],
 			"properties": {
 				"type": { "const": 0 },
@@ -33,6 +32,7 @@
 			}
 		},
 		"directory": {
+			"type": "object",
 			"required": [ "type", "content" ],
 			"properties": {
 				"type": { "const": 1 },

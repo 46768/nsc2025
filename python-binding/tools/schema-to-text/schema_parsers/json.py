@@ -15,7 +15,10 @@ def englishify_field(field: Field):
         field_name = "Matches `" + field_name + "` Regex"
 
     # (name, type, required, description)
-    return (field_name, field_type, field_required, field_desc)
+    return {"name": field_name,
+            "type": field_type,
+            "required": field_required,
+            "description": field_desc}
 
 
 # Schema Parser

@@ -15,7 +15,7 @@ def format_schema(schema_data: Schema):
 
     for field in schema_data.properties:
         field_data = parser.englishify_field(field)
-        table_string += '\t'.join(field_data) + '\n'
+        table_string += '\t'.join([field_data[k] for k in table_keys]) + '\n'
 
     table_string = table_string[:-1]
 

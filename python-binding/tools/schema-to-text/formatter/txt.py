@@ -2,14 +2,19 @@ from schema import Schema
 import textwrap
 
 
+file_ext = "txt"
+
+
 def format_schema(schema_data: Schema):
-    table_keys = schema_data.properties[0].field_keys
-
     table = []
-
     table.append("Title: " + schema_data.title)
     table.append("Description: " + schema_data.description)
     table.append("Type: " + schema_data.object_type)
+
+    if len(schema_data.properties) == 0:
+        return (file_ext, '\n'.join(table))
+
+    table_keys = schema_data.properties[0].field_keys
 
     header_lengths = {k: len(k) for k in table_keys}
     header_max_lengths = {k: 5 * len(k) for k in table_keys}
@@ -30,9 +35,6 @@ def format_schema(schema_data: Schema):
                 for k in table_keys}
 
         table_datas.append(table_data)
-
-    if len(table_datas) == 0:
-        return ("txt", '\n'.join(table))
 
     table_divider = ('+'
                      + '+'.join(
@@ -68,4 +70,4 @@ def format_schema(schema_data: Schema):
 
         table.append(table_divider)
 
-    return ("txt", '\n'.join(table))
+    return (file_ext, '\n'.join(table))

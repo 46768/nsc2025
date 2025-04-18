@@ -87,7 +87,14 @@ def format_schema(schema):
     elif object_type == "object":
         parse_object(json_schema, schema)
     else:
-        pass
+        for k, v in schema.items():
+            # Ignore metadata stuff
+            if k in ["title", "description", "type"] or k.startswith('$'):
+                continue
+
+            (json_schema.add_property(SchemaProperty)
+             .set_name(k)
+             .set_value(str(v)))
 
     return json_schema
 

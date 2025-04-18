@@ -1,6 +1,5 @@
 import argparse
-import importlib.util
-import sys
+import util
 
 cli_parser = argparse.ArgumentParser(prog="schematotext",
                                      description="Converts schemas to human "
@@ -17,24 +16,19 @@ schema_file = args.schemaFile
 with open(schema_file) as f:
     schema_data = f.read()
 
-try:
-    importlib.util.find_spec("schema_parsers."+schema_type)
-except ImportError:
+if not util.does_module_exists("schema_parsers."+schema_type):
     print(f"Error: Schema '{schema_type}' not found")
     exit(1)
 
-
-def lazy_import(name):
-    spec = importlib.util.find_spec(name)
-    loader = importlib.util.LazyLoader(spec.loader)
-    spec.loader = loader
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[name] = module
-    loader.exec_module(module)
-    return module
+if not util.does_module_exists("formatter."+output_format):
+    print(f"Error: Format '{output_format}' not found")
+    exit(1)
 
 
-parser = lazy_import("schema_parsers."+schema_type)
-formatter = lazy_import("formatter."+output_format)
+parser = util.lazy_import("schema_parsers."+schema_type)
+formatter = util.lazy_import("formatter."+output_format)
 schema = parser.parse_schema(schema_data)
-print(formatter.format_schema(schema))
+
+file_ext, file_data = formatter.format_schema(schema)
+with open("result."+file_ext, 'wb') as f:
+    f.write(bytes(file_data, encoding="ascii"))

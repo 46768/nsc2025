@@ -1,142 +1,57 @@
+from schema import Schema, Field
 import json
 
-vowels = ['a', 'e', 'i', 'o', 'u']
 
-headers = [
-    {
-        "name": "Field",
-        "max_extra_spaces": 1000,
-        "schema_map": lambda s, p, pk: pk
-    },
+# Englishifier
 
-    {
-        "name": "Type",
-        "max_extra_spaces": 10,
-        "schema_map": lambda s, p, pk: p["type"]
-    },
+def englishify_field(field: Field):
+    field_name = field.name
+    field_type = field.type
+    field_required = 'Y' if field.required else 'N'
+    field_desc = field.description
+    field_extras = field.extra
 
-    {
-        "name": "Required?",
-        "max_extra_spaces": 10,
-        "schema_map": lambda s, p, pk: ('Y'
-                                        if (pk in s["required"]
-                                            if "required" in s else False)
-                                        else 'N')
-    },
+    if "regex_field" in field_extras:
+        field_name = "Matches `" + field_name + "` Regex"
 
-    {
-        "name": "Description",
-        "max_extra_spaces": 10,
-        "center": False,
-        "schema_map": lambda s, p, pk: (p["description"]
-                                        if "description" in p else "")
-    },
-]
+    # (name, type, required, description)
+    return (field_name, field_type, field_required, field_desc)
 
 
-def clamp(x, min_v, max_v):
-    return min(max_v, max(x, min_v))
-
-
-def format_array(array_schema):
-    array_text = "An array of "
-
-    if "minItems" in array_schema:
-        min_items = array_schema["minItems"]
-        array_text += f"at least {min_items} "
-
-    if ("uniqueItems" in array_schema
-            and array_schema["uniqueItems"] is True):
-        array_text += "unique "
-
-    array_text += array_schema["items"]["type"]
-    return array_text
-
-
-def format_type(type_schema):
-    starts_with_vowel = type_schema["type"][0].lower in vowels
-
-    return ("An" if starts_with_vowel else "A") + ' ' + type_schema["type"]
-
-
-def format_regex(regex_string):
-    return "Matches `" + regex_string + "` regex"
-
+# Schema Parser
 
 def format_schema(schema):
-    # Table headers: field, type, required, desc
-
-    schema_header = ""
-    table_text = ""
+    json_schema = Schema()
 
     if "title" in schema:
-        schema_header += schema["title"] + ' JSON Schema\n'
+        json_schema.title = schema["title"]
 
     if "description" in schema:
-        if "title" in schema:
-            schema_header += '\n'
-        schema_header += schema["description"] + '\n'
+        json_schema.description = schema["description"]
 
-    schema_header += '\n'
+    json_schema.type = "json"
+    properties = schema["properties"]
+    regex_properties = schema["patternProperties"]
+    requried_properties = schema["required"]
 
-    if schema["type"] == "array":
-        table_text = format_array(schema)
-    elif schema["type"] != "object":
-        table_text = format_type(schema)
-    else:  # Schema is 'object' type
-        properties = schema["properties"]
-        regex_properties = schema["patternProperties"]
+    def add_field(field_name, field_data):
+        field = json_schema.add_property()
+        field.name = field_name
+        field.type = field_data["type"]
+        field.required = field_name in requried_properties
+        field.description = field_data.get("description", "")
 
-        fields = []
+        return field
 
-        def get_field(field_name, field_data):
-            return {k: v for (k, v) in [
-                (f["name"], f["schema_map"](
-                    schema, field_data, field_name)) for f in headers]}
+    for field_name, field_data in properties.items():
+        add_field(field_name, field_data)
 
-        for field_name, field_data in properties.items():
-            fields.append(get_field(field_name, field_data))
+    for field_name, field_data in regex_properties.items():
+        field = add_field(field_name, field_data)
+        field.extra.add("regex_field")
 
-        for field_name, field_data in regex_properties.items():
-            fields.append(get_field(field_name, field_data))
-
-        headers_length = []
-
-        for header in headers:
-            header_name = header["name"]
-            header_length = len(header_name)
-            header_max_length = header_length + header["max_extra_spaces"]
-
-            for field in fields:
-                header_length = clamp(len(field[header_name]),
-                                      header_length,
-                                      header_max_length)
-
-            headers_length.append(
-                    {"name": header_name, "length": header_length})
-
-        table_header = ""
-        for header in headers_length:
-            table_header += ("| "
-                             + header["name"].center(header["length"])
-                             + ' ')
-        table_header += "|"
-        table_hdivider = table_header.replace('|', '+')
-        table_hdivider = ''.join(
-                map(lambda x: x if x == '+' else '-', table_hdivider)) + '\n'
-
-        table_text += (table_hdivider
-                       + table_header + '\n'
-                       + table_hdivider.replace('-', '='))
-
-        for field in fields:
-            for header in headers:
-                pass
-
-        table_text += table_hdivider[:-1]
-
-    return schema_header + table_text
+    return json_schema
 
 
 def parse_schema(json_data: str):
-    print(format_schema(json.loads(json_data)))
+    return format_schema(json.loads(json_data))

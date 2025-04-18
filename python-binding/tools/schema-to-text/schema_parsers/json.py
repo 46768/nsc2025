@@ -1,27 +1,72 @@
-from schema import Schema, Field
+from schema import Schema, SchemaProperty
 import json
 
 
-# Englishifier
+def parse_array(json_schema, schema):
+    prefix_items = schema.get("prefixItems", [])
+    for i, item in enumerate(prefix_items):
+        item_name = f"[{i}]"
+        item_type = "item"
 
-def englishify_field(field: Field):
-    field_name = field.name
-    field_type = field.type
-    field_required = 'Y' if field.required else 'N'
-    field_desc = field.description
-    field_extras = field.extra
+        if "type" in item:
+            item_type = item["type"]
+        elif "enum" in item:
+            item_type = "enum" + str(item["enum"])
 
-    if "regex_field" in field_extras:
-        field_name = "Matches `" + field_name + "` Regex"
+        (json_schema.add_property(SchemaProperty)
+         .set_name(item_name)
+         .set_value(item_type))
 
-    # (name, type, required, description)
-    return {"name": field_name,
-            "type": field_type,
-            "required": field_required,
-            "description": field_desc}
+        for k, v in item.items():
+            if k in ["type", "enum"]:
+                continue
+            (json_schema.add_property(SchemaProperty)
+             .set_name(item_name+'/'+k)
+             .set_value(str(v)))
+
+    if schema["items"] is False:
+        json_schema.object_type = "tuple"
+    else:
+        item_type = schema["items"]["type"]
+        (json_schema.add_property(SchemaProperty)
+         .set_name("Item type")
+         .set_value(item_type)
+         .set_description("Type of items within the array"
+                          " (after the prefix items)"))
+
+        if "minItems" in schema:
+            (json_schema.add_property(SchemaProperty)
+             .set_name("Minimum count of item")
+             .set_value(schema["minItems"])
+             .set_description("Minimum amount of items in the array"))
+        if schema.get("uniqueItems", False) is True:
+            (json_schema.add_property(SchemaProperty)
+             .set_name("Unique items")
+             .set_value("Y")
+             .set_description("Ensure every items are unique"))
 
 
-# Schema Parser
+def parse_object(json_schema, schema):
+    properties = schema["properties"]
+    regex_properties = schema.get("patternProperties", {})
+    requried_properties = schema["required"]
+
+    def add_field(field_name, field_data):
+        field = (json_schema.add_property()
+                 .set_name(field_name)
+                 .set_type(field_data["type"])
+                 .set_required(field_name in requried_properties)
+                 .set_description(field_data.get("description", "")))
+
+        return field
+
+    for field_name, field_data in properties.items():
+        add_field(field_name, field_data)
+
+    for field_name, field_data in regex_properties.items():
+        field = add_field(field_name, field_data)
+        field.add_extra_property("regex_field")
+
 
 def format_schema(schema):
     json_schema = Schema()
@@ -32,26 +77,17 @@ def format_schema(schema):
     if "description" in schema:
         json_schema.description = schema["description"]
 
-    json_schema.type = "json"
-    properties = schema["properties"]
-    regex_properties = schema["patternProperties"]
-    requried_properties = schema["required"]
+    object_type = schema["type"]
 
-    def add_field(field_name, field_data):
-        field = json_schema.add_property()
-        field.name = field_name
-        field.type = field_data["type"]
-        field.required = field_name in requried_properties
-        field.description = field_data.get("description", "")
+    json_schema.schema_type = "json"
+    json_schema.object_type = object_type
 
-        return field
-
-    for field_name, field_data in properties.items():
-        add_field(field_name, field_data)
-
-    for field_name, field_data in regex_properties.items():
-        field = add_field(field_name, field_data)
-        field.extra.add("regex_field")
+    if object_type == "array":
+        parse_array(json_schema, schema)
+    elif object_type == "object":
+        parse_object(json_schema, schema)
+    else:
+        pass
 
     return json_schema
 

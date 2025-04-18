@@ -9,9 +9,5 @@
 		{ "enum": ["Street", "Avenue", "Boulevard"] },
 		{ "enum": ["NW", "NE", "SW", "SE"] }
 	],
-	"items": {
-		"type": "integer"
-	},
-	"minItems": 5,
-	"uniqueItems": true
+	"items": false
 }

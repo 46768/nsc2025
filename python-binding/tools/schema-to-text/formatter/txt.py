@@ -1,23 +1,21 @@
 from schema import Schema
-import util
 import textwrap
 
 
 def format_schema(schema_data: Schema):
-    schema_format = schema_data.type
-    parser = util.lazy_import("schema_parsers."+schema_format)
     table_keys = schema_data.properties[0].field_keys
 
     table = []
 
     table.append("Title: " + schema_data.title)
     table.append("Description: " + schema_data.description)
+    table.append("Type: " + schema_data.object_type)
 
     header_lengths = {k: len(k) for k in table_keys}
     header_max_lengths = {k: 5 * len(k) for k in table_keys}
 
     for field in schema_data.properties:
-        field_data = parser.englishify_field(field)
+        field_data = field.englishify()
 
         for key in table_keys:
             header_lengths[key] = min(header_max_lengths[key],
@@ -26,12 +24,15 @@ def format_schema(schema_data: Schema):
 
     table_datas = []
     for field in schema_data.properties:
-        field_data = parser.englishify_field(field)
+        field_data = field.englishify()
         table_data = {
                 k: textwrap.wrap(field_data[k], header_lengths[k])
                 for k in table_keys}
 
         table_datas.append(table_data)
+
+    if len(table_datas) == 0:
+        return ("txt", '\n'.join(table))
 
     table_divider = ('+'
                      + '+'.join(

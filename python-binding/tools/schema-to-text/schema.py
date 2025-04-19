@@ -1,3 +1,33 @@
+class SchemaProperty:
+    field_keys = ["property", "value", "description"]
+
+    def __init__(self):
+        self.name = ""
+        self.description = ""
+        self.value = None
+
+    def set_name(self, name: str):
+        self.name = name
+        return self
+
+    def set_description(self, description: str):
+        self.description = description
+        return self
+
+    def set_value(self, value):
+        self.value = value
+        return self
+
+    def englishify(self):
+        field_name = self.name
+        field_value = self.value
+        field_desc = self.description
+
+        return {"property": field_name,
+                "value": str(field_value),
+                "description": field_desc}
+
+
 class Field:
     field_keys = ["name", "type", "required", "description"]
 
@@ -50,36 +80,6 @@ class Field:
         return {"name": field_name,
                 "type": field_type,
                 "required": field_required,
-                "description": field_desc}
-
-
-class SchemaProperty:
-    field_keys = ["name", "value", "description"]
-
-    def __init__(self):
-        self.name = ""
-        self.description = ""
-        self.value = None
-
-    def set_name(self, name: str):
-        self.name = name
-        return self
-
-    def set_description(self, description: str):
-        self.description = description
-        return self
-
-    def set_value(self, value):
-        self.value = value
-        return self
-
-    def englishify(self):
-        field_name = self.name
-        field_value = self.value
-        field_desc = self.description
-
-        return {"name": field_name,
-                "value": str(field_value),
                 "description": field_desc}
 
 

@@ -1,0 +1,48 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"title": "HTTP Packet RPC",
+	"description": "Schema for the packet RPC used in the communication between Godot and Python",
+	"type": "object",
+	"required": [
+		"headers/p-time",
+		"headers/p-type",
+		"headers/p-hash",
+		"headers/content-length",
+		"url",
+		"code",
+		"content"
+	],
+
+	"properties": {
+		"headers/p-time": {
+			"type": "number",
+			"description": "Time of packet at construction. UNIX time in seconds"
+		},
+		"headers/p-type": {
+			"type": "string",
+			"description": "Target method of the service of the URL of the packet"
+		},
+		"headers/p-hash": {
+			"type": "string",
+			"description": "SHA256 hash of the packet. Uses p-time, p-type, content string concatenated in that order for hashing"
+		},
+		"headers/content-length": {
+			"type": "integer",
+			"description": "Length of the packet's content"
+		},
+		"url": {
+			"type": "string",
+			"description": "URL destination for incoming packets, URL source for return packets"
+		},
+		"code": {
+			"type": "integer",
+			"description": "HTTP return code of the packet, 000 for incoming packets"
+		},
+		"content": {
+			"type": "string",
+			"description": "JSON serialzed content, may not be ASCII"
+		}
+	},
+	"additionalProperties": false
+}
+

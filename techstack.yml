@@ -1,0 +1,29 @@
+# This file is for declaring the techstack used within this project.
+# This includes tools, and languages.
+
+frontend:
+  - "Godot 4.4"
+
+backend:
+  - "Python 3.13.3"
+  - "Conda"
+
+version_control_software:
+  - "Git"
+  - "Github"
+
+documentations:
+  - "sphinx 8.2.3"
+
+languages:
+  - "GDScript"
+  - "Python"
+
+dependencies:
+  python:
+    - "pyyaml 6.0.2"
+  conda:
+    - "conda-pack 0.8.1"
+  sphinx:
+    - "sphinx.ext.autodoc"
+    - "sphinx.ext.napoleon"

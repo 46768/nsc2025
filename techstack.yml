@@ -1,5 +1,6 @@
+# techstack.yml
 # This file is for declaring the techstack used within this project.
-# This includes tools, and languages.
+# This includes tools, languages, and core dependencies.
 
 frontend:
   - "Godot 4.4"
@@ -8,22 +9,47 @@ backend:
   - "Python 3.13.3"
   - "Conda"
 
-version_control_software:
+programming_language:
+  - "GDScript"
+  - "Python"
+
+game_development_tool:
+  - "Godot 4.4"
+  - "Krita 5.2.9"
+
+documentation:
+  - "sphinx 8.2.3"
+  - "Google Docs"
+
+development_tool:
+  - "Neovim 0.10.4"
+  - "Visual Studio Code"
   - "Git"
   - "Github"
 
-documentations:
-  - "sphinx 8.2.3"
+productivity_tool:
+  - "Google Sheet"
+  - "Github Projects"
 
-languages:
-  - "GDScript"
-  - "Python"
+data_format:
+  - "YAML"
+  - "JSON"
+
+ci_cd:
+  - "Github Actions"
 
 dependencies:
   python:
     - "pyyaml 6.0.2"
+    - "matplotlib 3.10.1"
+    - "networkx 3.4.2"
+    - "scipy 1.15.2"
+    - "numpy 2.2.4"
+    - "pydot 3.0.4"
+
   conda:
     - "conda-pack 0.8.1"
+
   sphinx:
     - "sphinx.ext.autodoc"
     - "sphinx.ext.napoleon"

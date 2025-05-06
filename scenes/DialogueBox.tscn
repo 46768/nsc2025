@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://b6xvkvbl5b81l"]
 
-[ext_resource type="Script" uid="uid://vlbschkurvl6" path="res://scripts/core/dialogue-system/dialogue_box.gd" id="1_r2og1"]
+[ext_resource type="Script" uid="uid://vlbschkurvl6" path="res://scripts/core/dialogue-system/dialogue-box.gd" id="1_r2og1"]
 [ext_resource type="Texture2D" uid="uid://ebjgaywwcvye" path="res://assets/textures/dialogue-system/nan.png" id="2_giuoe"]
 
 [node name="DialogueBox" type="MarginContainer"]

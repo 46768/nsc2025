@@ -6,6 +6,8 @@ var name: String
 var vfs: VFS
 var sequence: Sequence = Sequence.new()
 
+var is_running: bool = false
+
 
 static func load_json(json: String) -> ProblemClass:
 	var json_dict: Dictionary = JSON.parse_string(json)
@@ -27,6 +29,7 @@ func _init(iname: String, ivfs: VFS) -> void:
 
 
 func start() -> void:
+	is_running = true
 	sequence.next()
 
 

@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://c44n34k18cx8m"]
 
 [ext_resource type="Theme" uid="uid://bq4vvnvsx0a5q" path="res://themes/ide/ide-default.tres" id="1_eacvr"]
-[ext_resource type="Script" path="res://scripts/IDE/ide.gd" id="1_msfw7"]
+[ext_resource type="Script" uid="uid://d0kdg1rtfo0av" path="res://scripts/IDE/ide.gd" id="1_msfw7"]
 [ext_resource type="Script" uid="uid://dxs06js8hwkng" path="res://scripts/IDE/buffer_tabs.gd" id="3_eacvr"]
 [ext_resource type="StyleBox" uid="uid://ck21jxwdspuit" path="res://themes/ide/backpanel.stylebox" id="3_kfwwp"]
 [ext_resource type="Script" uid="uid://dq0odnd4pbbda" path="res://scripts/IDE/console.gd" id="4_16dsd"]

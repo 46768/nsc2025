@@ -1,7 +1,7 @@
 extends CharacterBody2D
 
 
-const SPEED: float = 300.0
+const SPEED: float = 500.0
 const JUMP_VELOCITY: float = -400.0
 
 
@@ -21,5 +21,9 @@ func _physics_process(delta: float) -> void:
 		velocity.x = direction * SPEED
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
+	if direction == 1.0:
+		get_node("Malecharacter").flip_h = true
+	elif direction == -1.0:
+		get_node("Malecharacter").flip_h = false
 
 	move_and_slide()

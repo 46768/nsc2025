@@ -175,7 +175,6 @@ func assemble(source: String, rom: Dictionary) -> Array[Array]:
 			continue
 		
 		var tokenized_line: Array = SequenceDSL.tokenize(line)
-		print(tokenized_line)
 		
 		# Global label
 		if line.ends_with(":"):
@@ -192,7 +191,6 @@ func assemble(source: String, rom: Dictionary) -> Array[Array]:
 		
 		# Loops through each tokens, replace the tokens with parsed operand
 		for j: int in range(1, len(tokenized_line)):
-			print(j)
 			var parsed_operand: Variant = SequenceDSL.parse_operand(
 					tokenized_line[j], rom, label_map, label_global,
 					label_offset)

@@ -12,14 +12,15 @@ config_version=5
 
 config/name="nsc2025"
 config/version="0.0.1-demo"
-run/main_scene="res://main.tscn"
+run/main_scene="uid://bis4qj05im6g8"
 config/use_custom_user_dir=true
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
-DiskUtil="*res://scripts/core/autoloads/disk_utils.gd"
+SignalBus="*res://scripts/core/autoloads/signal-bus.gd"
+DiskUtil="*res://scripts/core/autoloads/disk-utils.gd"
 Globals="*res://scripts/core/autoloads/globals.gd"
 Packet="*res://scripts/core/networking/packet.gd"
 PythonBinding="*res://scripts/python-binding/python-binding.gd"
@@ -67,6 +68,11 @@ KeyD={
 KeySpace={
 "deadzone": 0.2,
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":32,"key_label":0,"unicode":32,"location":0,"echo":false,"script":null)
+]
+}
+KeyE={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":69,"key_label":0,"unicode":101,"location":0,"echo":false,"script":null)
 ]
 }
 

@@ -1,7 +1,9 @@
 class_name VFS
 extends Object
 
+
 signal data_changed
+@warning_ignore("unused_signal")
 signal buffer_reload
 
 enum RET_CODE { SUCCESS, ERR }

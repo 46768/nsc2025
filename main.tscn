@@ -1,17 +1,31 @@
-[gd_scene load_steps=6 format=3 uid="uid://dc0wkqvws5k6e"]
+[gd_scene load_steps=8 format=4 uid="uid://bis4qj05im6g8"]
 
-[ext_resource type="Script" uid="uid://cjnecbig4hetd" path="res://scripts/main/main.gd" id="1_a2087"]
-[ext_resource type="PackedScene" uid="uid://c44n34k18cx8m" path="res://scenes/IDE.tscn" id="1_xj0ui"]
-[ext_resource type="PackedScene" uid="uid://cixmrgx1jxv8p" path="res://scenes/Player.tscn" id="3_h2yge"]
-[ext_resource type="Texture2D" uid="uid://dadmwkga8kc6s" path="res://assets/textures/placeholder.jpg" id="4_1bvp3"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_lquwl"]
-size = Vector2(1280, 128)
+[ext_resource type="Script" uid="uid://cjnecbig4hetd" path="res://scripts/main/main.gd" id="1_272bh"]
+[ext_resource type="PackedScene" uid="uid://cixmrgx1jxv8p" path="res://scenes/Player.tscn" id="2_5vw27"]
+[ext_resource type="PackedScene" uid="uid://cmn85kjdxt2ni" path="res://scenes/NPC.tscn" id="3_kek77"]
+[ext_resource type="JSON" path="res://assets/json/npc/demo.json" id="4_4c57u"]
+[ext_resource type="Texture2D" uid="uid://dadmwkga8kc6s" path="res://assets/textures/placeholder.jpg" id="5_efxa6"]
+[ext_resource type="TileSet" uid="uid://b07lysqg7p46m" path="res://tileset/map_tileset.tres" id="6_dg77c"]
+[ext_resource type="PackedScene" uid="uid://c44n34k18cx8m" path="res://scenes/IDE.tscn" id="7_ycdy4"]
 
 [node name="Main" type="Node2D"]
-script = ExtResource("1_a2087")
+script = ExtResource("1_272bh")
 
-[node name="Ide" parent="." instance=ExtResource("1_xj0ui")]
+[node name="Player" parent="." instance=ExtResource("2_5vw27")]
+position = Vector2(-170, 30)
+
+[node name="NPC" parent="." instance=ExtResource("3_kek77")]
+position = Vector2(478, 32)
+npc_data_resource = ExtResource("4_4c57u")
+npc_texture = ExtResource("5_efxa6")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAD8/wEAAAADAAEAAAD9/wEAAAADAAEAAAD+/wEAAAADAAEAAAD//wEAAAADAAEAAAAAAAEAAAADAAEAAAABAAEAAAADAAEAAAACAAEAAAADAAEAAAADAAEAAAADAAEAAAAEAAEAAAADAAEAAAA=")
+tile_set = ExtResource("6_dg77c")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Ide" parent="UI" instance=ExtResource("7_ycdy4")]
 visible = false
 anchors_preset = 0
 anchor_right = 0.0
@@ -19,18 +33,4 @@ anchor_bottom = 0.0
 grow_horizontal = 1
 grow_vertical = 1
 
-[node name="Player" parent="." instance=ExtResource("3_h2yge")]
-position = Vector2(582, 163)
-
-[node name="Floor" type="StaticBody2D" parent="."]
-position = Vector2(586, 569)
-metadata/_edit_group_ = true
-
-[node name="Sprite2D" type="Sprite2D" parent="Floor"]
-scale = Vector2(10, 1)
-texture = ExtResource("4_1bvp3")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Floor"]
-shape = SubResource("RectangleShape2D_lquwl")
-
-[connection signal="ide_initialized" from="Ide" to="." method="_on_ide_initialized"]
+[connection signal="ide_initialized" from="UI/Ide" to="." method="_on_ide_initialized"]

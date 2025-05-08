@@ -16,3 +16,6 @@ __pycache__
 
 # Documentation build file
 docs/_build/*
+
+# Schema parsers output
+python-binding/tools/schema-to-text/result.*

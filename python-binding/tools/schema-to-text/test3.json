@@ -1,6 +1,0 @@
-{
-	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"title": "Virtual Filesystem",
-	"description": "Schema for Virtual filesystem used in this project",
-	"type": "string"
-}

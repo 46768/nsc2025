@@ -1,0 +1,66 @@
+[gd_scene load_steps=3 format=3 uid="uid://dpxfmhbqr5s0k"]
+
+[ext_resource type="Script" uid="uid://bc65ikop5lu5d" path="res://scripts/ui/menu/menu.gd" id="1_7w7rl"]
+[ext_resource type="Script" uid="uid://cwq0jrwkvutfo" path="res://scripts/ui/menu/icons.gd" id="2_wedc3"]
+
+[node name="Menu" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("1_7w7rl")
+
+[node name="Panel" type="PanelContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="IMarg" type="MarginContainer" parent="Panel"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBox" type="VBoxContainer" parent="Panel/IMarg"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Desktop" type="Container" parent="Panel/IMarg/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.9
+mouse_filter = 2
+script = ExtResource("2_wedc3")
+
+[node name="Icons" type="Control" parent="Panel/IMarg/VBox/Desktop"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="SolidColorBG" type="ColorRect" parent="Panel/IMarg/VBox/Desktop"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="TextureBG" type="TextureRect" parent="Panel/IMarg/VBox/Desktop"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="Taskbar" type="PanelContainer" parent="Panel/IMarg/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.1
+mouse_filter = 2
+
+[node name="Elements" type="HBoxContainer" parent="Panel/IMarg/VBox/Taskbar"]
+layout_mode = 2
+mouse_filter = 2

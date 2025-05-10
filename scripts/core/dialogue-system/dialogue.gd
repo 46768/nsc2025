@@ -1,7 +1,7 @@
 extends Node
 
 
-const DIALOGUE: PackedScene = preload("res://scenes/DialogueBox.tscn")
+const DIALOGUE: PackedScene = preload("res://scenes/dialogueBox.tscn")
 
 var current_dialogue: Dictionary[String, Node] = {}
 

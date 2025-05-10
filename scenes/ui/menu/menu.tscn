@@ -39,14 +39,14 @@ size_flags_stretch_ratio = 0.9
 mouse_filter = 2
 script = ExtResource("2_wedc3")
 
+[node name="App" type="Control" parent="Panel/IMarg/VBox/Desktop"]
+z_index = 2
+layout_mode = 2
+
 [node name="Icons" type="Control" parent="Panel/IMarg/VBox/Desktop"]
+z_index = 1
 layout_mode = 2
 mouse_filter = 2
-
-[node name="Label" type="Label" parent="Panel/IMarg/VBox/Desktop/Icons"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
 
 [node name="SolidColorBG" type="ColorRect" parent="Panel/IMarg/VBox/Desktop"]
 layout_mode = 2

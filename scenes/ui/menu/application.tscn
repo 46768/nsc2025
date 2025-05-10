@@ -1,0 +1,63 @@
+[gd_scene load_steps=5 format=3 uid="uid://cplt8hsed67vw"]
+
+[ext_resource type="Script" uid="uid://buuj6esjjtren" path="res://scripts/ui/application/application.gd" id="1_ncmis"]
+[ext_resource type="Texture2D" uid="uid://b1yuq6v7xa6o4" path="res://assets/textures/chrome-minimize.svg" id="1_s85u3"]
+[ext_resource type="Texture2D" uid="uid://brf5iee5j5fsn" path="res://assets/textures/chrome-maximize.svg" id="2_ncmis"]
+[ext_resource type="Texture2D" uid="uid://dbbivlp6pb61w" path="res://assets/textures/chrome-close.svg" id="3_a4gqp"]
+
+[node name="Application" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ncmis")
+
+[node name="Topbar" type="PanelContainer" parent="."]
+layout_mode = 2
+size_flags_stretch_ratio = 0.05
+
+[node name="C" type="HBoxContainer" parent="Topbar"]
+layout_mode = 2
+
+[node name="Title" type="HBoxContainer" parent="Topbar/C"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Icon" type="TextureRect" parent="Topbar/C/Title"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+
+[node name="Name" type="Label" parent="Topbar/C/Title"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "N/A"
+
+[node name="Control" type="HBoxContainer" parent="Topbar/C"]
+layout_mode = 2
+
+[node name="Minimize" type="TextureButton" parent="Topbar/C/Control"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+texture_normal = ExtResource("1_s85u3")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Maximize" type="TextureButton" parent="Topbar/C/Control"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+texture_normal = ExtResource("2_ncmis")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Close" type="TextureButton" parent="Topbar/C/Control"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+texture_normal = ExtResource("3_a4gqp")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Content" type="PanelContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.95

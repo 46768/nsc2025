@@ -44,52 +44,57 @@ func _ready() -> void:
 		texture_bg.show()
 		texture_bg.set_texture(texture_background)
 	
-	_place_icons()
+	__place_icons()
 	
-	resized.connect(_resize)
+	resized.connect(__resize)
 
 
-func _resize() -> void:
+func __resize() -> void:
 	cont_size = get_size()
 	texture_bg.set_size(cont_size)
 	solid_color_bg.set_size(cont_size)
 	icons.set_size(cont_size)
 
 
-func _place_icons() -> void:
+func __generate_icon_node(icon: DesktopIcon) -> Control:
+	var icon_tex: Texture2D = icon.get_texture()
+	var icon_pos: Vector2i = icon.get_position()
+	
+	var icon_bitmap: BitMap = BitMap.new()
+	icon_bitmap.create_from_image_alpha(icon_tex.get_image(), -1)
+	
+	var icon_node: Control = Control.new()
+	icon_node.set_mouse_filter(Control.MOUSE_FILTER_IGNORE)
+	icon_node.set_size(Vector2(icon_size, icon_size))
+	icon_node.set_position(Vector2(
+			icon_pos.x*(icon_size+icon_margin)+icon_margin,
+			icon_pos.y*(icon_size+icon_margin)+icon_margin))
+	icon_node.set_name("%s_%d_%d" % [
+		icon.get_name(),icon_pos.x, icon_pos.y])
+	
+	var icon_button: TextureButton = TextureButton.new()
+	icon_button.texture_normal = icon_tex
+	icon_button.set_click_mask(icon_bitmap)
+	icon_button.ignore_texture_size = true
+	icon_button.stretch_mode = TextureButton.STRETCH_SCALE
+	icon_button.set_size(Vector2(icon_size, icon_size))
+	icon_button.pressed.connect(icon.on_execute)
+	
+	var icon_label: Label = Label.new()
+	icon_label.set_text(icon.get_name())
+	icon_label.set_position(Vector2i(0, icon_size))
+	icon_label.add_theme_font_size_override("font_size", icon_size/icon_label_ratio)
+	icon_label.set_size(Vector2i(icon_size, icon_label.get_theme_font_size("font_size")))
+	icon_label.set_horizontal_alignment(HORIZONTAL_ALIGNMENT_CENTER)
+	icon_label.set_vertical_alignment(VERTICAL_ALIGNMENT_CENTER)
+	
+	icon_node.add_child(icon_label)
+	icon_node.add_child(icon_button)
+	
+	return icon_node
+
+
+func __place_icons() -> void:
 	for icon: DesktopIcon in icons_data:
-		var icon_tex: Texture2D = icon.get_texture()
-		var icon_pos: Vector2i = icon.get_position()
-		
-		var icon_bitmap: BitMap = BitMap.new()
-		icon_bitmap.create_from_image_alpha(icon_tex.get_image(), -1)
-		
-		var icon_node: Control = Control.new()
-		icon_node.set_mouse_filter(Control.MOUSE_FILTER_IGNORE)
-		icon_node.set_size(Vector2(icon_size, icon_size))
-		icon_node.set_position(Vector2(
-				icon_pos.x*(icon_size+icon_margin)+icon_margin,
-				icon_pos.y*(icon_size+icon_margin)+icon_margin))
-		icon_node.set_z_index(1)
-		icon_node.set_name("%s_%d_%d" % [
-			icon.get_name(),icon_pos.x, icon_pos.y])
-		
-		var icon_button: TextureButton = TextureButton.new()
-		icon_button.texture_normal = icon_tex
-		icon_button.set_click_mask(icon_bitmap)
-		icon_button.ignore_texture_size = true
-		icon_button.stretch_mode = TextureButton.STRETCH_SCALE
-		icon_button.set_size(Vector2(icon_size, icon_size))
-		icon_button.pressed.connect(icon.on_execute)
-		
-		var icon_label: Label = Label.new()
-		icon_label.set_text(icon.get_name())
-		icon_label.set_position(Vector2i(0, icon_size))
-		icon_label.add_theme_font_size_override("font_size", icon_size/icon_label_ratio)
-		icon_label.set_size(Vector2i(icon_size, icon_label.get_theme_font_size("font_size")))
-		icon_label.set_horizontal_alignment(HORIZONTAL_ALIGNMENT_CENTER)
-		icon_label.set_vertical_alignment(VERTICAL_ALIGNMENT_CENTER)
-		
-		icon_node.add_child(icon_label)
-		icon_node.add_child(icon_button)
+		var icon_node: Control = __generate_icon_node(icon)
 		icons.add_child(icon_node)

@@ -7,6 +7,13 @@ var name: String = "N/A"
 var texture: Texture2D = preload("res://assets/textures/placeholder.jpg")
 var on_execute: Callable = no_execute
 
+
+static func from_application(app: Application) -> DesktopIcon:
+	var desktop_icon: DesktopIcon = (DesktopIcon.new()
+		.set_name(app.name)
+		.set_texture(app.icon))
+	return desktop_icon
+
 func no_execute() -> void:
 	print("%s clicked" % name)
 

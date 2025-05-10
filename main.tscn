@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://dadmwkga8kc6s" path="res://assets/textures/placeholder.jpg" id="5_efxa6"]
 [ext_resource type="TileSet" uid="uid://b07lysqg7p46m" path="res://tileset/map_tileset.tres" id="6_dg77c"]
 [ext_resource type="PackedScene" uid="uid://c44n34k18cx8m" path="res://scenes/ui/ide.tscn" id="7_ycdy4"]
-[ext_resource type="PackedScene" uid="uid://dpxfmhbqr5s0k" path="res://scenes/ui/menu.tscn" id="8_5vw27"]
+[ext_resource type="PackedScene" uid="uid://dpxfmhbqr5s0k" path="res://scenes/ui/menu/menu.tscn" id="8_5vw27"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_272bh")

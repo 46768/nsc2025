@@ -43,6 +43,11 @@ script = ExtResource("2_wedc3")
 layout_mode = 2
 mouse_filter = 2
 
+[node name="Label" type="Label" parent="Panel/IMarg/VBox/Desktop/Icons"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
 [node name="SolidColorBG" type="ColorRect" parent="Panel/IMarg/VBox/Desktop"]
 layout_mode = 2
 size_flags_horizontal = 3

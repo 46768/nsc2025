@@ -27,7 +27,8 @@ var icons_data: Array[DesktopIcon] = [
 	.set_name("Quests")
 	.set_texture(preload("res://assets/textures/tasklist.svg")),
 ]
-var icon_size: int = IconSize.MEDIUM
+var icon_label_ratio: int = 4
+var icon_size: int = ((icon_label_ratio+1)*IconSize.MEDIUM)/icon_label_ratio
 var icon_margin: int = 16
 
 
@@ -61,13 +62,10 @@ func _place_icons() -> void:
 		var icon_pos: Vector2i = icon.get_position()
 		
 		var icon_bitmap: BitMap = BitMap.new()
-		icon_bitmap.create_from_image_alpha(icon_tex.get_image(), 0)
+		icon_bitmap.create_from_image_alpha(icon_tex.get_image(), -1)
 		
-		var icon_node: TextureButton = TextureButton.new()
-		icon_node.texture_normal = icon_tex
-		icon_node.set_click_mask(icon_bitmap)
-		icon_node.ignore_texture_size = true
-		icon_node.stretch_mode = TextureButton.STRETCH_SCALE
+		var icon_node: Control = Control.new()
+		icon_node.set_mouse_filter(Control.MOUSE_FILTER_IGNORE)
 		icon_node.set_size(Vector2(icon_size, icon_size))
 		icon_node.set_position(Vector2(
 				icon_pos.x*(icon_size+icon_margin)+icon_margin,
@@ -75,6 +73,23 @@ func _place_icons() -> void:
 		icon_node.set_z_index(1)
 		icon_node.set_name("%s_%d_%d" % [
 			icon.get_name(),icon_pos.x, icon_pos.y])
-		icon_node.pressed.connect(icon.on_execute)
 		
+		var icon_button: TextureButton = TextureButton.new()
+		icon_button.texture_normal = icon_tex
+		icon_button.set_click_mask(icon_bitmap)
+		icon_button.ignore_texture_size = true
+		icon_button.stretch_mode = TextureButton.STRETCH_SCALE
+		icon_button.set_size(Vector2(icon_size, icon_size))
+		icon_button.pressed.connect(icon.on_execute)
+		
+		var icon_label: Label = Label.new()
+		icon_label.set_text(icon.get_name())
+		icon_label.set_position(Vector2i(0, icon_size))
+		icon_label.add_theme_font_size_override("font_size", icon_size/icon_label_ratio)
+		icon_label.set_size(Vector2i(icon_size, icon_label.get_theme_font_size("font_size")))
+		icon_label.set_horizontal_alignment(HORIZONTAL_ALIGNMENT_CENTER)
+		icon_label.set_vertical_alignment(VERTICAL_ALIGNMENT_CENTER)
+		
+		icon_node.add_child(icon_label)
+		icon_node.add_child(icon_button)
 		icons.add_child(icon_node)

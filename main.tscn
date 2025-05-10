@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=4 uid="uid://bis4qj05im6g8"]
+[gd_scene load_steps=8 format=4 uid="uid://bis4qj05im6g8"]
 
 [ext_resource type="Script" uid="uid://cjnecbig4hetd" path="res://scripts/main/main.gd" id="1_272bh"]
 [ext_resource type="PackedScene" uid="uid://cixmrgx1jxv8p" path="res://scenes/game-elements/player.tscn" id="2_5vw27"]
@@ -6,7 +6,6 @@
 [ext_resource type="JSON" path="res://assets/json/npc/demo.json" id="4_4c57u"]
 [ext_resource type="Texture2D" uid="uid://dadmwkga8kc6s" path="res://assets/textures/placeholder.jpg" id="5_efxa6"]
 [ext_resource type="TileSet" uid="uid://b07lysqg7p46m" path="res://tileset/map_tileset.tres" id="6_dg77c"]
-[ext_resource type="PackedScene" uid="uid://c44n34k18cx8m" path="res://scenes/ui/ide.tscn" id="7_ycdy4"]
 [ext_resource type="PackedScene" uid="uid://dpxfmhbqr5s0k" path="res://scenes/ui/menu/menu.tscn" id="8_5vw27"]
 
 [node name="Main" type="Node2D"]
@@ -26,14 +25,4 @@ tile_set = ExtResource("6_dg77c")
 
 [node name="UI" type="CanvasLayer" parent="."]
 
-[node name="Ide" parent="UI" instance=ExtResource("7_ycdy4")]
-visible = false
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-grow_horizontal = 1
-grow_vertical = 1
-
 [node name="Menu" parent="UI" instance=ExtResource("8_5vw27")]
-
-[connection signal="ide_initialized" from="UI/Ide" to="." method="_on_ide_initialized"]

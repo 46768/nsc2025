@@ -1,6 +1,5 @@
-[gd_scene load_steps=8 format=3 uid="uid://c44n34k18cx8m"]
+[gd_scene load_steps=7 format=3 uid="uid://c44n34k18cx8m"]
 
-[ext_resource type="Theme" uid="uid://bq4vvnvsx0a5q" path="res://themes/ide/ide-default.tres" id="1_eacvr"]
 [ext_resource type="Script" uid="uid://d0kdg1rtfo0av" path="res://scripts/ui/ide/ide.gd" id="1_msfw7"]
 [ext_resource type="Script" uid="uid://dxs06js8hwkng" path="res://scripts/ui/ide/buffer_tabs.gd" id="3_eacvr"]
 [ext_resource type="StyleBox" uid="uid://ck21jxwdspuit" path="res://themes/ide/backpanel.stylebox" id="3_kfwwp"]
@@ -10,61 +9,38 @@
 
 [node name="Ide" type="Control"]
 z_index = 1
-layout_direction = 2
 layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+anchors_preset = 0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_msfw7")
 
-[node name="Omarg" type="MarginContainer" parent="."]
+[node name="Panelc" type="PanelContainer" parent="."]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="Panelc" type="PanelContainer" parent="Omarg"]
-layout_mode = 2
-theme = ExtResource("1_eacvr")
+offset_right = 560.0
+offset_bottom = 155.0
 theme_override_styles/panel = ExtResource("3_kfwwp")
 
-[node name="Imarg" type="MarginContainer" parent="Omarg/Panelc"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="Vsplit" type="HSplitContainer" parent="Omarg/Panelc/Imarg"]
+[node name="Vsplit" type="HSplitContainer" parent="Panelc"]
 layout_mode = 2
 split_offset = 240
 
-[node name="SidebarSplit" type="VSplitContainer" parent="Omarg/Panelc/Imarg/Vsplit"]
+[node name="SidebarSplit" type="VSplitContainer" parent="Panelc/Vsplit"]
 layout_mode = 2
 split_offset = 120
 
-[node name="Sidebar" type="TabContainer" parent="Omarg/Panelc/Imarg/Vsplit/SidebarSplit"]
+[node name="Sidebar" type="TabContainer" parent="Panelc/Vsplit/SidebarSplit"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 current_tab = 0
 clip_tabs = false
 
-[node name="Problem Viewer" type="BoxContainer" parent="Omarg/Panelc/Imarg/Vsplit/SidebarSplit/Sidebar"]
+[node name="Problem Viewer" type="BoxContainer" parent="Panelc/Vsplit/SidebarSplit/Sidebar"]
 layout_mode = 2
 metadata/_tab_index = 0
 
-[node name="Txt" type="RichTextLabel" parent="Omarg/Panelc/Imarg/Vsplit/SidebarSplit/Sidebar/Problem Viewer"]
+[node name="Txt" type="RichTextLabel" parent="Panelc/Vsplit/SidebarSplit/Sidebar/Problem Viewer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -73,48 +49,48 @@ bbcode_enabled = true
 text = "hello!"
 selection_enabled = true
 
-[node name="File Explorer" type="BoxContainer" parent="Omarg/Panelc/Imarg/Vsplit/SidebarSplit/Sidebar"]
+[node name="File Explorer" type="BoxContainer" parent="Panelc/Vsplit/SidebarSplit/Sidebar"]
 visible = false
 layout_mode = 2
 script = ExtResource("6_5fjmn")
 metadata/_tab_index = 1
 
-[node name="FileTree" type="Tree" parent="Omarg/Panelc/Imarg/Vsplit/SidebarSplit/Sidebar/File Explorer"]
+[node name="FileTree" type="Tree" parent="Panelc/Vsplit/SidebarSplit/Sidebar/File Explorer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Debugger" type="BoxContainer" parent="Omarg/Panelc/Imarg/Vsplit/SidebarSplit/Sidebar"]
+[node name="Debugger" type="BoxContainer" parent="Panelc/Vsplit/SidebarSplit/Sidebar"]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
-[node name="Notes" type="TextEdit" parent="Omarg/Panelc/Imarg/Vsplit/SidebarSplit"]
+[node name="Notes" type="TextEdit" parent="Panelc/Vsplit/SidebarSplit"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 placeholder_text = "Put your notes here"
 
-[node name="EditorSplit" type="VSplitContainer" parent="Omarg/Panelc/Imarg/Vsplit"]
+[node name="EditorSplit" type="VSplitContainer" parent="Panelc/Vsplit"]
 layout_mode = 2
 split_offset = 120
 
-[node name="BufferTabs" type="TabContainer" parent="Omarg/Panelc/Imarg/Vsplit/EditorSplit"]
+[node name="BufferTabs" type="TabContainer" parent="Panelc/Vsplit/EditorSplit"]
 layout_mode = 2
 size_flags_vertical = 3
 script = ExtResource("3_eacvr")
 
-[node name="Console" type="VBoxContainer" parent="Omarg/Panelc/Imarg/Vsplit/EditorSplit"]
+[node name="Console" type="VBoxContainer" parent="Panelc/Vsplit/EditorSplit"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("4_16dsd")
 
-[node name="ConsoleOutput" type="PanelContainer" parent="Omarg/Panelc/Imarg/Vsplit/EditorSplit/Console"]
+[node name="ConsoleOutput" type="PanelContainer" parent="Panelc/Vsplit/EditorSplit/Console"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = ExtResource("7_pngv2")
 
-[node name="ConsoleOutputText" type="RichTextLabel" parent="Omarg/Panelc/Imarg/Vsplit/EditorSplit/Console/ConsoleOutput"]
+[node name="ConsoleOutputText" type="RichTextLabel" parent="Panelc/Vsplit/EditorSplit/Console/ConsoleOutput"]
 custom_minimum_size = Vector2(72, 96)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -126,19 +102,19 @@ autowrap_mode = 2
 threaded = true
 selection_enabled = true
 
-[node name="ConsoleInput" type="HBoxContainer" parent="Omarg/Panelc/Imarg/Vsplit/EditorSplit/Console"]
+[node name="ConsoleInput" type="HBoxContainer" parent="Panelc/Vsplit/EditorSplit/Console"]
 layout_mode = 2
 
-[node name="ConsoleCWD" type="PanelContainer" parent="Omarg/Panelc/Imarg/Vsplit/EditorSplit/Console/ConsoleInput"]
+[node name="ConsoleCWD" type="PanelContainer" parent="Panelc/Vsplit/EditorSplit/Console/ConsoleInput"]
 layout_mode = 2
 theme_override_styles/panel = ExtResource("7_pngv2")
 
-[node name="CWDText" type="Label" parent="Omarg/Panelc/Imarg/Vsplit/EditorSplit/Console/ConsoleInput/ConsoleCWD"]
+[node name="CWDText" type="Label" parent="Panelc/Vsplit/EditorSplit/Console/ConsoleInput/ConsoleCWD"]
 layout_mode = 2
 size_flags_vertical = 1
 theme_override_styles/normal = ExtResource("7_pngv2")
 
-[node name="ConsoleInputLine" type="LineEdit" parent="Omarg/Panelc/Imarg/Vsplit/EditorSplit/Console/ConsoleInput"]
+[node name="ConsoleInputLine" type="LineEdit" parent="Panelc/Vsplit/EditorSplit/Console/ConsoleInput"]
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -148,10 +124,10 @@ theme_override_styles/normal = ExtResource("7_pngv2")
 keep_editing_on_text_submit = true
 caret_blink = true
 
-[connection signal="ide_initialized" from="." to="Omarg/Panelc/Imarg/Vsplit/SidebarSplit/Sidebar/File Explorer" method="_on_ide_initialized"]
-[connection signal="ide_initialized" from="." to="Omarg/Panelc/Imarg/Vsplit/EditorSplit/BufferTabs" method="_on_ide_initialized"]
-[connection signal="ide_initialized" from="." to="Omarg/Panelc/Imarg/Vsplit/EditorSplit/Console" method="_on_ide_initialized"]
-[connection signal="ide_vfs_changed" from="." to="Omarg/Panelc/Imarg/Vsplit/SidebarSplit/Sidebar/File Explorer" method="_on_ide_vfs_changed"]
-[connection signal="ide_vfs_changed" from="." to="Omarg/Panelc/Imarg/Vsplit/EditorSplit/Console" method="_on_ide_vfs_changed"]
-[connection signal="buffer_tabs_initialized" from="Omarg/Panelc/Imarg/Vsplit/EditorSplit/BufferTabs" to="Omarg/Panelc/Imarg/Vsplit/EditorSplit/Console" method="_on_buffer_initialized"]
-[connection signal="text_submitted" from="Omarg/Panelc/Imarg/Vsplit/EditorSplit/Console/ConsoleInput/ConsoleInputLine" to="Omarg/Panelc/Imarg/Vsplit/EditorSplit/Console" method="_run_command"]
+[connection signal="ide_initialized" from="." to="Panelc/Vsplit/SidebarSplit/Sidebar/File Explorer" method="_on_ide_initialized"]
+[connection signal="ide_initialized" from="." to="Panelc/Vsplit/EditorSplit/BufferTabs" method="_on_ide_initialized"]
+[connection signal="ide_initialized" from="." to="Panelc/Vsplit/EditorSplit/Console" method="_on_ide_initialized"]
+[connection signal="ide_vfs_changed" from="." to="Panelc/Vsplit/SidebarSplit/Sidebar/File Explorer" method="_on_ide_vfs_changed"]
+[connection signal="ide_vfs_changed" from="." to="Panelc/Vsplit/EditorSplit/Console" method="_on_ide_vfs_changed"]
+[connection signal="buffer_tabs_initialized" from="Panelc/Vsplit/EditorSplit/BufferTabs" to="Panelc/Vsplit/EditorSplit/Console" method="_on_buffer_initialized"]
+[connection signal="text_submitted" from="Panelc/Vsplit/EditorSplit/Console/ConsoleInput/ConsoleInputLine" to="Panelc/Vsplit/EditorSplit/Console" method="_run_command"]

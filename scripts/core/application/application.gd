@@ -11,6 +11,12 @@ func _init(application_content: PackedScene) -> void:
 	scene = application_content
 
 
+func spawn() -> ApplicationInstance:
+	var instance = ApplicationInstance.new(self)
+	
+	return instance
+
+
 func set_name(new_name: String) -> Application:
 	name = new_name
 	return self

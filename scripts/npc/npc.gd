@@ -55,8 +55,8 @@ Boat goes binted!!!
 	
 	seq.write_rom("sample_program", "print(\"Hello World!\")")
 	
-	seq.write_rom("next_sig", Globals.ide.shell.signal_reg["next_sig"])
-	seq.write_rom("test_sig", Globals.ide.shell.signal_reg["test_sig"])
+	seq.write_rom("next_sig", SignalBus.next_sig)
+	seq.write_rom("test_sig", SignalBus.test_sig)
 	
 	seq.load_source("""
 		dialogue %hello1

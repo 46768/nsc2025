@@ -11,10 +11,12 @@ var on_execute: Callable = no_execute
 static func from_application(app: Application) -> DesktopIcon:
 	var desktop_icon: DesktopIcon = (DesktopIcon.new()
 		.set_name(app.name)
-		.set_texture(app.icon))
+		.set_texture(app.icon)
+		.set_on_execute(func(app_ui: Control): app_ui.add_child(
+				app.spawn().get_app_node())))
 	return desktop_icon
 
-func no_execute() -> void:
+func no_execute(__: Control) -> void:
 	print("%s clicked" % name)
 
 func _init() -> void:
@@ -52,5 +54,5 @@ func set_on_execute(fn: Callable) -> DesktopIcon:
 func get_on_execute() -> Callable:
 	return on_execute
 
-func execute() -> void:
-	on_execute.call()
+func execute(app_ui: Control) -> void:
+	on_execute.call(app_ui)

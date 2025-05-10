@@ -14,14 +14,15 @@ enum IconSize {
 @onready var solid_color_bg: ColorRect = $SolidColorBG
 @onready var texture_bg: TextureRect = $TextureBG
 @onready var icons: Control = $Icons
+@onready var apps: Control = $App
 @onready var cont_size: Vector2 = get_size()
 
 # TODO: Replace with modifiable icon data list
 var icons_data: Array[DesktopIcon] = [
-	DesktopIcon.new()
-	.set_position(Vector2i(0, 0))
-	.set_name("Code")
-	.set_texture(preload("res://assets/textures/edit.svg")),
+	DesktopIcon.from_application(
+			Application.new(preload("res://scenes/ui/ide.tscn"))
+			.set_name("IDE")
+			.set_icon(preload("res://assets/textures/edit.svg"))),
 	DesktopIcon.new()
 	.set_position(Vector2i(1, 0))
 	.set_name("Quests")
@@ -30,6 +31,9 @@ var icons_data: Array[DesktopIcon] = [
 var icon_label_ratio: int = 4
 var icon_size: int = ((icon_label_ratio+1)*IconSize.MEDIUM)/icon_label_ratio
 var icon_margin: int = 16
+
+var icon_refs: Dictionary[String, DesktopIcon] = {}
+var icon_execution_hooks: Dictionary[String, bool] = {}
 
 
 func _ready() -> void:
@@ -54,6 +58,20 @@ func __resize() -> void:
 	texture_bg.set_size(cont_size)
 	solid_color_bg.set_size(cont_size)
 	icons.set_size(cont_size)
+	apps.set_size(cont_size)
+
+
+func _on_icon_pressed(icon_name: String) -> void:
+	if not icon_execution_hooks.has(icon_name):
+		icon_execution_hooks.set(icon_name, true)
+		get_tree().create_timer(1).timeout.connect(__remove_icon_hook.bind(icon_name))
+	else:
+		icon_refs.get(icon_name).execute(apps)
+		icon_execution_hooks.erase(icon_name)
+
+
+func __remove_icon_hook(icon_name: String) -> void:
+	icon_execution_hooks.erase(icon_name)
 
 
 func __generate_icon_node(icon: DesktopIcon) -> Control:
@@ -78,7 +96,7 @@ func __generate_icon_node(icon: DesktopIcon) -> Control:
 	icon_button.ignore_texture_size = true
 	icon_button.stretch_mode = TextureButton.STRETCH_SCALE
 	icon_button.set_size(Vector2(icon_size, icon_size))
-	icon_button.pressed.connect(icon.on_execute)
+	icon_button.pressed.connect(_on_icon_pressed.bind(icon_node.get_name()))
 	
 	var icon_label: Label = Label.new()
 	icon_label.set_text(icon.get_name())
@@ -97,4 +115,5 @@ func __generate_icon_node(icon: DesktopIcon) -> Control:
 func __place_icons() -> void:
 	for icon: DesktopIcon in icons_data:
 		var icon_node: Control = __generate_icon_node(icon)
+		icon_refs.set(icon_node.get_name(), icon)
 		icons.add_child(icon_node)

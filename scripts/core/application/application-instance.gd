@@ -15,7 +15,7 @@ func _init(app_ref: Application) -> void:
 	content_node = application_ref.scene.instantiate()
 	
 	app_node = application_scene.instantiate()
-	app_node.app_instance_ref = weakref(self)
+	app_node.app_instance_ref = self
 	app_node.app_name = application_ref.name
 	app_node.app_icon = application_ref.icon
 	
@@ -24,3 +24,13 @@ func _init(app_ref: Application) -> void:
 
 func get_app_node() -> VBoxContainer:
 	return app_node
+
+
+func minimize() -> void:
+	app_node.hide()
+
+func maximize() -> void:
+	app_node.show()
+
+func close() -> void:
+	app_node.free()

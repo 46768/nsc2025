@@ -12,7 +12,7 @@ static func from_application(app: Application) -> DesktopIcon:
 	var desktop_icon: DesktopIcon = (DesktopIcon.new()
 		.set_name(app.name)
 		.set_texture(app.icon)
-		.set_on_execute(func(app_ui: Control): app_ui.add_child(
+		.set_on_execute(func(app_ui: Control)->void: app_ui.add_child(
 				app.spawn().get_app_node())))
 	return desktop_icon
 

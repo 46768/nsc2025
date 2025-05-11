@@ -12,7 +12,7 @@ func _init(application_content: PackedScene) -> void:
 
 
 func spawn() -> ApplicationInstance:
-	var instance = ApplicationInstance.new(self)
+	var instance: ApplicationInstance = ApplicationInstance.new(self)
 	
 	return instance
 

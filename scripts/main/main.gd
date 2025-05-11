@@ -4,7 +4,6 @@ extends Node2D
 signal main_initialized
 
 @onready var player_ui: CanvasLayer = $UI
-@onready var ide_ui: Control = $UI/Ide
 
 
 func _ready() -> void:
